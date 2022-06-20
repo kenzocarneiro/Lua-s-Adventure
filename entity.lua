@@ -7,11 +7,11 @@ function Entity:new()
     return e
 end
 
-function Entity:init(img, is_sheet, width, height)
+function Entity:init(img, isSheet, width, height)
     self.isSheet = isSheet or false
 
     -- A finir
-    if is_sheet then
+    if isSheet then
         self.spriteSheet = img
         self.spriteQuads = {}
         for y = 0, img:getHeight() - height, height do
