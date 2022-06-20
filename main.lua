@@ -10,11 +10,18 @@ function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
     love.graphics.setDefaultFilter("nearest", "nearest")
     local Player = require("player")
-    G_player = Player:new()
+    local Sprite = require("sprite")
+    local SpriteCollection = require("spriteC")
 
-    -- Args : speed, weapon, pos, img, isSheet, width, height, hbWidth, hbHeight, hbOffset
+
+    local player_sc = SpriteCollection:new("player")
+    player_sc:adds(Sprite:new("sprites/wizard_idle-Sheet.png", true, "idle", 18, 18))
+
     -- G_player because player is a global variable
-    G_player:init(1, "epee", Vector:new(100, 100), "sprites/wizard_idle-Sheet.png", true, 18, 18, 5, 10, Vector:new(0, 3))
+    G_player = Player:new()
+    -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
+    -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
+    G_player:init(1, "epee", Vector:new(100, 100), player_sc, 5, 10, Vector:new(0, 3))
 end
 
 function love.update(dt)
