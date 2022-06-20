@@ -5,8 +5,8 @@ function Hitbox:new(x, y, width, height)
     setmetatable(h, self)
     self.__index = self
 
-    h.x=x or self.x
-    h.y=y or self.y
+    h.x= x or self.x
+    h.y= y or self.y
     h.width=width or self.width
     h.height=height or self.height
 
@@ -33,13 +33,14 @@ end
 
 -- update hitbox coords (use this after we move)
 function Hitbox:move(x, y)
-    self.x = x
-    self.y = y
+    self.x = x-self.width/2
+    self.y = y-self.height/2
 end
 
 -- draws the hitbox, useful to debug
 function Hitbox:draw()
     love.graphics.setColor(255, 255, 255)
+    love.graphics.setLineWidth(0.5)
     love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 end
 
