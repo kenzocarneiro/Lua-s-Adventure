@@ -9,20 +9,20 @@ end
 function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
     love.graphics.setDefaultFilter("nearest", "nearest")
-    Player = require("player")
-    player = Player:new()
+    local Player = require("player")
+    G_player = Player:new()
 
-    -- Args : speed, weapon, x, y, img, isSheet, width, height, hbWidth, hbHeight, hbOffsetX, hbOffsetY
     -- Args : speed, weapon, pos, img, isSheet, width, height, hbWidth, hbHeight, hbOffset
-    player:init(1, "epee", Vector:new(100, 100), "sprites/wizard_idle-Sheet.png", true, 18, 18, 5, 10, Vector:new(0, 3))
+    -- G_player because player is a global variable
+    G_player:init(1, "epee", Vector:new(100, 100), "sprites/wizard_idle-Sheet.png", true, 18, 18, 5, 10, Vector:new(0, 3))
 end
 
 function love.update(dt)
     -- player movements
-    player:update(dt)
+    G_player:update(dt)
 end
 
 function love.draw()
     love.graphics.scale(4, 4)
-    player:draw(true)
+    G_player:draw(true)
 end
