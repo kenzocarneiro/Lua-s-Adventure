@@ -15,7 +15,7 @@ function love.load()
 
 
     local player_sc = SpriteCollection:new("player")
-    player_sc:adds(Sprite:new("sprites/wizard_idle-Sheet.png", true, "idle", 18, 18))
+    player_sc:init({Sprite:new("sprites/wizard_idle-Sheet.png", true, "idle", 18, 18)})
 
     -- G_player because player is a global variable
     G_player = Player:new()

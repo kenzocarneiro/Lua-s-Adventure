@@ -17,46 +17,24 @@ function SpriteCollection:new(el)
     return sc
 end
 
---- @param sprite Sprite
---- @return nil
-function SpriteCollection:adds(sprite)
-    self.sprites[sprite.state] = sprite
-    if sprite.isSheet then
-        sprite.frames = {}
-        self.currentFrame = 1
-        self.frameTimer = 0
-        self.interval = 0.1
-        for y = 0, sprite.loveImg:getHeight() - sprite.height, sprite.height do
-            for x = 0, sprite.loveImg:getWidth() - sprite.width, sprite.width do
-                sprite.frames[#sprite.frames + 1] = love.graphics.newQuad(x, y, sprite.width, sprite.width, sprite.loveImg:getDimensions())
-            end
-        end
-    end
-end
+--- Initialize the SpriteCollection with an array of sprites
+--- @param sprites Sprite[]
+function SpriteCollection:init(sprites)
+    -- iterate over sprites
+    for i, sprite in ipairs(sprites) do
+        -- add sprite to collection
+        self.sprites[sprite.state] = sprite
 
-
---- Function that add a sprite to the collection
---- @param s_img number
---- @param s_isSheet boolean
---- @param s_state string
---- @param s_width number
---- @param s_height number
---- @return nil
-function SpriteCollection:add(s_img, s_isSheet, s_state, s_width, s_height)
-    self.sprites[s_state] = {state=s_state,
-        isSheet=s_isSheet,
-        width=s_width,
-        height=s_height,
-        loveImg = love.graphics.newImage(s_img)}
-
-    if s_isSheet then
-        self.sprites[s_state].frames = {}
-        self.currentFrame = 1
-        self.frameTimer = 0
-        self.interval = 0.1
-        for y = 0, self.sprites[s_state].loveImg:getHeight() - s_height, s_height do
-            for x = 0, self.sprites[s_state].loveImg:getWidth() - s_width, s_width do
-                self.sprites[s_state].frames[#self.sprites[s_state].frames + 1] = love.graphics.newQuad(x, y, s_width, s_height, self.sprites[s_state].loveImg:getDimensions())
+        -- Handle sprite sheets
+        if sprite.isSheet then
+            sprite.frames = {}
+            self.currentFrame = 1
+            self.frameTimer = 0
+            self.interval = 0.1
+            for y = 0, sprite.loveImg:getHeight() - sprite.height, sprite.height do
+                for x = 0, sprite.loveImg:getWidth() - sprite.width, sprite.width do
+                    sprite.frames[#sprite.frames + 1] = love.graphics.newQuad(x, y, sprite.width, sprite.width, sprite.loveImg:getDimensions())
+                end
             end
         end
     end
