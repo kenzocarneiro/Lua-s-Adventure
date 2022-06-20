@@ -23,16 +23,16 @@ function Player:new(img, is_sheet, width, height)
 end
 
 function Player:update()
-    if love.keyboard.isDown("right") then
+    if love.keyboard.isDown("right", "d") then
         self.x = self.x + self.speed
     end
-    if love.keyboard.isDown("left") then
+    if love.keyboard.isDown("left", "q") then
         self.x = self.x - self.speed
     end
-    if love.keyboard.isDown("up") then
+    if love.keyboard.isDown("up", "z") then
         self.y = self.y - self.speed
     end
-    if love.keyboard.isDown("down") then
+    if love.keyboard.isDown("down", "s") then
         self.y = self.y + self.speed
     end
 end
