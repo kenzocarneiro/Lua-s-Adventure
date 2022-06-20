@@ -1,22 +1,19 @@
-Hitbox = {x=0, y=0, width=0, height=0}
+Vector = require("vector")
 
--- offsetX et offsetY ne sont utiles que si on change height et width pour avoir une hitbox personnalisée (sinon mettre la taille
+Hitbox = {pos = Vector:new(0, 0), width=0, height=0}
+
+-- offset n'est utile que si on change height et width pour avoir une hitbox personnalisée (sinon mettre la taille
 -- de l'image et pas d'offset)
-function Hitbox:new(x, y, width, height, offsetX, offsetY)
+function Hitbox:new(pos, width, height, offset)
     local h = {}
     setmetatable(h, self)
     self.__index = self
 
-    h.x= x or self.x
-    h.y= y or self.y
+    h.pos = pos or self.pos
 
-    if offsetX then
-        self.offsetX = offsetX
-        h.x = h.x + offsetX
-    end
-    if offsetY then
-        self.offsetY = offsetY
-        h.y = h.y + offsetY
+    if offset then
+        self.offset = offset
+        h.pos = h.pos + offset
     end
 
     h.width=width or self.width
@@ -27,16 +24,16 @@ end
 
 function Hitbox:collide(h)
     -- correspond au cas ou la hitbox h collide en haut à gauche de la hitbox self
-    if self.x <= (h.x+h.width) and self.x >= h.x and self.y <= (h.y+h.height) and self.y >= h.y then
+    if self.pos.x <= (h.pos.x+h.width) and self.pos.x >= h.pos.x and self.pos.y <= (h.pos.y+h.height) and self.pos.y >= h.pos.y then
         return true
     -- correspond au cas ou la hitbox h collide en bas à gauche de la hitbox self
-    elseif (self.x+self.width) <= (h.x+h.width) and (self.x+self.width) >= h.x and self.y <= (h.y+h.height) and self.y >= h.y then
+    elseif (self.pos.x+self.width) <= (h.pos.x+h.width) and (self.pos.x+self.width) >= h.pos.x and self.pos.y <= (h.pos.y+h.height) and self.pos.y >= h.pos.y then
         return true
     -- correspond au cas ou la hitbox h collide en haut à droite de la hitbox self
-    elseif (h.x+h.width) <= (self.x+self.width) and (h.x+h.width) >= self.x and h.y <= (self.y+self.height) and h.y >= self.y then
+    elseif (h.pos.x+h.width) <= (self.pos.x+self.width) and (h.pos.x+h.width) >= self.pos.x and h.pos.y <= (self.pos.y+self.height) and h.pos.y >= self.pos.y then
         return true
     -- correspond au cas ou la hitbox h collide en bas à droite de la hitbox self
-    elseif h.x <= (self.x+self.width) and h.x >= self.x and h.y <= (self.y+self.height) and h.y >= self.y then
+    elseif h.pos.x <= (self.pos.x+self.width) and h.pos.x >= self.pos.x and h.pos.y <= (self.pos.y+self.height) and h.pos.y >= self.pos.y then
         return true
     else
         return false
@@ -44,16 +41,17 @@ function Hitbox:collide(h)
 end
 
 -- update hitbox coords (use this after we move, or at each frame)
-function Hitbox:move(x, y)
-    self.x = x + self.offsetX - self.width/2
-    self.y = y + self.offsetY - self.height/2
+function Hitbox:move(pos)
+    self.pos = pos + self.offset
+    self.pos.x = self.pos.x - self.width/2
+    self.pos.y = self.pos.y - self.height/2
 end
 
 -- draws the hitbox, useful to debug
 function Hitbox:draw()
     love.graphics.setColor(255, 255, 255)
     love.graphics.setLineWidth(0.5)
-    love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+    love.graphics.rectangle("line", self.pos.x, self.pos.y, self.width, self.height)
 end
 
 
@@ -61,13 +59,13 @@ end
 -- /!\ TEST /!\
 
 
--- main_h = Hitbox:new(50, 50, 10, 10)
--- h1 = Hitbox:new(45, 45, 10 ,10)
--- h2 = Hitbox:new(55, 45, 10 ,10)
--- h3 = Hitbox:new(45, 55, 10 ,10)
--- h4 = Hitbox:new(55, 55, 10 ,10)
--- h_not = Hitbox:new(70, 70, 10, 10)
--- h_test = Hitbox:new(45, 52, 10, 5)
+-- main_h = Hitbox:new(Vector:new(50, 50), 10, 10)
+-- h1 = Hitbox:new(Vector:new(45, 45), 10 ,10)
+-- h2 = Hitbox:new(Vector:new(55, 45), 10 ,10)
+-- h3 = Hitbox:new(Vector:new(45, 55), 10 ,10)
+-- h4 = Hitbox:new(Vector:new(55, 55), 10 ,10)
+-- h_not = Hitbox:new(Vector:new(70, 70), 10, 10)
+-- h_test = Hitbox:new(Vector:new(45, 52), 10, 5)
 
 -- print(main_h:collide(h1))        -- should return true
 -- print(main_h:collide(h2))        -- should return true

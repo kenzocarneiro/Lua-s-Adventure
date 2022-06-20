@@ -1,6 +1,7 @@
-Element = {x = 0, y = 0, width = 8, height = 8, health = 1, flipH = 1, flipV = 1}
-
+Vector = require("vector")
 Hitbox = require("hitbox")
+
+Element = {pos = Vector:new(0, 0), width = 8, height = 8, health = 1, flipH = 1, flipV = 1}
 
 function Element:new()
     local e = {}
@@ -9,9 +10,8 @@ function Element:new()
     return e
 end
 
-function Element:init(x, y, img, isSheet, width, height, hbWidth, hbHeight, hbOffsetX, hbOffsetY)
-    self.x = x or Element.x
-    self.y = y or Element.y
+function Element:init(pos, img, isSheet, width, height, hbWidth, hbHeight, hbOffset)
+    self.pos = pos or Element.pos
 
     self.sprite = love.graphics.newImage(img)
     self.isSheet = isSheet or false
@@ -21,10 +21,9 @@ function Element:init(x, y, img, isSheet, width, height, hbWidth, hbHeight, hbOf
 
     hbWidth = hbWidth or self.width
     hbHeight = hbHeight or self.height
-    hbOffsetX = hbOffsetX or 0
-    hbOffsetY = hbOffsetY or 0
+    hbOffset = hbOffset or Vector:new(0, 0)
 
-    self.hitbox = Hitbox:new(self.x, self.y, hbWidth, hbHeight, hbOffsetX, hbOffsetY)
+    self.hitbox = Hitbox:new(self.pos, hbWidth, hbHeight, hbOffset)
 
     if isSheet then
         self.frames = {}
@@ -50,11 +49,11 @@ function Element:update(dt)
             end
         end
     end
-    self.hitbox:move(self.x, self.y) -- TODO: move hitbox with element
+    self.hitbox:move(self.pos) -- TODO: move hitbox with element
 end
 
 function Element:draw(draw_hitbox)
-    love.graphics.draw(self.sprite, self.frames[self.currentFrame], self.x, self.y, 0, self.flipH, self.flipV, self.width/2, self.height/2)
+    love.graphics.draw(self.sprite, self.frames[self.currentFrame], self.pos.x, self.pos.y, 0, self.flipH, self.flipV, self.width/2, self.height/2)
     if draw_hitbox then
         self.hitbox:draw()
     end
