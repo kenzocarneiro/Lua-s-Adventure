@@ -11,7 +11,7 @@ function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
     Player = require("player")
     player = Player:new()
-    player:init(100, 100, "sprites/wizard_idle-Sheet.png", true, 18, 18)
+    player:init(100, 100, "sprites/wizard_idle-Sheet.png", true, 18, 18, 5, 10, 0, 3)
 end
 
 function love.update(dt)
@@ -21,5 +21,5 @@ end
 
 function love.draw()
     love.graphics.scale(4, 4)
-    player:draw()
+    player:draw(true)
 end

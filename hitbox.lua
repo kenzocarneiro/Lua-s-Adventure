@@ -1,12 +1,22 @@
 Hitbox = {x=0, y=0, width=0, height=0}
 
-function Hitbox:new(x, y, width, height)
+function Hitbox:new(x, y, width, height, offsetX, offsetY)
     local h = {}
     setmetatable(h, self)
     self.__index = self
 
     h.x= x or self.x
     h.y= y or self.y
+
+    if offsetX then
+        self.offsetX = offsetX
+        h.x = h.x + offsetX
+    end
+    if offsetY then
+        self.offsetY = offsetY
+        h.y = h.y + offsetY
+    end
+
     h.width=width or self.width
     h.height=height or self.height
 
@@ -33,8 +43,8 @@ end
 
 -- update hitbox coords (use this after we move)
 function Hitbox:move(x, y)
-    self.x = x-self.width/2
-    self.y = y-self.height/2
+    self.x = x + self.offsetX - self.width/2
+    self.y = y + self.offsetY - self.height/2
 end
 
 -- draws the hitbox, useful to debug
@@ -60,8 +70,8 @@ end
 -- print(main_h:collide(h1))        -- should return true
 -- print(main_h:collide(h2))        -- should return true
 -- print(main_h:collide(h3))        -- should return true
--- print(main_h:collide(h4))        -- should return true  
--- print(main_h:collide(h_not))     -- should return false 
+-- print(main_h:collide(h4))        -- should return true
+-- print(main_h:collide(h_not))     -- should return false
 -- print(main_h:collide(main_h))    -- should return true
 -- print(main_h:collide(h_test))    -- should return true
 

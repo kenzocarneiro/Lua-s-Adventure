@@ -9,7 +9,7 @@ function Entity:new()
     return e
 end
 
-function Entity:init(x, y, img, isSheet, width, height)
+function Entity:init(x, y, img, isSheet, width, height, hbWidth, hbHeight, hbOffsetX, hbOffsetY)
     self.x = x or Entity.x
     self.y = y or Entity.y
 
@@ -19,7 +19,12 @@ function Entity:init(x, y, img, isSheet, width, height)
     self.width = width or Entity.width
     self.height = height or Entity.height
 
-    self.hitbox = Hitbox:new(self.x, self.y, self.width, self.height)
+    hbWidth = hbWidth or self.width
+    hbHeight = hbHeight or self.height
+    hbOffsetX = hbOffsetX or 0
+    hbOffsetY = hbOffsetY or 0
+
+    self.hitbox = Hitbox:new(self.x, self.y, hbWidth, hbHeight, hbOffsetX, hbOffsetY)
 
     if isSheet then
         self.frames = {}
@@ -45,12 +50,14 @@ function Entity:update(dt)
             end
         end
     end
-    self.hitbox:move(self.x, self.y)
+    self.hitbox:move(self.x, self.y) -- TODO: move hitbox with entity
 end
 
-function Entity:draw()
-    self.hitbox:draw()
+function Entity:draw(draw_hitbox)
     love.graphics.draw(self.sprite, self.frames[self.currentFrame], self.x, self.y, 0, self.flipH, self.flipV, self.width/2, self.height/2)
+    if draw_hitbox then
+        self.hitbox:draw()
+    end
 end
 
 return Entity
