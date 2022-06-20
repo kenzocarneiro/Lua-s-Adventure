@@ -40,8 +40,7 @@ end
 -- draws the hitbox, useful to debug
 function Hitbox:draw()
     love.graphics.setColor(255, 255, 255)
-    love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
-    love.graphics.setColor(0, 0, 0)
+    love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 end
 
 

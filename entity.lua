@@ -1,4 +1,4 @@
-Entity = {x = 0, y = 0, speed = 1, width = 8, height = 8, health = 1}
+Entity = {x = 0, y = 0, speed = 1, width = 18, height = 18, health = 1}
 
 Hitbox = require("hitbox")
 
@@ -30,8 +30,8 @@ function Entity:init(img, isSheet, width, height)
 end
 
 function Entity:draw()
+    self.hitbox.draw(self)
     love.graphics.draw(self.sprite, self.x, self.y)
-    self.hitbox:draw()
 end
 
 return Entity
