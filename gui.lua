@@ -16,14 +16,14 @@
 local GUI = {}
 
 
--- Classe Element
+-- Classe Element .. !!!!!!!!!!!!!!!!!!! => a "refaire" en mode pas Java
 local function newElement(pX, pY)
     local myElement = {}
     myElement.X = pX
     myElement.Y = pY
     myElement.Visible = true
     function myElement:draw()
-      print("newElement / draw / Not implemented")
+        print("newElement / draw / Not implemented")
     end
     function myElement:update(dt)
         --print("newElement / update / Not implemented")
@@ -32,8 +32,36 @@ local function newElement(pX, pY)
         self.Visible = pVisible
     end
     return myElement
-  end
+end
 
+function GUI.newPanel(pX, pY, pW, pH)
+    local myPanel = newElement(pX, pY)
+    myPanel.W = pW
+    myPanel.H = pH
+    myPanel.Image = nil
+    
+    function myPanel:setImage(pImage)
+        self.Image = pImage
+        self.W = pImage:getWidth()
+        self.H = pImage:getHeight()
+    end
+    
+    function myPanel:drawPanel()
+        love.graphics.setColor(255,255,255)
+        if self.Image == nil then
+            love.graphics.rectangle("line", self.X, self.Y, self.W, self.H)
+        else
+            love.graphics.draw(self.Image, self.X, self.Y)
+        end
+    end
+
+    function myPanel:draw()
+        if self.Visible == false then return end
+        self:drawPanel()
+    end
+
+    return myPanel
+end
 
 -- classe Groupe
 -- les variables commençant par p sont des arguments passés à uhe fonction
@@ -60,36 +88,7 @@ function GUI.newGroup()
         end
         love.graphics.pop()
     end
-      
-      function GUI.newPanel(pX, pY, pW, pH)
-        local myPanel = newElement(pX, pY)
-        myPanel.W = pW
-        myPanel.H = pH
-        myPanel.Image = nil
-      
-        function myPanel:setImage(pImage)
-          self.Image = pImage
-          self.W = pImage:getWidth()
-          self.H = pImage:getHeight()
-        end
-      
-        function myPanel:drawPanel()
-          love.graphics.setColor(255,255,255)
-          if self.Image == nil then
-            love.graphics.rectangle("line", self.X, self.Y, self.W, self.H)
-          else
-            love.graphics.draw(self.Image, self.X, self.Y)
-        end
-      end
-    
-      function myPanel:draw()
-        if self.Visible == false then return end
-        self:drawPanel()
-      end
-      
-      return myPanel
-    end
 end
-      
+
 return GUI
 
