@@ -1,5 +1,7 @@
 Entity = {x = 0, y = 0, speed = 1, width = 8, height = 8, health = 1, flipH = 1, flipV = 1}
 
+Hitbox = require("hitbox")
+
 function Entity:new()
     local e = {}
     setmetatable(e, self)
@@ -16,6 +18,8 @@ function Entity:init(x, y, img, isSheet, width, height)
 
     self.width = width or Entity.width
     self.height = height or Entity.height
+
+    self.hitbox = Hitbox:new(self.x, self.y, self.width, self.height)
 
     if isSheet then
         self.frames = {}
@@ -45,6 +49,7 @@ end
 
 function Entity:draw()
     love.graphics.draw(self.sprite, self.frames[self.currentFrame], self.x, self.y, 0, self.flipH, self.flipV, self.width/2, self.height/2)
+    self.hitbox:draw()
 end
 
 return Entity
