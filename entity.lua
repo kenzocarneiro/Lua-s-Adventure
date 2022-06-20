@@ -49,7 +49,7 @@ end
 
 function Entity:draw()
     love.graphics.draw(self.sprite, self.frames[self.currentFrame], self.x, self.y, 0, self.flipH, self.flipV, self.width/2, self.height/2)
-    self.hitbox:draw()
+    -- self.hitbox:draw()
 end
 
 return Entity
