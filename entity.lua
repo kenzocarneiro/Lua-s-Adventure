@@ -18,8 +18,8 @@ function Entity:move(dx, dy)
 end
 
 
-function Entity:update()
-
+function Entity:update(dt)
+    Element.update(self, dt)
 end
 
 

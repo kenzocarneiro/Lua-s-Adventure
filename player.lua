@@ -17,7 +17,7 @@ function Player:update(dt)
     if love.keyboard.isDown("down", "s") then
         self.y = self.y + self.speed
     end
-    Element.update(self, dt)
+    Entity.update(self, dt)
 end
 
 return Player
