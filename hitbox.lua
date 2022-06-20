@@ -1,5 +1,7 @@
 Hitbox = {x=0, y=0, width=0, height=0}
 
+-- offsetX et offsetY ne sont utiles que si on change height et width pour avoir une hitbox personnalisée (sinon mettre la taille
+-- de l'image et pas d'offset)
 function Hitbox:new(x, y, width, height, offsetX, offsetY)
     local h = {}
     setmetatable(h, self)
@@ -41,7 +43,7 @@ function Hitbox:collide(h)
     end
 end
 
--- update hitbox coords (use this after we move)
+-- update hitbox coords (use this after we move, or at each frame)
 function Hitbox:move(x, y)
     self.x = x + self.offsetX - self.width/2
     self.y = y + self.offsetY - self.height/2
