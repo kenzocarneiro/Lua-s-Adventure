@@ -8,15 +8,15 @@ function Entity:new()
 end
 
 function Entity:init(img, is_sheet, width, height)
-    self.is_sheet = is_sheet or false
+    self.isSheet = isSheet or false
 
     -- A finir
     if is_sheet then
-        self.sprite_sheet = img
-        self.sprite_quads = {}
+        self.spriteSheet = img
+        self.spriteQuads = {}
         for y = 0, img:getHeight() - height, height do
             for x = 0, img:getWidth() - width, width do
-                self.sprite_quads[#self.sprite_quads + 1] = love.graphics.newQuad(x, y, width, height, img:getDimensions())
+                self.spriteQuads[#self.spriteQuads + 1] = love.graphics.newQuad(x, y, width, height, img:getDimensions())
             end
         end
     else
