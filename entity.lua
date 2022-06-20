@@ -11,16 +11,9 @@ function Entity:init(speed, weapon, ...)
     Element:init(...)
 end
 
+function Entity:move(dx, dy) end
 
 
-function Entity:move(dx, dy)
-    
-end
-
-
-function Entity:update(dt)
-    Element.update(self, dt)
-end
-
+function Entity:update(dt) Element.update(self, dt) end
 
 return Entity
