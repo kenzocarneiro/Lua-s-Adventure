@@ -31,10 +31,17 @@ function Hitbox:collide(h)
     end
 end
 
---update hitbox coords (use this after we move)
+-- update hitbox coords (use this after we move)
 function Hitbox:move(x, y)
     self.x = x
     self.y = y
+end
+
+-- draws the hitbox, useful to debug
+function Hitbox:draw()
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
+    love.graphics.setColor(0, 0, 0)
 end
 
 
