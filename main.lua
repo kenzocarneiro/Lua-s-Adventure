@@ -11,7 +11,8 @@ function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
     Player = require("player")
     player = Player:new()
-    player:init(100, 100, "sprites/wizard_idle-Sheet.png", true, 18, 18, 5, 10, 0, 3)
+    -- Args : speed, weapon, x, y, img, isSheet, width, height, hbWidth, hbHeight, hbOffsetX, hbOffsetY
+    player:init(1, "epee", 100, 100, "sprites/wizard_idle-Sheet.png", true, 18, 18, 5, 10, 0, 3)
 end
 
 function love.update(dt)

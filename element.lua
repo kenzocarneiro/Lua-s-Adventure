@@ -1,4 +1,4 @@
-Element = {x = 0, y = 0, speed = 1, width = 8, height = 8, health = 1, flipH = 1, flipV = 1}
+Element = {x = 0, y = 0, width = 8, height = 8, health = 1, flipH = 1, flipV = 1}
 
 Hitbox = require("hitbox")
 

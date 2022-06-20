@@ -1,6 +1,6 @@
-Element = require("element")
+Entity = require("entity")
 
-Player = Element:new()
+Player = Entity:new()
 
 function Player:update(dt)
     if love.keyboard.isDown("right", "d") then
