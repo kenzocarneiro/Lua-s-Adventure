@@ -1,23 +1,23 @@
-Entity = {x = 0, y = 0, speed = 1, width = 8, height = 8, health = 1, flipH = 1, flipV = 1}
+Element = {x = 0, y = 0, speed = 1, width = 8, height = 8, health = 1, flipH = 1, flipV = 1}
 
 Hitbox = require("hitbox")
 
-function Entity:new()
+function Element:new()
     local e = {}
     setmetatable(e, self)
     self.__index = self
     return e
 end
 
-function Entity:init(x, y, img, isSheet, width, height, hbWidth, hbHeight, hbOffsetX, hbOffsetY)
-    self.x = x or Entity.x
-    self.y = y or Entity.y
+function Element:init(x, y, img, isSheet, width, height, hbWidth, hbHeight, hbOffsetX, hbOffsetY)
+    self.x = x or Element.x
+    self.y = y or Element.y
 
     self.sprite = love.graphics.newImage(img)
     self.isSheet = isSheet or false
 
-    self.width = width or Entity.width
-    self.height = height or Entity.height
+    self.width = width or Element.width
+    self.height = height or Element.height
 
     hbWidth = hbWidth or self.width
     hbHeight = hbHeight or self.height
@@ -39,7 +39,7 @@ function Entity:init(x, y, img, isSheet, width, height, hbWidth, hbHeight, hbOff
     end
 end
 
-function Entity:update(dt)
+function Element:update(dt)
     if self.isSheet then
         self.frameTimer = self.frameTimer + dt
         if self.frameTimer > self.interval then
@@ -50,14 +50,14 @@ function Entity:update(dt)
             end
         end
     end
-    self.hitbox:move(self.x, self.y) -- TODO: move hitbox with entity
+    self.hitbox:move(self.x, self.y) -- TODO: move hitbox with element
 end
 
-function Entity:draw(draw_hitbox)
+function Element:draw(draw_hitbox)
     love.graphics.draw(self.sprite, self.frames[self.currentFrame], self.x, self.y, 0, self.flipH, self.flipV, self.width/2, self.height/2)
     if draw_hitbox then
         self.hitbox:draw()
     end
 end
 
-return Entity
+return Element

@@ -1,6 +1,6 @@
-Entity = require("entity")
+Element = require("element")
 
-Player = Entity:new()
+Player = Element:new()
 
 function Player:update(dt)
     if love.keyboard.isDown("right", "d") then
@@ -17,7 +17,7 @@ function Player:update(dt)
     if love.keyboard.isDown("down", "s") then
         self.y = self.y + self.speed
     end
-    Entity.update(self, dt)
+    Element.update(self, dt)
 end
 
 return Player
