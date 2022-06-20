@@ -10,7 +10,8 @@ function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
     love.graphics.setDefaultFilter("nearest", "nearest")
     Player = require("player")
-    player = Player:new("wizard_idle_01.png")
+    player = Player:new()
+    player:init("wizard_idle_01.png", false, 18, 18)
 end
 
 function love.update(dt)
