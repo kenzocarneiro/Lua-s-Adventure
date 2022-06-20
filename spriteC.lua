@@ -3,8 +3,8 @@
 --- @class SpriteCollection
 SpriteCollection = {flipH = 1, flipV = 1, sprites = nil}
 
---- Constructor of SpriteCollection
---- @param el string the name of the corresponding Element
+--- Constructor of SpriteCollection.
+--- @param el string The name of the corresponding Element.
 --- @return SpriteCollection
 function SpriteCollection:new(el)
     local sc = {}
@@ -17,7 +17,7 @@ function SpriteCollection:new(el)
     return sc
 end
 
---- Initialize the SpriteCollection with an array of sprites
+--- Initialize the SpriteCollection with an array of sprites.
 --- @param sprites Sprite[]
 function SpriteCollection:init(sprites)
     -- iterate over sprites
@@ -40,7 +40,7 @@ function SpriteCollection:init(sprites)
     end
 end
 
---- Update function of SpriteCollection, called every frames
+--- Update function of SpriteCollection (called every frames).
 --- @param dt number
 --- @param state string
 function SpriteCollection:update(dt, state)

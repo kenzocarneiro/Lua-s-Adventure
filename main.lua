@@ -1,11 +1,6 @@
 if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
 
-function love.conf(t)
-    t.window.width = 1000
-    t.window.height = 800
-    t.window.title = "My game!"
-end
-
+--- Load the game
 function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
     love.graphics.setDefaultFilter("nearest", "nearest")
@@ -24,11 +19,15 @@ function love.load()
     G_player:init(1, "epee", Vector:new(100, 100), player_sc, 5, 10, Vector:new(0, 3))
 end
 
+
+--- Update the game (called every frames)
+--- @param dt number the time elapsed since the last frame
 function love.update(dt)
     -- player movements
     G_player:update(dt)
 end
 
+--- Draw the game (called every frames)
 function love.draw()
     love.graphics.scale(4, 4)
     G_player:draw(true)

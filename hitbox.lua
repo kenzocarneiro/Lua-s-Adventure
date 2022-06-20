@@ -1,10 +1,22 @@
 Vector = require("vector")
 
+--- Class representing Hitboxes and Hurtboxes in the game.
+--- @class Hitbox
+--- @field pos Vector
+--- @field width number
+--- @field height number
+--- @field offset Vector
 Hitbox = {pos = Vector:new(0, 0), width=0, height=0}
 
--- offset n'est utile que si on change height et width pour avoir une hitbox personnalisée (sinon mettre la taille
--- de l'image et pas d'offset)
+--- Constructor of Hitbox
+--- @param pos Vector
+--- @param width number
+--- @param height number
+--- @param offset Vector
+--- @return Hitbox
 function Hitbox:new(pos, width, height, offset)
+    -- offset n'est utile que si on change height et width pour avoir une hitbox personnalisée
+    -- (sinon mettre la taille de l'image et pas d'offset)
     local h = {}
     setmetatable(h, self)
     self.__index = self
@@ -22,6 +34,9 @@ function Hitbox:new(pos, width, height, offset)
     return h
 end
 
+--- Tests if the Hitbox is overlapping with another Hitbox.
+--- @param h Hitbox
+--- @return boolean
 function Hitbox:collide(h)
     -- correspond au cas ou la hitbox h collide en haut à gauche de la hitbox self
     if self.pos.x <= (h.pos.x+h.width) and self.pos.x >= h.pos.x and self.pos.y <= (h.pos.y+h.height) and self.pos.y >= h.pos.y then
@@ -40,14 +55,15 @@ function Hitbox:collide(h)
     end
 end
 
--- update hitbox coords (use this after we move, or at each frame)
+--- Update the coordinates of the Hitbox (use this after we move, or at each frame).
+--- @param pos Vector
 function Hitbox:move(pos)
     self.pos = pos + self.offset
     self.pos.x = self.pos.x - self.width/2
     self.pos.y = self.pos.y - self.height/2
 end
 
--- draws the hitbox, useful to debug
+--- Draws the hitbox (used for debugging).
 function Hitbox:draw()
     love.graphics.setColor(255, 255, 255)
     love.graphics.setLineWidth(0.5)
