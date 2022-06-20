@@ -11,12 +11,12 @@ function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
     Player = require("player")
     player = Player:new()
-    player:init("wizard_idle_01.png", false, 18, 18)
+    player:init(100, 100, "wizard_idle-Sheet.png", true, 18, 18)
 end
 
 function love.update(dt)
     -- player movements
-    player:update()
+    player:update(dt)
 end
 
 function love.draw()
