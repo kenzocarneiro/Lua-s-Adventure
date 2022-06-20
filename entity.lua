@@ -45,6 +45,7 @@ function Entity:update(dt)
             end
         end
     end
+    self.hitbox:move(self.x, self.y)
 end
 
 function Entity:draw()
