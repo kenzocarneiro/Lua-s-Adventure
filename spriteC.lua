@@ -1,7 +1,11 @@
 
-
+--- Class representing the collection of Sprites of an Element
 --- @class SpriteCollection
-SpriteCollection = {flipH = 1, flipV = 1, sprites = nil}
+--- @field sprites table<string, Sprite>
+--- @field flipH number
+--- @field flipV number
+--- @field frames number
+SpriteCollection = {flipH = 1, flipV = 1, sprites = nil, currentFrame=1, frameTimer=0, interval=0.1}
 
 --- Constructor of SpriteCollection.
 --- @param el string The name of the corresponding Element.
@@ -24,19 +28,6 @@ function SpriteCollection:init(sprites)
     for i, sprite in ipairs(sprites) do
         -- add sprite to collection
         self.sprites[sprite.state] = sprite
-
-        -- Handle sprite sheets
-        if sprite.isSheet then
-            sprite.frames = {}
-            self.currentFrame = 1
-            self.frameTimer = 0
-            self.interval = 0.1
-            for y = 0, sprite.loveImg:getHeight() - sprite.height, sprite.height do
-                for x = 0, sprite.loveImg:getWidth() - sprite.width, sprite.width do
-                    sprite.frames[#sprite.frames + 1] = love.graphics.newQuad(x, y, sprite.width, sprite.width, sprite.loveImg:getDimensions())
-                end
-            end
-        end
     end
 end
 
@@ -58,6 +49,11 @@ end
 
 function SpriteCollection:draw(state, draw_hitbox, pos)
     love.graphics.draw(self.sprites[state].loveImg, self.sprites[state].frames[self.currentFrame], pos.x, pos.y, 0, self.flipH, self.flipV, self.sprites[state].width/2, self.sprites[state].height/2)
+end
+
+function SpriteCollection:changeState(state)
+    self.frameTimer = 0
+    self.currentFrame = 0
 end
 
 return SpriteCollection

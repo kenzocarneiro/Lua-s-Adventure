@@ -3,7 +3,6 @@ Entity = require("entity")
 --- Class representing the Monster.
 --- @class Monster:Entity Monster is a subclass of Entity.
 Monster = Entity:new()
-print("[MONSTER]", Monster)
 --- Constructor of Monster.
 --- @return Monster
 function Monster:new() return Entity.new(self) end

@@ -11,7 +11,9 @@ function love.load()
 
 
     local player_sc = SpriteCollection:new("player")
-    player_sc:init({Sprite:new("sprites/wizard_idle-Sheet.png", true, "idle", 18, 18)})
+    player_sc:init({Sprite:new("sprites/wizard_idle-Sheet.png", true, "idle", 18, 18),
+        Sprite:new("sprites/wizard_run-Sheet.png", true, "run", 18, 18),
+        Sprite:new("sprites/wizard_attack-Sheet.png", true, "attack", 18, 18)})
 
     local monster_sc = SpriteCollection:new("monster")
     monster_sc:init({Sprite:new("sprites/wizard_idle-Sheet.png", true, "idle", 18, 18)})

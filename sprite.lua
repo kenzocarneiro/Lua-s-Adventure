@@ -6,6 +6,7 @@
 --- @field state string
 --- @field width number
 --- @field height number
+--- @field frames love.Quad[]|nil
 Sprite = {}
 
 
@@ -18,7 +19,20 @@ Sprite = {}
 --- @return Sprite s sprite table created on the fly.
 function Sprite:new(img, isSheet, state, width, height)
     -- Sprites are created on the fly
-    return {loveImg = love.graphics.newImage(img), isSheet=isSheet, state=state, width=width, height=height}
+    local s = {loveImg = love.graphics.newImage(img), isSheet=isSheet, state=state, width=width, height=height}
+    setmetatable(s, self)
+    self.__index = self
+
+    if isSheet then
+        s.frames = {}
+        for y = 0, s.loveImg:getHeight() - height, height do
+            for x = 0, s.loveImg:getWidth() - width, width do
+                s.frames[#s.frames + 1] = love.graphics.newQuad(x, y, width, width, s.loveImg:getDimensions())
+            end
+        end
+    end
+
+    return s
 end
 
 return Sprite

@@ -7,7 +7,6 @@ Element = require("element")
 --- @field speed number
 --- @field weapon number
 Entity = Element:new()
-print("[ENTITY]", Entity)
 --- Constructor of Entity.
 --- @return Entity
 function Entity:new() return Element.new(self) end

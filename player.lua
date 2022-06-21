@@ -3,7 +3,6 @@ Entity = require("entity")
 --- Class representing the Player.
 --- @class Player:Entity Player is a subclass of Entity.
 Player = Entity:new()
-print("[PLAYER]", Player)
 --- Constructor of Player.
 --- @return Player
 function Player:new() return Entity.new(self) end
@@ -27,7 +26,7 @@ function Player:update(dt)
         move = Vector:new(0, self.speed)
     end
 
-    
+
     if not self.hitbox:collide(move, G_hitboxes[2]) then
         self.pos = self.pos + move
     end

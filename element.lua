@@ -9,7 +9,6 @@ Hitbox = require("hitbox")
 --- @field spriteCollection SpriteCollection
 --- @field hitbox Hitbox
 Element = {health = 1, state = "idle"}
-print("[ELEMENT]", Element)
 
 --- Constructor of Element.
 --- @return Element
@@ -25,7 +24,6 @@ end
 --- @param spriteCollection SpriteCollection
 function Element:init(pos, spriteCollection, hbWidth, hbHeight, hbOffset)
     self.pos = pos or Vector:new(0, 0)
-    print("[init]", self, self.pos)
 
     self.spriteCollection = spriteCollection
     -- self.sprite = love.graphics.newImage(img)
@@ -41,7 +39,6 @@ end
 --- Update the element (called every frames).
 --- @param dt number
 function Element:update(dt)
-    print("[update]", self, self.pos)
     self.spriteCollection:update(dt, self.state)
     self.hitbox:move(self.pos) -- TODO: move hitbox with element
 end
@@ -53,6 +50,11 @@ function Element:draw(draw_hitbox)
     if draw_hitbox then
         self.hitbox:draw()
     end
+end
+
+function Element:changeState(state)
+    self.state = state
+    self.spriteCollection:changeState(state)
 end
 
 function Element:__tostring()
