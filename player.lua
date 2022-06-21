@@ -13,18 +13,18 @@ function Player:new() return Entity.new(self) end
 function Player:update(dt)
     local move = Vector:new(0, 0)
     if love.keyboard.isDown("right", "d") then
-        move = Vector:new(self.speed, 0)
+        move = move + Vector:new(self.speed, 0)
         self.spriteCollection.flipH = 1
     end
     if love.keyboard.isDown("left", "q") then
-        move = Vector:new(-self.speed, 0)
+        move = move + Vector:new(-self.speed, 0)
         self.spriteCollection.flipH = -1
     end
     if love.keyboard.isDown("up", "z") then
-        move = Vector:new(0, -self.speed)
+        move = move + Vector:new(0, -self.speed)
     end
     if love.keyboard.isDown("down", "s") then
-        move = Vector:new(0, self.speed)
+        move = move + Vector:new(0, self.speed)
     end
 
     local collision = false
