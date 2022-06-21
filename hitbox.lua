@@ -36,8 +36,8 @@ function Hitbox:new(pos, width, height, offset)
 end
 
 --- Tests if the Hitbox is overlapping with another Hitbox h after a move m
---- @param h Hitbox
 --- @param m Vector
+--- @param h Hitbox
 --- @return boolean
 function Hitbox:collide(m, h)
     local temp_pos = self.pos + m
