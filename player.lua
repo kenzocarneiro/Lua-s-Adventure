@@ -28,7 +28,7 @@ function Player:update(dt)
     end
 
     
-    if not self.hitbox:collide(move, hitboxes[2]) then
+    if not self.hitbox:collide(move, G_hitboxes[2]) then
         self.pos = self.pos + move
     end
 
