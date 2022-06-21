@@ -20,76 +20,80 @@
 
 
 -- II) Orienté objet en Lua
-local Account = {amount=10}
+-- local Account = {amount=10}
 
-function Account:new()
-    local o = {}   -- create object if user does not provide one
-    setmetatable(o, self)
-    self.__index = self
-    return o
-end
-
-
-
-function Account:add(amount)
-    self.amount = self.amount + amount
-end
-
-function Account:delete()
-    self.amount = nil
-end
-
-function Account:show_amount()
-    print(self.amount)
-end
-
-local t = Account:new()
-local t2 = Account:new()   -- Account.new(Account)
-
-t2:add(3)
-t2:show_amount()
-t2:delete()
-t2:show_amount() -- t2.show_amount(t2)
-Account:show_amount()
-
-
-
---- III) Héritage
--- Account = {balance = 0, val=3}
-
--- function Account:new(o)
---     o = o or {}
+-- function Account:new()
+--     local o = {}   -- create object if user does not provide one
 --     setmetatable(o, self)
 --     self.__index = self
 --     return o
 -- end
 
 
--- function Account:deposit(v)
---     print("I'm an Account")
---     self.balance = self.balance + v
+
+-- function Account:add(amount)
+--     self.amount = self.amount + amount
 -- end
 
--- function Account:withdraw(v)
---     if v > self.balance then error("insufficient funds") end
---     self.balance = self.balance - v
+-- function Account:delete()
+--     self.amount = nil
 -- end
 
-
--- VIPAccount = Account:new()
-
--- local s = VIPAccount:new()
-
--- VIPAccount.type = "VIP"
-
--- function VIPAccount:deposit(v)
---     print("I'm a VIP account")
---     Account.deposit(self, v)
+-- function Account:show_amount()
+--     print(self.amount)
 -- end
--- local s2 = VIPAccount:new()
--- s:deposit(100)
--- print(s.balance)
--- print(s.type)
--- print(getmetatable(s) == getmetatable(s2))
 
--- local sous_s = s:new()
+-- local t = Account:new()
+-- local t2 = Account:new()   -- Account.new(Account)
+
+-- t2:add(3)
+-- t2:show_amount()
+-- t2:delete()
+-- t2:show_amount() -- t2.show_amount(t2)
+-- Account:show_amount()
+
+
+
+--- III) Héritage
+Account = {balance = 0, val=3}
+
+function Account:new()
+    print("[init]", self)
+    local o = {}
+    setmetatable(o, self)
+    self.__index = self
+    return o
+end
+
+
+function Account:deposit(v)
+    print("I'm an Account")
+    self.balance = self.balance + v
+end
+
+function Account:withdraw(v)
+    if v > self.balance then error("insufficient funds") end
+    self.balance = self.balance - v
+end
+
+
+VIPAccount = Account:new()
+
+function VIPAccount:new() return Account.new(self) end
+
+local s = VIPAccount:new()
+
+VIPAccount.type = "VIP"
+
+function VIPAccount:deposit(v)
+    print("I'm a VIP account")
+    Account.deposit(self, v)
+end
+local s2 = VIPAccount:new()
+s:deposit(100)
+s2:deposit(50)
+print(s.balance)
+print(s2.balance)
+print(s.type)
+print(s2.type)
+print(getmetatable(s) == getmetatable(s2))
