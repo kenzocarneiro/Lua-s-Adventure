@@ -13,7 +13,7 @@ Room = {defaultLength = 40, defaultHeight = 30}
 
 local dungeon_tileset = Sprite:new("img/dungeon_topdown.png", true, "idle", 8, 8, Vector:new(0, 0), false)
 
-local detection_tiles_list = {[1]="full", [2]="full", [3]="right", [4]="left", [5]="full", [6]="full", [7]="obj",
+local collision_tiles_list = {[1]="full", [2]="full", [3]="right", [4]="left", [5]="full", [6]="full", [7]="obj",
     [9]="right", [10]="left", [11]="right", [12]="left", [13]="full", [14]="full",
     [17]="right", [18]="left", [19]="right", [20]="left", [21]="full", [22]="full"}
 
@@ -61,9 +61,18 @@ function Room:new(roomNbr)
         for c = 1, map_width do
             -- print(tile_layer.data[(l-1)*map_width + c])
             local tile = {data=wall_layer.data[(l-1)*map_width + c]}
-            if detection_tiles_list[tile.data] then
-                local detection_type = detection_tiles_list[tile.data]
-                tile.hitbox=Hitbox:new(Vector:new((c-1)*8 + r.tileSize, (l-1)*8 + r.tileSize), 8, 8, Vector:new(0, 0))
+            if collision_tiles_list[tile.data] then
+                local wall_type = collision_tiles_list[tile.data]
+
+                if wall_type == "full" then
+                    tile.hitbox=Hitbox:new(Vector:new((c-1)*8 + r.tileSize, (l-1)*8 + r.tileSize), 8, 8, Vector:new(0, 0))
+                elseif wall_type == "right" then
+                    tile.hitbox=Hitbox:new(Vector:new((c-1)*8 + r.tileSize + 4, (l-1)*8 + r.tileSize), 4, 8, Vector:new(0, 0))
+                elseif wall_type == "left" then
+                    tile.hitbox=Hitbox:new(Vector:new((c-1)*8 + r.tileSize, (l-1)*8 + r.tileSize), 4, 8, Vector:new(0, 0))
+                else
+                    error("Unknown wall type : " .. wall_type)
+                end
                 G_hitboxes[#G_hitboxes+1]=tile.hitbox
             end
             line[c]=tile
