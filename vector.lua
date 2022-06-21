@@ -1,3 +1,4 @@
+--- Class representing Vectors.
 --- @class Vector
 --- @field x number
 --- @field y number

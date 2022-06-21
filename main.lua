@@ -8,15 +8,16 @@ function love.load()
     local Monster = require("monster")
     local Sprite = require("sprite")
     local SpriteCollection = require("spriteC")
+    local SpriteTimer = require("SpriteTimer")
 
 
     local player_sc = SpriteCollection:new("player")
-    player_sc:init({Sprite:new("sprites/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 13)),
-        Sprite:new("sprites/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 13)),
-        Sprite:new("sprites/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7,13))})
+    player_sc:init({Sprite:new("sprites/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9)),
+        Sprite:new("sprites/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9)),
+        Sprite:new("sprites/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9))})
 
     local monster_sc = SpriteCollection:new("monster")
-    monster_sc:init({Sprite:new("sprites/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7,13))})
+    monster_sc:init({Sprite:new("sprites/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9))})
 
     -- G_player because player is a global variable
     G_player = Player:new()

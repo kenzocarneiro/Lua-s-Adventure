@@ -5,7 +5,7 @@
 --- @field flipH number
 --- @field flipV number
 --- @field frames number
-SpriteCollection = {flipH = 1, flipV = 1, sprites = nil, currentFrame=1, frameTimer=0, interval=0.1}
+SpriteCollection = {flipH = 1, flipV = 1, sprites = nil}
 
 --- Constructor of SpriteCollection.
 --- @param el string The name of the corresponding Element.
@@ -31,29 +31,18 @@ function SpriteCollection:init(sprites)
     end
 end
 
---- Update function of SpriteCollection (called every frames).
---- @param dt number
+--- Draw function of SpriteCollection.
 --- @param state string
-function SpriteCollection:update(dt, state)
-    if self.sprites[state].isSheet then
-        self.frameTimer = self.frameTimer + dt
-        if self.frameTimer > self.interval then
-            self.frameTimer = 0
-            self.currentFrame = self.currentFrame + 1
-            if self.currentFrame > #self.sprites[state].frames then
-                self.currentFrame = 1
-            end
-        end
-    end
+--- @param pos number
+function SpriteCollection:draw(state, pos, frameNumber)
+    love.graphics.draw(self.sprites[state].loveImg, self.sprites[state].frames[frameNumber], pos.x, pos.y, 0, self.flipH, self.flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
 end
 
-function SpriteCollection:draw(state, draw_hitbox, pos)
-    love.graphics.draw(self.sprites[state].loveImg, self.sprites[state].frames[self.currentFrame], pos.x, pos.y, 0, self.flipH, self.flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
-end
-
-function SpriteCollection:changeState(state)
-    self.frameTimer = 0
-    self.currentFrame = 1
+--- Get number of sprites in spriteCollection for the given state.
+--- @param state string
+--- @return Sprite sprite
+function SpriteCollection:getNumberOfSprites(state)
+    return #self.sprites[state].frames
 end
 
 return SpriteCollection
