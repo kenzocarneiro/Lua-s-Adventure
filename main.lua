@@ -6,12 +6,7 @@ if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
 -- Pour notre magnifique HUD
 local Group = require("hud/group")
 local Panel = require("hud/panel")
-
-function love.conf(t)
-    t.window.width = 1920
-    t.window.height = 1080
-    t.window.title = "My game!"
-end
+local Bar = require("hud/bar")
 
 function love.load()
     love.graphics.setBackgroundColor(55, 55, 55)
@@ -30,19 +25,33 @@ function love.load()
     G_panelTest1 = Panel:new(10, 50)
     G_panelTest1:setImage(love.graphics.newImage("sprites/hud/panel1.png"), 0.1)
 
+    G_healthBar = Bar:new(10,2, 41, 7, 10, nil,{0,255,0})
+
     G_groupTest = Group:new()
     G_groupTest:addElement(G_panelTest1)
-
+    G_groupTest:addElement(G_healthBar)
     G_groupTest:addElement(G_healthHeart)
+
     
 end
 
+function love.keypressed(k)
+    if k == "space" then
+        G_healthBar:modifyValue(-2)
+    end
+
+    if k == "n" then
+        G_healthBar:modifyValue(2)
+    end
+
+end
+
+
 function love.update(dt)
+
     -- player movements
     G_player:update()
-   -- if healthBar.Value > 0 then
-   --     healthBar:setValue(healthBar.Value - 0.01)
-   --   end
+   
    G_groupTest:update(dt)
 end
 

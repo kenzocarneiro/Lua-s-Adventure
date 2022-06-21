@@ -48,7 +48,7 @@ function Text:draw()
     love.graphics.print(self.text, x, y)
   end
 
-function GCGUI.newButton
+function GCGUI.newButton()
   local myButton = GCGUI.newPanel(pX, pY, pW, pH)
   myButton.Text = pText
   myButton.Font = pFont
@@ -116,3 +116,4 @@ function GCGUI.newButton
   end
   
   return Button
+end
