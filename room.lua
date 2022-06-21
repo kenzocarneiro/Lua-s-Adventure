@@ -5,9 +5,10 @@ function Room:new(length, height, entrance, exit, enemies)
     setmetatable(r, self)
     self.__index = self
 
-    local isFinished = false
-    local layer = nil
-    local mask = nil
+    r.isFinished = false
+    r.layer = nil
+    r.mask = nil
+    r.tileSize = 32
 
     -- Initialisation de la carte : 
     local t = {}
@@ -59,6 +60,27 @@ end
 
 function Room:draw()
     -- A voir comment c'est importé avec le JSON etc.
+end
+
+function Room:findTileWithPos(pos)
+    local index = {row=0,col=0}
+    local i = 0
+    repeat
+        if i*self.tileSize <= pos.x <= (i+1)*self.tileSize then
+            index.row = i + 1
+        end
+        i = i + 1
+    until (index.row ~= 0) or (i == self.length)
+
+    local j = 0
+    repeat
+        if j*self.tileSize <= pos.x <= (j+1)*self.tileSize then
+            index.col = j + 1
+        end
+        j = j + 1
+    until (index.col ~= 0) or (i == self.height)
+
+    return index
 end
 
 return Room
