@@ -12,9 +12,9 @@ function Panel:new(pX, pY, pW, pH, pColorOut)
     setmetatable(myPanel, self)
     
     -- initialisation
-    myPanel.w = pW
-    myPanel.h = pH
-    myPanel.colorOut = pColorOut
+    myPanel.w = pW or 10
+    myPanel.h = pH or 10
+    myPanel.colorOut = pColorOut or {255, 255, 255}
     myPanel.image = nil
     myPanel.isHover = false
     myPanel.lstEvents = {}
@@ -22,8 +22,9 @@ function Panel:new(pX, pY, pW, pH, pColorOut)
     return myPanel
 end
 
-function Panel:setImage(pImage)
+function Panel:setImage(pImage, pScale)
     self.image = pImage
+    self.scale = pScale or 1
     self.w = pImage:getWidth()
     self.h = pImage:getHeight()
 end
@@ -64,7 +65,7 @@ function Panel:draw()
     else
 
         love.graphics.setColor(255/255,255/255,255/255)
-        love.graphics.draw(self.image, self.x, self.y)
+        love.graphics.draw(self.image, self.x, self.y, 0, self.scale)
     end
 end
 
