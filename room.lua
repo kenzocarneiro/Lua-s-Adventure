@@ -16,7 +16,7 @@ function Room:new(length, height, entrance, exit, enemies)
         local line = {}
         for c = 1, length do
             -- C'est du full bullshit, c'est juste pour remplir la carte pour l'instant
-            local tile = {pixelPos={0,0}}
+            local tile = {pixelPos=Vector:new()}
             line[c]=tile
         end
         t[l]=line

@@ -7,4 +7,7 @@
     "code-runner.executorMap": {
         "lua": "love $workspaceRoot",
     },
+    "Lua.diagnostics.globals": [
+        "g_nullHeuristic"
+    ],
 }
