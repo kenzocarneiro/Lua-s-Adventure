@@ -26,15 +26,22 @@ function Player:update(dt)
         move = move + Vector:new(0, self.speed)
     end
 
-    local collision = false
-    for i = 1,#G_hitboxes,1 do
-        if self.hitbox:collide(move, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
-            collision = true
+    if move ~= Vector:new(0, 0) then
+        self:changeState("run")
+        local collision = false
+        for i = 1,#G_hitboxes,1 do
+            if self.hitbox:collide(move, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
+                collision = true
+            end
         end
+        if not collision then
+            self.pos = self.pos + move
+        end
+    else
+        self:changeState("idle")
     end
-    if not collision then
-        self.pos = self.pos + move
-    end
+
+
 
 
     Entity.update(self, dt)

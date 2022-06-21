@@ -53,8 +53,10 @@ function Element:draw(draw_hitbox)
 end
 
 function Element:changeState(state)
-    self.state = state
-    self.spriteCollection:changeState(state)
+    if self.state ~= state then
+        self.state = state
+        self.spriteCollection:changeState(state)
+    end
 end
 
 function Element:__tostring()

@@ -48,12 +48,12 @@ function SpriteCollection:update(dt, state)
 end
 
 function SpriteCollection:draw(state, draw_hitbox, pos)
-    love.graphics.draw(self.sprites[state].loveImg, self.sprites[state].frames[self.currentFrame], pos.x, pos.y, 0, self.flipH, self.flipV, self.sprites[state].width/2, self.sprites[state].height/2)
+    love.graphics.draw(self.sprites[state].loveImg, self.sprites[state].frames[self.currentFrame], pos.x, pos.y, 0, self.flipH, self.flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
 end
 
 function SpriteCollection:changeState(state)
     self.frameTimer = 0
-    self.currentFrame = 0
+    self.currentFrame = 1
 end
 
 return SpriteCollection
