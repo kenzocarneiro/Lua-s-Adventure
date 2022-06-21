@@ -1,11 +1,11 @@
-if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
+Pong = {}
 
-local Racket = require("racket") 
-local Ball = require("ball") 
-local Field = require("field")
+local Racket = require("tests/Pong/racket")
+local Ball = require("tests/Pong/ball")
+local Field = require("tests/Pong/field")
 
 -- Load function (call one time)
-function love.load()
+function Pong.load()
     racketLeft = Racket:new(90, 250)
     racketRight = Racket:new(710, 250)
     ball = Ball:new(400, 300)
@@ -13,7 +13,7 @@ function love.load()
 end
 
 -- Main loop for calcul
-function love.update(dt)
+function Pong.update(dt)
     -- keypress
     --racketLeft
     if love.keyboard.isDown("z") then
@@ -37,7 +37,7 @@ function love.update(dt)
     if ball:top() == field:top() or ball:bottom() == field:bottom() then
         ball:mulDY(-1)
     end
-    
+
     if (ball:left() == racketLeft:right() and racketLeft:top() <= ball:top() and ball:bottom() <= racketLeft:bottom()) or (ball:right() == racketRight:left() and racketRight:top() <= ball:top() and ball:bottom() <= racketRight:bottom()) then
         ball:mulDX(-1)
     end
@@ -52,7 +52,7 @@ end
 -- function love.draw()
 --     love.graphics.print("Hello World", 400, 300)
 -- end
-function love.draw()
+function Pong.draw()
     racketLeft:draw()
     racketRight:draw()
     ball:draw()
@@ -60,10 +60,11 @@ function love.draw()
 end
 
 -- functions
-function love.keypressed(k)
+function Pong.keypressed(k)
     -- print(k)
 	if k == 'escape' then
 		love.event.push('quit') -- Quit the game.
-	end	
+	end
 end
 
+return Pong

@@ -1,5 +1,5 @@
 
-local img = love.graphics.newImage("racket.png")
+local img = love.graphics.newImage("tests/Pong/racket.png")
 local Racket = {x=0, y=0, w=20, h=100, img=img}
 
 --constructor

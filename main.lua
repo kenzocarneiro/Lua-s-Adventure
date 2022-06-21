@@ -32,12 +32,25 @@ function love.load()
     G_monster2:init(1, "epee", Vector:new(150, 150), monster_sc, 5, 9, Vector:new(0, 3))
 
     G_hitboxes = {G_player.hitbox, G_monster.hitbox, G_monster2.hitbox}
+
+    G_PONG = false
 end
 
 
 --- Update the game (called every frames)
 --- @param dt number the time elapsed since the last frame
 function love.update(dt)
+    if G_PONG then
+        Pong.update(dt)
+        return
+    end
+
+    if love.keyboard.isDown("p") and love.keyboard.isDown("o") and love.keyboard.isDown("n") and love.keyboard.isDown("g") then
+        Pong = require("tests/pong/pong")
+        Pong.load()
+        G_PONG = true
+    end
+
     -- player movements
     G_player:update(dt)
     G_monster:update(dt)
@@ -46,6 +59,11 @@ end
 
 --- Draw the game (called every frames)
 function love.draw()
+    if G_PONG then
+        love.graphics.scale(1, 1)
+        Pong.draw()
+        return
+    end
     love.graphics.scale(4, 4)
     G_player:draw(true)
     G_monster:draw(true)
