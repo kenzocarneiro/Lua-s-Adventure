@@ -31,7 +31,6 @@ function Sprite:new(img, isSheet, state, width, height, middle, twoDFrames)
             for y = 0, s.loveImg:getHeight()/height do
                 s.frames[y] = {}
                 for x = 0, s.loveImg:getWidth()/width do
-                    print(x, y)
                     s.frames[y][x] = love.graphics.newQuad(x*height, y*width, width, height, s.loveImg:getDimensions())
                 end
             end

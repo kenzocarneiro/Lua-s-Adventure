@@ -63,7 +63,6 @@ function Room:new(roomNbr)
             local tile = {data=wall_layer.data[(l-1)*map_width + c]}
             if detection_tiles_list[tile.data] then
                 local detection_type = detection_tiles_list[tile.data]
-                print((l-1)*map_width)
                 tile.hitbox=Hitbox:new(Vector:new((c-1)*8 + r.tileSize, (l-1)*8 + r.tileSize), 8, 8, Vector:new(0, 0))
                 G_hitboxes[#G_hitboxes+1]=tile.hitbox
             end

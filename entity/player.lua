@@ -41,13 +41,9 @@ function Player:update(dt)
             end
             if collision_H and collision_V then
                 break
-            -- elseif (not collision_H and not collision_V) and self.hitbox:collide(move, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
-            --     print("BOTH")
-            --     collision_H = true
-            --     collision_V = true
             end
         end
-        print(collision_H, collision_V)
+
         local finalMove = Vector:new(0, 0)
         if not collision_H then
             finalMove = finalMove + move_H
