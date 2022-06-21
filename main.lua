@@ -25,7 +25,10 @@ function love.load()
     G_monster = Monster:new()
     G_monster:init(1, "epee", Vector:new(70, 70), monster_sc, 5, 10, Vector:new(0, 3))
 
-    G_hitboxes = {G_monster.hitbox, G_monster.hitbox}
+    G_monster2 = Monster:new()
+    G_monster2:init(1, "epee", Vector:new(150, 150), monster_sc, 5, 10, Vector:new(0, 3))
+
+    G_hitboxes = {G_player.hitbox, G_monster.hitbox, G_monster2.hitbox}
 end
 
 
@@ -35,6 +38,7 @@ function love.update(dt)
     -- player movements
     G_player:update(dt)
     G_monster:update(dt)
+    G_monster2:update(dt)
 end
 
 --- Draw the game (called every frames)
@@ -42,4 +46,5 @@ function love.draw()
     love.graphics.scale(4, 4)
     G_player:draw(true)
     G_monster:draw(true)
+    G_monster2:draw(true)
 end

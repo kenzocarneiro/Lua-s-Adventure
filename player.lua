@@ -27,8 +27,13 @@ function Player:update(dt)
         move = Vector:new(0, self.speed)
     end
 
-    
-    if not self.hitbox:collide(move, G_hitboxes[2]) then
+    local collision = false
+    for i = 1,#G_hitboxes,1 do 
+        if self.hitbox:collide(move, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
+            collision = true
+        end
+    end
+    if not collision then
         self.pos = self.pos + move
     end
 
