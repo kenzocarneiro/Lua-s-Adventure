@@ -9,8 +9,14 @@ function love.load()
     local Sprite = require("sprite/sprite")
     local SpriteCollection = require("sprite/spriteC")
     local SpriteTimer = require("sprite/spriteTimer")
+    local Item = require("item")
 
+    --declaration des variables globales de controle
+    G_hitboxes = {}
+    G_itemList = {}
+    G_hitboxActivated = true
 
+    --initialize sprite collections for monster player and item
     local player_sc = SpriteCollection:new("player")
     player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9)),
         Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9)),
@@ -19,19 +25,29 @@ function love.load()
     local monster_sc = SpriteCollection:new("monster")
     monster_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6))})
 
+    local item_sc = SpriteCollection:new("item")
+    item_sc:init({Sprite:new("img/axe.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+
     -- G_player because player is a global variable
     G_player = Player:new()
     -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
     -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
-    G_player:init(1, "epee", Vector:new(100, 100), player_sc, 5, 10, Vector:new(0, 10))
+    G_player:init({}, 15, 1, "epee", Vector:new(120, 120), player_sc, 5, 10, Vector:new(0, 3))
+    G_hitboxes[#G_hitboxes+1] = G_player.hitbox
 
     G_monster = Monster:new()
-    G_monster:init(1, "epee", Vector:new(70, 70), monster_sc, 5, 9, Vector:new(0, 3))
+    G_monster:init(1, "epee", Vector:new(70, 70), monster_sc, 5, 11, Vector:new(0, 3))
+    G_hitboxes[#G_hitboxes+1] = G_monster.hitbox
 
     G_monster2 = Monster:new()
-    G_monster2:init(1, "epee", Vector:new(150, 150), monster_sc, 5, 9, Vector:new(0, 3))
+    G_monster2:init(1, "epee", Vector:new(150, 150), monster_sc, 5, 11, Vector:new(0, 3))
+    G_hitboxes[#G_hitboxes+1] = G_monster2.hitbox
 
-    G_hitboxes = {G_player.hitbox, G_monster.hitbox, G_monster2.hitbox}
+    G_axe = Item:new()
+    G_axe:init("AXE !", Vector:new(90, 90), item_sc, 5, 7, Vector:new(-3, -2))
+    G_hitboxes[#G_hitboxes+1] = G_axe.hitbox
+    G_itemList[#G_itemList+1] = G_axe
 end
 
 
@@ -42,12 +58,35 @@ function love.update(dt)
     G_player:update(dt)
     G_monster:update(dt)
     G_monster2:update(dt)
+    
+    --updating all the items of the game
+    if G_itemList then
+        for i = 1,#G_itemList do
+            G_itemList[i]:update(dt)
+        end
+    end
+
+    --trying to pick up item
+    if G_itemList then
+        for i = 1,#G_itemList do
+            if G_player:pickup(G_itemList[i]) then
+                G_itemList[i] = nil
+            end
+        end
+    end
 end
 
 --- Draw the game (called every frames)
 function love.draw()
     love.graphics.scale(4, 4)
-    G_player:draw(true)
-    G_monster:draw(true)
-    G_monster2:draw(true)
+    G_player:draw(G_hitboxActivated)
+    G_monster:draw(G_hitboxActivated)
+    G_monster2:draw(G_hitboxActivated)
+    
+    --drawing items on the map
+    if G_itemList then
+        for i = 1,#G_itemList do
+            G_itemList[i]:draw(G_hitboxActivated)
+        end
+    end
 end

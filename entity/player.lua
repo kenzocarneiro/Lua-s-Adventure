@@ -2,10 +2,23 @@ Entity = require("entity/entity")
 
 --- Class representing the Player.
 --- @class Player:Entity Player is a subclass of Entity.
+--- @field inventory table 
+--- @field collectRadius number
 Player = Entity:new()
 --- Constructor of Player.
 --- @return Player
 function Player:new() return Entity.new(self) end
+
+--- Initializes the item.
+--- @param inventory table
+--- @param collectRadius number
+function Player:init(inventory, collectRadius, ...)
+    self.inventory = inventory or {}
+    self.collectRadius = collectRadius or 10
+    self.radiusDisplay = false
+
+    Entity.init(self, ...)
+end
 
 --- Update the player (called every frames).
 --- @param dt number
@@ -24,6 +37,20 @@ function Player:update(dt)
     end
     if love.keyboard.isDown("down", "s") then
         move = move + Vector:new(0, self.speed)
+    end
+
+    --affichage des hitboxes
+    if love.keyboard.isDown("lshift") then 
+        G_hitboxActivated = true
+    else
+        G_hitboxActivated = false
+    end
+
+    --affichage du radius de collect
+    if love.keyboard.isDown("lctrl") then 
+        self.radiusDisplay = true
+    else
+        self.radiusDisplay = false
     end
 
     if move ~= Vector:new(0, 0) then
@@ -60,6 +87,27 @@ function Player:update(dt)
 
 
     Entity.update(self, dt)
+end
+
+function Player:draw(draw_hitbox)
+    if self.radiusDisplay then
+        love.graphics.setLineWidth(0.3)
+        love.graphics.circle("line", self.pos.x, self.pos.y, self.collectRadius)
+    end
+
+    Entity.draw(self, draw_hitbox)
+end
+
+
+function Player:pickup(item)
+    local itemX = item.pos.x
+    local itemY = item.pos.y
+
+    if ((itemX-self.pos.x)^2 + (itemY - self.pos.y)^2) <= (self.collectRadius^2) then
+        self.inventory[#self.inventory+1] = item
+        return true
+    end
+    return false
 end
 
 function Player:__tostring()
