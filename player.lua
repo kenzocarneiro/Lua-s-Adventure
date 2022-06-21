@@ -3,6 +3,7 @@ Entity = require("entity")
 --- Class representing the Player.
 --- @class Player:Entity Player is a subclass of Entity.
 Player = Entity:new()
+print("[PLAYER]", Player)
 --- Constructor of Player.
 --- @return Player
 function Player:new() return Entity.new(self) end
@@ -11,7 +12,7 @@ function Player:new() return Entity.new(self) end
 --- @param dt number
 function Player:update(dt)
     if love.keyboard.isDown("right", "d") then
-        self.pos.x = self.pos.x + self.speed
+            self.pos.x = self.pos.x + self.speed
         self.spriteCollection.flipH = 1
     end
     if love.keyboard.isDown("left", "q") then
@@ -24,7 +25,13 @@ function Player:update(dt)
     if love.keyboard.isDown("down", "s") then
         self.pos.y = self.pos.y + self.speed
     end
+
+
     Entity.update(self, dt)
+end
+
+function Player:__tostring()
+    return "Player"
 end
 
 return Player

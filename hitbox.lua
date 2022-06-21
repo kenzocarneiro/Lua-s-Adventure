@@ -6,7 +6,7 @@ Vector = require("vector")
 --- @field width number
 --- @field height number
 --- @field offset Vector
-Hitbox = {pos = Vector:new(0, 0), width=0, height=0}
+Hitbox = {width=0, height=0}
 
 --- Constructor of Hitbox
 --- @param pos Vector
@@ -18,10 +18,11 @@ function Hitbox:new(pos, width, height, offset)
     -- offset n'est utile que si on change height et width pour avoir une hitbox personnalisée
     -- (sinon mettre la taille de l'image et pas d'offset)
     local h = {}
+
     setmetatable(h, self)
     self.__index = self
 
-    h.pos = pos or self.pos
+    h.pos = pos or Vector:new(0, 0)
 
     if offset then
         self.offset = offset
