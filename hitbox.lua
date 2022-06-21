@@ -35,21 +35,23 @@ function Hitbox:new(pos, width, height, offset)
     return h
 end
 
---- Tests if the Hitbox is overlapping with another Hitbox.
+--- Tests if the Hitbox is overlapping with another Hitbox h after a move m
 --- @param h Hitbox
+--- @param m Vector
 --- @return boolean
-function Hitbox:collide(h)
+function Hitbox:collide(m, h)
+    local temp_pos = self.pos + m
     -- correspond au cas ou la hitbox h collide en haut à gauche de la hitbox self
-    if self.pos.x <= (h.pos.x+h.width) and self.pos.x >= h.pos.x and self.pos.y <= (h.pos.y+h.height) and self.pos.y >= h.pos.y then
+    if temp_pos.x <= (h.pos.x+h.width) and temp_pos.x >= h.pos.x and temp_pos.y <= (h.pos.y+h.height) and temp_pos.y >= h.pos.y then
         return true
     -- correspond au cas ou la hitbox h collide en bas à gauche de la hitbox self
-    elseif (self.pos.x+self.width) <= (h.pos.x+h.width) and (self.pos.x+self.width) >= h.pos.x and self.pos.y <= (h.pos.y+h.height) and self.pos.y >= h.pos.y then
+    elseif (temp_pos.x+self.width) <= (h.pos.x+h.width) and (temp_pos.x+self.width) >= h.pos.x and temp_pos.y <= (h.pos.y+h.height) and temp_pos.y >= h.pos.y then
         return true
     -- correspond au cas ou la hitbox h collide en haut à droite de la hitbox self
-    elseif (h.pos.x+h.width) <= (self.pos.x+self.width) and (h.pos.x+h.width) >= self.pos.x and h.pos.y <= (self.pos.y+self.height) and h.pos.y >= self.pos.y then
+    elseif (h.pos.x+h.width) <= (temp_pos.x+self.width) and (h.pos.x+h.width) >= temp_pos.x and h.pos.y <= (temp_pos.y+self.height) and h.pos.y >= temp_pos.y then
         return true
     -- correspond au cas ou la hitbox h collide en bas à droite de la hitbox self
-    elseif h.pos.x <= (self.pos.x+self.width) and h.pos.x >= self.pos.x and h.pos.y <= (self.pos.y+self.height) and h.pos.y >= self.pos.y then
+    elseif h.pos.x <= (temp_pos.x+self.width) and h.pos.x >= temp_pos.x and h.pos.y <= (temp_pos.y+self.height) and h.pos.y >= temp_pos.y then
         return true
     else
         return false

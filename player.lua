@@ -11,19 +11,24 @@ function Player:new() return Entity.new(self) end
 --- Update the player (called every frames).
 --- @param dt number
 function Player:update(dt)
+    local move = Vector:new(0, 0)
     if love.keyboard.isDown("right", "d") then
-            self.pos.x = self.pos.x + self.speed
+            move = Vector:new(self.speed, 0)
         self.spriteCollection.flipH = 1
     end
     if love.keyboard.isDown("left", "q") then
-        self.pos.x = self.pos.x - self.speed
+        move = Vector:new(-self.speed, 0)
         self.spriteCollection.flipH = -1
     end
     if love.keyboard.isDown("up", "z") then
-        self.pos.y = self.pos.y - self.speed
+        move = Vector:new(0, -self.speed)
     end
     if love.keyboard.isDown("down", "s") then
-        self.pos.y = self.pos.y + self.speed
+        move = Vector:new(0, self.speed)
+    end
+
+    if not self.hitbox:collide(move, hitboxes[2]) then
+        self.pos = self.pos + move
     end
 
 
