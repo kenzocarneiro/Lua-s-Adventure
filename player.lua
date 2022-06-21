@@ -5,7 +5,7 @@ Entity = require("entity")
 Player = Entity:new()
 --- Constructor of Player.
 --- @return Player
-function Player:new() return Entity:new() end
+function Player:new() return Entity.new(self) end
 
 --- Update the player (called every frames).
 --- @param dt number

@@ -9,7 +9,7 @@ Element = require("element")
 Entity = Element:new()
 --- Constructor of Entity.
 --- @return Entity
-function Player:new() return Element:new() end
+function Entity:new() return Element.new(self) end
 
 
 --- Initializes the entity.
