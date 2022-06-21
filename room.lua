@@ -16,7 +16,7 @@ function Room:new(length, height, entrance, exit, enemies)
         local line = {}
         for c = 1, length do
             -- C'est du full bullshit, c'est juste pour remplir la carte pour l'instant
-            local tile = {id=true}
+            local tile = {pixelPos={0,0}}
             line[c]=tile
         end
         t[l]=line
@@ -62,8 +62,11 @@ function Room:draw()
     -- A voir comment c'est importé avec le JSON etc.
 end
 
+-- Returns the tile where the indicated position is
+--- @param pos Vector The position to use
 function Room:findTileWithPos(pos)
     local index = {row=0,col=0}
+    -- i doit être le x du coin supérieur gauche de la carte
     local i = 0
     repeat
         if i*self.tileSize <= pos.x <= (i+1)*self.tileSize then
@@ -72,6 +75,7 @@ function Room:findTileWithPos(pos)
         i = i + 1
     until (index.row ~= 0) or (i == self.length)
 
+    -- j doit être le y du coin inférieur gauche de la carte
     local j = 0
     repeat
         if j*self.tileSize <= pos.x <= (j+1)*self.tileSize then
@@ -81,6 +85,18 @@ function Room:findTileWithPos(pos)
     until (index.col ~= 0) or (i == self.height)
 
     return index
+end
+
+function Room:getIndexes(tile)
+    return self.findTileWithPos(tile.pixelPos)
+end
+
+-- Returns the tile where the indicated position is
+--- @param pos Vector The position with which we want to know if it's in the same tile as tile
+--- @param tile table A tile
+function Room:isOnTheSameTile(pos,tile)
+    local posTileIndexes = self.findTileWithPos(pos)
+    return self.tiles[posTileIndexes[1]][posTileIndexes[2]] == tile
 end
 
 return Room
