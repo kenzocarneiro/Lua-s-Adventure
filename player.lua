@@ -28,14 +28,29 @@ function Player:update(dt)
 
     if move ~= Vector:new(0, 0) then
         self:changeState("run")
-        local collision = false
+        local move_H = Vector:new(move.x, 0)
+        local move_V = Vector:new(0, move.y)
+        local collision_H = false
+        local collision_V = false
         for i = 1,#G_hitboxes,1 do
-            if self.hitbox:collide(move, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
-                collision = true
+            if self.hitbox:collide(move_H, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
+                collision_H = true
+            end
+            if self.hitbox:collide(move_V, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
+                collision_V = true
+            end
+            if collision_H and collision_V then
+                break
+            elseif (not collision_H and not collision_V) and self.hitbox:collide(move, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
+                collision_H = true
+                collision_V = true
             end
         end
-        if not collision then
-            self.pos = self.pos + move
+        if not collision_H then
+            self.pos = self.pos + move_H
+        end
+        if not collision_V then
+            self.pos = self.pos + move_V
         end
     else
         self:changeState("idle")
