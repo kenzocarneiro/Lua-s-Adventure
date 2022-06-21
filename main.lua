@@ -4,20 +4,20 @@ if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
 function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
     love.graphics.setDefaultFilter("nearest", "nearest")
-    local Player = require("player")
-    local Monster = require("monster")
-    local Sprite = require("sprite")
-    local SpriteCollection = require("spriteC")
-    local SpriteTimer = require("SpriteTimer")
+    local Player = require("entity/player")
+    local Monster = require("entity/monster")
+    local Sprite = require("sprite/sprite")
+    local SpriteCollection = require("sprite/spriteC")
+    local SpriteTimer = require("sprite/spriteTimer")
 
 
     local player_sc = SpriteCollection:new("player")
-    player_sc:init({Sprite:new("sprites/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9)),
-        Sprite:new("sprites/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9)),
-        Sprite:new("sprites/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9))})
+    player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9)),
+        Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9)),
+        Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9))})
 
     local monster_sc = SpriteCollection:new("monster")
-    monster_sc:init({Sprite:new("sprites/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6))})
+    monster_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6))})
 
     -- G_player because player is a global variable
     G_player = Player:new()

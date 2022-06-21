@@ -1,4 +1,4 @@
-Entity = require("entity")
+Entity = require("entity/entity")
 
 --- Class representing the Player.
 --- @class Player:Entity Player is a subclass of Entity.

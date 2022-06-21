@@ -1,4 +1,4 @@
-Entity = require("entity")
+Entity = require("entity/entity")
 
 --- Class representing the Monster.
 --- @class Monster:Entity Monster is a subclass of Entity.
