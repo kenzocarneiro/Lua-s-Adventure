@@ -50,18 +50,10 @@ function Room:new(length, height, entrance, exit, enemies)
 
     -- Faire de même avec les ennemis
 
-        --Pour recuperer le nombre d'ennemis :
-    
-    local count = 0
-    for k,v in pairs(enemies) do
-        count = count + 1
-    end
-
-    for nbEnmy = 2,count+1 do
+    for nbEnmy = 1,#enemies do
         -- Ici instancier l'ennemi
-        r.entities[nbEnmy] = chara
+        r.entities[nbEnmy + 1] = chara
     end
-
 end
 
 
