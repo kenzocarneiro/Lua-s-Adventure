@@ -30,10 +30,10 @@ function love.load()
     G_player:init(1, "epee", Vector:new(100, 100), player_sc, 5, 10, Vector:new(0, 10))
 
     G_monster = Monster:new()
-    G_monster:init(1, "epee", Vector:new(70, 70), monster_sc, 5, 9, Vector:new(0, 3))
+    G_monster:init(1, "epee", Vector:new(50, 70), monster_sc, 20, 20, Vector:new(0, 3))
 
     G_monster2 = Monster:new()
-    G_monster2:init(1, "epee", Vector:new(150, 150), monster_sc, 5, 9, Vector:new(0, 3))
+    G_monster2:init(1, "epee", Vector:new(150, 130), monster_sc, 3, 3, Vector:new(0, 3))
 
     G_hitboxes[#G_hitboxes + 1] = G_player.hitbox
     G_hitboxes[#G_hitboxes + 1] = G_monster.hitbox
