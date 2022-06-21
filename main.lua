@@ -25,7 +25,7 @@ function love.load()
     G_monster = Monster:new()
     G_monster:init(1, "epee", Vector:new(70, 70), monster_sc, 5, 10, Vector:new(0, 3))
 
-    hitboxes = {G_monster.hitbox, G_monster.hitbox}
+    G_hitboxes = {G_monster.hitbox, G_monster.hitbox}
 end
 
 
