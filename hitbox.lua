@@ -10,11 +10,12 @@ Hitbox = {width=0, height=0}
 
 --- Constructor of Hitbox
 --- @param pos Vector
+--- @param name string
 --- @param width number
 --- @param height number
 --- @param offset Vector
 --- @return Hitbox
-function Hitbox:new(pos, width, height, offset)
+function Hitbox:new(pos, name, width, height, offset)
     -- offset n'est utile que si on change height et width pour avoir une hitbox personnalisée
     -- (sinon mettre la taille de l'image et pas d'offset)
     local h = {}
@@ -22,6 +23,7 @@ function Hitbox:new(pos, width, height, offset)
     setmetatable(h, self)
     self.__index = self
 
+    h.name = name
     h.pos = pos or Vector:new(0, 0)
 
     if offset then
@@ -34,6 +36,11 @@ function Hitbox:new(pos, width, height, offset)
 
     return h
 end
+
+-- ----- Ci-gît l'ancien algorithme de collision... -----
+-- - RIP in peace (= RIP in peace in peace (= RIP in peace in peace in peace (= ...)))
+-- - Lucien : "J'ai fini de corriger l'algorithme des Hitbox", pour la 150ème fois
+-- - Kenzo, à 1h du matin : "Ça marche pas"
 
 -- --- Tests if the Hitbox is overlapping with another Hitbox h after a move m
 -- --- @param m Vector
@@ -57,6 +64,7 @@ end
 --         return false
 --     end
 -- end
+-- ------------------------------------------------------
 
 
 --- Tests if the Hitbox is overlapping with another Hitbox h after a move m
@@ -79,7 +87,9 @@ end
 --- Update the coordinates of the Hitbox (use this after we move, or at each frame).
 --- @param pos Vector
 function Hitbox:move(pos)
-    self.pos = pos + self.offset
+    if self.offset then
+        self.pos = pos + self.offset
+    end
     self.pos.x = self.pos.x
     self.pos.y = self.pos.y
 end

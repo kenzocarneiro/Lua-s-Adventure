@@ -36,7 +36,7 @@ end
 --- Produce an Hitbox from the pattern of the given name at the given position
 --- @return Hitbox
 function HitboxFactory:produce(pos, name)
-    return Hitbox:new(pos, self.hitboxesPattern[name].width, self.hitboxesPattern[name].height, self.hitboxesPattern[name].offset)
+    return Hitbox:new(pos, name, self.hitboxesPattern[name].width, self.hitboxesPattern[name].height, self.hitboxesPattern[name].offset)
 end
 
 --- Produce an Hitbox from the pattern of the given name at the given position
@@ -44,7 +44,7 @@ end
 function HitboxFactory:produceAll(pos)
     local hitboxes = {}
     for k, v in pairs(self.hitboxesPattern) do
-        hitboxes[k] = Hitbox:new(pos, v.width, v.height, v.offset)
+        hitboxes[k] = Hitbox:new(pos, v.name, v.width, v.height, v.offset)
     end
     return hitboxes
 end
