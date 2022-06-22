@@ -13,14 +13,21 @@ function love.load()
     local Vector = require("vector")
     local Sprite = require("sprite/sprite")
     local SpriteCollection = require("sprite/spriteC")
+    local HitboxFactory = require("hitboxF")
 
     G_fireballSC = SpriteCollection:new("fireball")
     G_fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
 
+    G_fireballHF = HitboxFactory:new({"hitbox", 3, 3, Vector:new(-2, -2)})
+
     --declaration des variables globales de controle
+    --- @type Hitbox[]
     G_hitboxes = {}
+    --- @type Projectile[]
     G_projectiles = {}
+    --- @type Item[]
     G_itemList = {}
+    --- @type Monster[]
     G_monsterList = {}
     G_hitboxActivated = true
     G_room = Room:new(1)
@@ -31,37 +38,49 @@ function love.load()
         Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9)),
         Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9))})
 
+    local playerHF = HitboxFactory:new(
+        -- {"hurtbox", 5, 5, Vector:new(-5, -5)},
+        {"hitbox", 4, 10, Vector:new(-2, -2)}
+    )
+
     local monster_sc = SpriteCollection:new("monster")
     monster_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6))})
 
+    local monsterHF = HitboxFactory:new(
+        {name="hitbox", width=5, height=11, offset=Vector:new(-2, -2)}
+    )
+
     local item_sc = SpriteCollection:new("item")
     item_sc:init({Sprite:new("img/axe.png", false, "idle", 16, 16, Vector:new(7, 6))})
+    local itemHF = HitboxFactory:new(
+        {"hitbox", 4, 7, Vector:new(-5, -5)}
+    )
 
 
     -- G_player because player is a global variable
     G_player = Player:new()
     -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
     -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
-    G_player:init({}, 10, 1, "epee", Vector:new(100, 100), player_sc, 4, 10, Vector:new(-2, -2))
+    G_player:init({}, 15, 1, "epee", Vector:new(100, 100), player_sc, playerHF)
 
     local m = Monster:new()
-    m:init(0.5, 1, "epee", Vector:new(70, 70), monster_sc, 5, 11, Vector:new(-2, -2))
-    G_hitboxes[#G_hitboxes+1] = m.hitbox
+    m:init(0.5, 1, "epee", Vector:new(70, 70), monster_sc, monsterHF)
+    G_hitboxes[#G_hitboxes+1] = m.hitboxes["hitbox"]
     G_monsterList[#G_monsterList+1] = m
 
     local m2 = Monster:new()
-    m2:init(0.5, 1, "epee", Vector:new(150, 150), monster_sc, 5, 11, Vector:new(-2, -2))
-    G_hitboxes[#G_hitboxes+1] = m2.hitbox
+    m2:init(0.5, 1, "epee", Vector:new(150, 150), monster_sc, monsterHF)
+    G_hitboxes[#G_hitboxes+1] = m2.hitboxes["hitbox"]
     G_monsterList[#G_monsterList+1] = m2
 
     G_axe = Item:new()
-    G_axe:init("AXE !", Vector:new(90, 90), item_sc, 4, 7, Vector:new(-5, -5))
-    G_hitboxes[#G_hitboxes+1] = G_axe.hitbox
+    G_axe:init("AXE !", Vector:new(90, 70), item_sc, itemHF)
+    G_hitboxes[#G_hitboxes+1] = G_axe.hitboxes["hitbox"]
     G_itemList[#G_itemList+1] = G_axe
 
     G_axe2 = Item:new()
-    G_axe2:init("AXE !", Vector:new(200, 90), item_sc, 4, 7, Vector:new(-5, -5))
-    G_hitboxes[#G_hitboxes+1] = G_axe2.hitbox
+    G_axe2:init("AXE !", Vector:new(200, 90), item_sc, itemHF)
+    G_hitboxes[#G_hitboxes+1] = G_axe2.hitboxes["hitbox"]
     G_itemList[#G_itemList+1] = G_axe2
 end
 
@@ -103,7 +122,7 @@ function love.update(dt)
         if G_monsterList[index] then
             for j = 1,#G_hitboxes do
                 if G_hitboxes[j] then
-                    if G_hitboxes[j] == G_monsterList[index].hitbox then
+                    if G_hitboxes[j] == G_monsterList[index].hitboxes["hitbox"] then
                         table.remove(G_hitboxes, j)
                         break
                     end
@@ -111,7 +130,7 @@ function love.update(dt)
             end
             local i = G_monsterList[index]:drop()
             if i then
-                G_hitboxes[#G_hitboxes+1] = i.hitbox
+                G_hitboxes[#G_hitboxes+1] = i.hitboxes["hitbox"]
                 G_itemList[#G_itemList+1] = i
             end
             G_monsterList = G_monsterList[index]:die(G_monsterList)
@@ -155,7 +174,7 @@ function love.update(dt)
         if G_itemList[i] then
             if G_player:pickup(G_itemList[i]) then
                 for j = 1,#G_hitboxes do
-                    if G_hitboxes[j] == G_itemList[i].hitbox then
+                    if G_hitboxes[j] == G_itemList[i].hitboxes["hitbox"] then
                         table.remove(G_hitboxes, j)
                     end
                 end

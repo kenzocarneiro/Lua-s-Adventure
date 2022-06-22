@@ -43,8 +43,10 @@ function Monster:drop()
     local item_sc = SpriteCollection:new("item")
     item_sc:init({Sprite:new("img/axe.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
+    local itemHF = HitboxFactory:new({"hitbox", 5, 7, Vector:new(-3, -2)})
+
     local i = Item:new()
-    i:init("AXE !", Vector:new(self.pos.x, self.pos.y), item_sc, 5, 7, Vector:new(-3, -2))
+    i:init("AXE !", Vector:new(self.pos.x, self.pos.y), item_sc, itemHF)
 
     if math.random() <= self.chanceOfDrop then
         return i

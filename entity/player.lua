@@ -50,10 +50,10 @@ function Player:update(dt)
         local collision_V = false
         for i = 1,#G_hitboxes do
             if G_hitboxes[i] then
-                if self.hitbox:collide(move_H, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
+                if self.hitboxes["hitbox"]:collide(move_H, G_hitboxes[i]) and self.hitboxes["hitbox"] ~= G_hitboxes[i] then
                     collision_H = true
                 end
-                if self.hitbox:collide(move_V, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
+                if self.hitboxes["hitbox"]:collide(move_V, G_hitboxes[i]) and self.hitboxes["hitbox"] ~= G_hitboxes[i] then
                     collision_V = true
                 end
                 if collision_H and collision_V then
@@ -76,7 +76,8 @@ function Player:update(dt)
     end
 
     local currentFrame, animationFinished = self.spriteTimer:update(dt, self.spriteCollection:getNumberOfSprites(self.state))
-    self.hitbox:move(self.pos) -- TODO: move hitbox with element
+
+    self.hitboxes["hitbox"]:move(self.pos) -- TODO: move hitbox with element
 
     -- TODO: Using the sprite frame to define the attack fireRate isn't a good idea.
     if self.state == "attack" and currentFrame == self.spriteCollection:getNumberOfSprites(self.state) - 1 then
@@ -85,13 +86,13 @@ function Player:update(dt)
         local direction = Vector:new(self.spriteCollection.flipH, 0)
 
         if self.spriteCollection.flipH == 1 then
-            p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, 3, 3, Vector:new(-2, -2))
+            p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
         elseif self.spriteCollection.flipH == -1 then
-            p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, 3, 3, Vector:new(-1, -2))
+            p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
         end
 
         G_projectiles[#G_projectiles+1] = p
-        G_hitboxes[#G_hitboxes+1] = p.hitbox
+        G_hitboxes[#G_hitboxes+1] = p.hitboxes["hitbox"]
         self.state = "idle"
     end
 end

@@ -7,10 +7,10 @@ Projectile = Entity:new()
 --- @return Projectile
 function Projectile:new() return Entity.new(self) end
 
-function Projectile:init(direction, speed, weapon, pos, spriteCollection, hbWidth, hbHeight, hbOffset)
+function Projectile:init(direction, speed, weapon, pos, spriteCollection, hitboxFactory)
     self.direction = direction
 
-    Entity.init(self, speed, weapon, pos, spriteCollection, hbWidth, hbHeight, hbOffset)
+    Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)
 end
 
 --- Update the player (called every frames).
@@ -28,7 +28,7 @@ end
 function Projectile:draw(draw_hitbox)
     self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), self.direction.x)
     if draw_hitbox then
-        self.hitbox:draw()
+        self.hitboxes["hitbox"]:draw()
     end
 end
 

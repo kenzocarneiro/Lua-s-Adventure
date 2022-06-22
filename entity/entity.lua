@@ -17,15 +17,13 @@ function Entity:new() return Element.new(self) end
 --- @param weapon string
 --- @param pos Vector
 --- @param spriteCollection SpriteCollection
---- @param hbWidth number
---- @param hbHeight number
---- @param hbOffset Vector
-function Entity:init(speed, weapon, pos, spriteCollection, hbWidth, hbHeight, hbOffset)
+--- @param hitboxFactory HitboxFactory
+function Entity:init(speed, weapon, pos, spriteCollection, hitboxFactory)
     self.speed = speed or 1
     self.weapon = weapon or "epee"
     self.hasShoot = false
 
-    Element.init(self, pos, spriteCollection, hbWidth, hbHeight, hbOffset)
+    Element.init(self, pos, spriteCollection, hitboxFactory)
 end
 
 --- Move the entity (not done yet).
