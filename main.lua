@@ -1,5 +1,33 @@
+-- Cette ligne permet d'afficher des traces dans la console pendant l'éxécution
+io.stdout:setvbuf('no')
+
 if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
 
+-- Pour notre magnifique HUD
+local Hud = require("hud/hud")
+
+
+
+local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
+love.graphics.setFont(mainFont)
+
+-- A ne pas supprimer => mais ça ne marche pas encore (lien avec HUD)
+--
+-- local function onPanelHover(pState)
+--   print("Panel is hover:"..pState)
+-- end
+
+-- local function onCheckboxSwitch(pState)
+--   print("Switch is:"..pState)
+-- end
+--
+-- function love.keypressed(k)
+--   if k == "m" then
+--     G_hud.player["healthBar"]:modifyValue(2)
+--   elseif k == "l" then
+--     G_hud.player["healthBar"]:modifyValue(-2)
+--   end
+-- end
 
 --- Load the game
 function love.load()
@@ -62,6 +90,7 @@ function love.load()
     -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
     -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
     G_player:init({}, 15, 1, "epee", Vector:new(100, 100), player_sc, playerHF)
+    G_hitboxes[#G_hitboxes+1] = G_player.hitboxes["hitbox"]
 
     local m = Monster:new()
     m:init(0.5, 1, "epee", Vector:new(70, 70), monster_sc, monsterHF)
@@ -82,6 +111,9 @@ function love.load()
     G_axe2:init("AXE !", Vector:new(200, 90), item_sc, itemHF)
     G_hitboxes[#G_hitboxes+1] = G_axe2.hitboxes["hitbox"]
     G_itemList[#G_itemList+1] = G_axe2
+
+    G_hud = Hud:new()
+    -- print(G_hud.player[14]) debug A ne pas supprimer
 end
 
 function love.keypressed(k)
@@ -100,6 +132,8 @@ end
 --- Update the game (called every frames)
 --- @param dt number the time elapsed since the last frame
 function love.update(dt)
+    G_hud:update(dt) -- HUD
+
     --INPUTS
     --affichage des hitboxes
     if love.keyboard.isDown("lshift") then
@@ -158,6 +192,7 @@ function love.update(dt)
     -- Monster updates
     for i = 1,#G_monsterList do
         if G_monsterList[i] then
+            G_monsterList[i].goal = G_player.pos
             G_monsterList[i]:update(dt)
         end
     end
@@ -213,4 +248,7 @@ function love.draw()
     for i, v in ipairs(G_projectiles) do
         v:draw(true)
     end
+
+    love.graphics.scale(1/4, 1/4)
+    G_hud:draw()
 end

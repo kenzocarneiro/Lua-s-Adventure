@@ -100,6 +100,7 @@ end
 --- Draw the Player.
 --- @param draw_hitbox boolean
 function Player:draw(draw_hitbox)
+
     if self.radiusDisplay then
         love.graphics.setLineWidth(0.3)
         love.graphics.circle("line", self.pos.x, self.pos.y, self.collectRadius)
