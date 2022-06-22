@@ -14,22 +14,23 @@ function Monster:new() return Entity.new(self) end
 
 --- Initializes the monster.
 --- @param chanceOfDrop number --between 0 and 1
-function Monster:init(chanceOfDrop, ...)
+--- @param speed number
+--- @param weapon string
+--- @param pos Vector
+--- @param spriteCollection SpriteCollection
+--- @param hitboxFactory HitboxFactory
+function Monster:init(chanceOfDrop, speed, weapon, pos, spriteCollection, hitboxFactory)
     self.chanceOfDrop = chanceOfDrop or 0
     self.goal = nil
-    self.speed = 0.03
-    self.timer = Timer:new(self.speed)
-    --self.ia = IA:new(G_room)
 
-    Entity.init(self, ...)
+    Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)
 end
 
 
 --- Update the monster (called every frames).
 --- @param dt number
 function Monster:update(dt)
-    local time = self.timer:update(dt)
-    self:move(self.goal, time)
+    self:move(self.goal)
 
 
     Entity.update(self, dt)
@@ -66,7 +67,7 @@ function Monster:drop()
 end
 
 
-function Monster:move(vect, time)
+function Monster:move(vect)
     --initialization of the move we want to do
     local move = Vector:new(vect.x-self.pos.x,vect.y-self.pos.y)
 
@@ -86,8 +87,8 @@ function Monster:move(vect, time)
         end
     end
 
-    --if we have goal and if the timer is finished we try to move
-    if self.goal and time then
+    --if we have a goal
+    if self.goal then
 
         local move_H = Vector:new(move.x, 0)
         local move_V = Vector:new(0, move.y)

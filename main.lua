@@ -93,12 +93,12 @@ function love.load()
     G_hitboxes[#G_hitboxes+1] = G_player.hitboxes["hitbox"]
 
     local m = Monster:new()
-    m:init(0.5, 1, "epee", Vector:new(70, 70), monster_sc, monsterHF)
+    m:init(0.5, 0.5, "epee", Vector:new(70, 70), monster_sc, monsterHF)
     G_hitboxes[#G_hitboxes+1] = m.hitboxes["hitbox"]
     G_monsterList[#G_monsterList+1] = m
 
     local m2 = Monster:new()
-    m2:init(0.5, 1, "epee", Vector:new(150, 150), monster_sc, monsterHF)
+    m2:init(0.5, 0.5, "epee", Vector:new(150, 150), monster_sc, monsterHF)
     G_hitboxes[#G_hitboxes+1] = m2.hitboxes["hitbox"]
     G_monsterList[#G_monsterList+1] = m2
 
