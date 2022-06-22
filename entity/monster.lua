@@ -11,7 +11,7 @@ function Monster:new() return Entity.new(self) end
 
 
 --- Initializes the monster.
---- @param chanceOfDrop string --between 0 and 1
+--- @param chanceOfDrop number --between 0 and 1
 function Monster:init(chanceOfDrop, ...)
     self.chanceOfDrop = chanceOfDrop or 0
 
@@ -37,7 +37,7 @@ function Monster:die(monsterList)
 end
 
 
---- The monster drops an item 
+--- The monster drops an item
 --- @return Item -- ir nil if doesnt drop
 function Monster:drop()
     local item_sc = SpriteCollection:new("item")

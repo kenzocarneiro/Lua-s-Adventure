@@ -1,8 +1,9 @@
 Entity = require("entity/entity")
+Projectile = require("entity/projectile")
 
 --- Class representing the Player.
 --- @class Player:Entity Player is a subclass of Entity.
---- @field inventory table 
+--- @field inventory table
 --- @field collectRadius number
 Player = Entity:new()
 --- Constructor of Player.
@@ -23,6 +24,7 @@ end
 --- Update the player (called every frames).
 --- @param dt number
 function Player:update(dt)
+
     local move = Vector:new(0, 0)
     if love.keyboard.isDown("right", "d") then
         move = move + Vector:new(self.speed, 0)
@@ -41,7 +43,7 @@ function Player:update(dt)
 
     --moving and verifying collision
     if move ~= Vector:new(0, 0) then
-        self:changeState("run")
+        if self.state ~= "attack" then self:changeState("run") end
         local move_H = Vector:new(move.x, 0)
         local move_V = Vector:new(0, move.y)
         local collision_H = false
@@ -70,13 +72,28 @@ function Player:update(dt)
         self.pos = self.pos + finalMove
 
     else
-        self:changeState("idle")
+        if self.state ~= "attack" then self:changeState("idle") end
     end
 
+    local currentFrame, animationFinished = self.spriteTimer:update(dt, self.spriteCollection:getNumberOfSprites(self.state))
+    self.hitbox:move(self.pos) -- TODO: move hitbox with element
 
+    -- TODO: Using the sprite frame to define the attack fireRate isn't a good idea.
+    if self.state == "attack" and currentFrame == self.spriteCollection:getNumberOfSprites(self.state) - 1 then
+        self.hasShoot = true
+        local p = Projectile:new()
+        local direction = Vector:new(self.spriteCollection.flipH, 0)
 
+        if self.spriteCollection.flipH == 1 then
+            p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, 3, 3, Vector:new(-2, -2))
+        elseif self.spriteCollection.flipH == -1 then
+            p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, 3, 3, Vector:new(-1, -2))
+        end
 
-    Entity.update(self, dt)
+        G_projectiles[#G_projectiles+1] = p
+        G_hitboxes[#G_hitboxes+1] = p.hitbox
+        self.state = "idle"
+    end
 end
 
 --- Draw the Player.

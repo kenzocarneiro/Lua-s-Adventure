@@ -29,8 +29,8 @@ function Hitbox:new(pos, width, height, offset)
         h.pos = h.pos + offset
     end
 
-    h.width=width or self.width
-    h.height=height or self.height
+    h.width=width - 1 or self.width
+    h.height=height - 1 or self.height
 
     return h
 end
@@ -80,17 +80,26 @@ end
 --- @param pos Vector
 function Hitbox:move(pos)
     self.pos = pos + self.offset
-    self.pos.x = self.pos.x - self.width/2
-    self.pos.y = self.pos.y - self.height/2
+    self.pos.x = self.pos.x
+    self.pos.y = self.pos.y
 end
 
 --- Draws the hitbox (used for debugging).
 function Hitbox:draw()
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.setLineWidth(0.5)
-    love.graphics.rectangle("line", self.pos.x, self.pos.y, self.width, self.height)
-end
 
+    -- Hitbox rectangles
+    love.graphics.setLineWidth(1)
+    love.graphics.setColor(0/255, 255/255, 255/255, 100/255)
+    love.graphics.rectangle("line", self.pos.x + 0.5, self.pos.y + 0.5, self.width, self.height)
+
+    -- -- Hitbox corners
+    -- love.graphics.setPointSize(4)
+    -- love.graphics.setColor(255/255, 0/255, 9/255, 255/255)
+    -- love.graphics.points(self.pos.x + 0.5, self.pos.y + 0.5, self.pos.x + self.width + 0.5, self.pos.y + 0.5, self.pos.x + self.width + 0.5, self.pos.y + self.height + 0.5, self.pos.x + 0.5, self.pos.y + self.height + 0.5)
+
+    -- Restore default values
+    love.graphics.setColor(255/255, 255/255, 255/255, 255/255)
+end
 
 
 -- /!\ TEST /!\

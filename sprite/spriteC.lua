@@ -34,13 +34,19 @@ end
 --- Draw function of SpriteCollection.
 --- @param state string
 --- @param pos number
-function SpriteCollection:draw(state, pos, frameNumber)
+--- @param frameNumber number
+--- @param flipH number|nil
+--- @param flipV number|nil
+function SpriteCollection:draw(state, pos, frameNumber, flipH, flipV)
+    flipH = flipH or self.flipH
+    flipV = flipV or self.flipV
     if self.sprites[state].isSheet then
-        love.graphics.draw(self.sprites[state].loveImg, self.sprites[state].frames[frameNumber], pos.x, pos.y, 0, self.flipH, self.flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
+        love.graphics.draw(self.sprites[state].loveImg, self.sprites[state].frames[frameNumber], pos.x, pos.y, 0, flipH, flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
     else
-        love.graphics.draw(self.sprites[state].loveImg, pos.x, pos.y, 0, self.flipH, self.flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
+        love.graphics.draw(self.sprites[state].loveImg, pos.x, pos.y, 0, flipH, flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
     end
 end
+
 --- Tests if the sprite corresponding to this state is a spriteSheet
 --- @param state string
 --- @return boolean isSheet
