@@ -3,6 +3,8 @@ Vector = require("vector")
 --- Class representing Hitboxes and Hurtboxes in the game.
 --- @class Hitbox
 --- @field pos Vector
+--- @field name string
+--- @field layers string[]
 --- @field width number
 --- @field height number
 --- @field offset Vector
@@ -11,11 +13,12 @@ Hitbox = {width=0, height=0}
 --- Constructor of Hitbox
 --- @param pos Vector
 --- @param name string
+--- @param layers string[]
 --- @param width number
 --- @param height number
 --- @param offset Vector
 --- @return Hitbox
-function Hitbox:new(pos, name, width, height, offset)
+function Hitbox:new(pos, name, layers, width, height, offset)
     -- offset n'est utile que si on change height et width pour avoir une hitbox personnalisée
     -- (sinon mettre la taille de l'image et pas d'offset)
     local h = {}
@@ -25,6 +28,7 @@ function Hitbox:new(pos, name, width, height, offset)
 
     h.name = name
     h.pos = pos or Vector:new(0, 0)
+    h.layers = layers
 
     if offset then
         h.offset = offset

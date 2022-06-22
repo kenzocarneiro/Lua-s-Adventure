@@ -3,6 +3,7 @@ Hitbox = require("hitbox")
 --- Fake class representing Hitbox Patterns with a name
 --- @class L_HitboxPattern
 --- @field name number
+--- @field layers string[]
 --- @field width number
 --- @field height number
 --- @field offset Vector
@@ -24,7 +25,7 @@ function HitboxFactory:new(...)
 
     for i, v in ipairs{...} do
         if v[1] ~= nil then
-            sc.hitboxesPattern[v[1]] =  {name = v[1], width = v[2], height = v[3], offset = v[4]}
+            sc.hitboxesPattern[v[1]] =  {name = v[1], layers = v[2], width = v[3], height = v[4], offset = v[5]}
         else
             sc.hitboxesPattern[v.name] =  v
         end
@@ -36,7 +37,7 @@ end
 --- Produce an Hitbox from the pattern of the given name at the given position
 --- @return Hitbox
 function HitboxFactory:produce(pos, name)
-    return Hitbox:new(pos, name, self.hitboxesPattern[name].width, self.hitboxesPattern[name].height, self.hitboxesPattern[name].offset)
+    return Hitbox:new(pos, name, self.hitboxesPattern[name].layers, self.hitboxesPattern[name].width, self.hitboxesPattern[name].height, self.hitboxesPattern[name].offset)
 end
 
 --- Produce an Hitbox from the pattern of the given name at the given position
@@ -44,7 +45,7 @@ end
 function HitboxFactory:produceAll(pos)
     local hitboxes = {}
     for k, v in pairs(self.hitboxesPattern) do
-        hitboxes[k] = Hitbox:new(pos, v.name, v.width, v.height, v.offset)
+        hitboxes[k] = Hitbox:new(pos, v.name, v.layers, v.width, v.height, v.offset)
     end
     return hitboxes
 end
