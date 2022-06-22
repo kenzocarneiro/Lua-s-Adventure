@@ -4,7 +4,7 @@ Vector = require("vector")
 --- @class Hitbox
 --- @field pos Vector
 --- @field name string
---- @field layers string[]
+--- @field layers table<string, boolean|nil>
 --- @field width number
 --- @field height number
 --- @field offset Vector
@@ -13,7 +13,7 @@ Hitbox = {width=0, height=0}
 --- Constructor of Hitbox
 --- @param pos Vector
 --- @param name string
---- @param layers string[]
+--- @param layers table<string, boolean|nil>
 --- @param width number
 --- @param height number
 --- @param offset Vector

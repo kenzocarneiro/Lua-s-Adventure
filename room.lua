@@ -67,11 +67,11 @@ function Room:new(roomNbr)
                 local wall_type = collision_tiles_list[tile.data]
 
                 if wall_type == "full" then
-                    tile.hitbox=Hitbox:new(Vector:new((c-1)*8 + r.tileSize, (l-1)*8 + r.tileSize), "hitbox", {"tile"}, 8, 8, Vector:new(0, 0))
+                    tile.hitbox=Hitbox:new(Vector:new((c-1)*8 + r.tileSize, (l-1)*8 + r.tileSize), "hitbox", {tile=true}, 8, 8, Vector:new(0, 0))
                 elseif wall_type == "right" then
-                    tile.hitbox=Hitbox:new(Vector:new((c-1)*8 + r.tileSize + 4, (l-1)*8 + r.tileSize), "hitbox", {"tile"}, 4, 8, Vector:new(0, 0))
+                    tile.hitbox=Hitbox:new(Vector:new((c-1)*8 + r.tileSize + 4, (l-1)*8 + r.tileSize), "hitbox", {tile=true}, 4, 8, Vector:new(0, 0))
                 elseif wall_type == "left" then
-                    tile.hitbox=Hitbox:new(Vector:new((c-1)*8 + r.tileSize, (l-1)*8 + r.tileSize), "hitbox", {"tile"}, 4, 8, Vector:new(0, 0))
+                    tile.hitbox=Hitbox:new(Vector:new((c-1)*8 + r.tileSize, (l-1)*8 + r.tileSize), "hitbox", {tile=true}, 4, 8, Vector:new(0, 0))
                 else
                     error("Unknown wall type : " .. wall_type)
                 end

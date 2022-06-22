@@ -3,7 +3,7 @@ Hitbox = require("hitbox")
 --- Fake class representing Hitbox Patterns with a name
 --- @class L_HitboxPattern
 --- @field name number
---- @field layers string[]
+--- @field layers table<string, boolean|nil>
 --- @field width number
 --- @field height number
 --- @field offset Vector
@@ -15,7 +15,7 @@ HitboxFactory = {}
 
 --- Constructor of HitboxFactory.
 --- @return HitboxFactory
---- @param ... L_HitboxPattern[] | (string|number|Vector)[][] Example: HF:new({{"hitbox", width, height, offset}, {name="hurtbox", width=width, height=height, offset=offset}, ...})
+--- @param ... L_HitboxPattern[] | (string|number|Vector)[][] Example: HF:new({{"hitbox", {player=true}, width, height, offset}, {name="hurtbox", {enemy=true}, width=width, height=height, offset=offset}, ...})
 function HitboxFactory:new(...)
     local sc = {}
     setmetatable(sc, self)
