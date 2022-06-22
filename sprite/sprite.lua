@@ -18,6 +18,7 @@ Sprite = {}
 --- @param state string
 --- @param width number
 --- @param height number
+--- @param middle Vector|nil
 --- @param twoDFrames boolean|nil
 --- @return Sprite s sprite table created on the fly.
 function Sprite:new(img, isSheet, state, width, height, middle, twoDFrames)

@@ -14,22 +14,23 @@ function Monster:new() return Entity.new(self) end
 
 --- Initializes the monster.
 --- @param chanceOfDrop number --between 0 and 1
-function Monster:init(chanceOfDrop, ...)
+--- @param speed number
+--- @param weapon string
+--- @param pos Vector
+--- @param spriteCollection SpriteCollection
+--- @param hitboxFactory HitboxFactory
+function Monster:init(chanceOfDrop, speed, weapon, pos, spriteCollection, hitboxFactory)
     self.chanceOfDrop = chanceOfDrop or 0
     self.goal = nil
-    self.speed = 0.03
-    self.timer = Timer:new(self.speed)
-    --self.ia = IA:new(G_room)
 
-    Entity.init(self, ...)
+    Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)
 end
 
 
 --- Update the monster (called every frames).
 --- @param dt number
 function Monster:update(dt)
-    local time = self.timer:update(dt)
-    self:move(self.goal, time)
+    self:move(self.goal)
 
 
     Entity.update(self, dt)
@@ -53,8 +54,10 @@ function Monster:drop()
     local item_sc = SpriteCollection:new("item")
     item_sc:init({Sprite:new("img/axe.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
+    local itemHF = HitboxFactory:new({"hitbox", 4, 7, Vector:new(-5, -5)})
+
     local i = Item:new()
-    i:init("AXE !", Vector:new(self.pos.x, self.pos.y), item_sc, 5, 7, Vector:new(-3, -2))
+    i:init("AXE !", Vector:new(self.pos.x, self.pos.y), item_sc, itemHF)
 
     if math.random() <= self.chanceOfDrop then
         return i
@@ -64,57 +67,13 @@ function Monster:drop()
 end
 
 
-function Monster:move(vect, time)
+function Monster:move(vect)
     --initialization of the move we want to do
     local move = Vector:new(vect.x-self.pos.x,vect.y-self.pos.y)
 
-    --reduction of the values to the speed
-    if math.abs(move.x) > self.speed then
-        if move.x < 0 then
-            move.x = -self.speed
-        else 
-            move.x = self.speed
-        end
-    end
-    if math.abs(move.y) > self.speed then
-        if move.y < 0 then
-            move.y = -self.speed
-        else 
-            move.y = self.speed
-        end
-    end
-    
-    --if we have goal and if the timer is finished we try to move
-    if self.goal and time then
-
-        local move_H = Vector:new(move.x, 0)
-        local move_V = Vector:new(0, move.y)
-        local collision_H = false
-        local collision_V = false
-        for i = 1,#G_hitboxes do
-            if G_hitboxes[i] then
-                if self.hitbox:collide(move_H, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
-                    collision_H = true
-                end
-                if self.hitbox:collide(move_V, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
-                    collision_V = true
-                end
-                if collision_H and collision_V then
-                    self.goal = nil
-                    break
-                end
-            end
-        end
-
-        local finalMove = Vector:new(0, 0)
-        if not collision_H then
-            finalMove = finalMove + move_H
-        end
-        if not collision_V then
-            finalMove = finalMove + move_V
-        end
-        self.pos = self.pos + finalMove
-
+    --if we have a goal
+    if self.goal then
+        Entity.move(self, move)
     end
 end
 
