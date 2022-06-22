@@ -16,7 +16,7 @@ local function newElement(pX, pY)
   end
   return myElement
 end
-------------------------------------
+
 function GCGUI.newPanel(pX, pY, pW, pH, pColorOut)
   local myPanel = newElement(pX, pY)
   myPanel.W = pW
@@ -55,7 +55,19 @@ function GCGUI.newPanel(pX, pY, pW, pH, pColorOut)
     end
   end
 
-  
+  function myPanel:drawPanel()
+    if self.ColorOut ~= nil then
+      love.graphics.setColor(self.ColorOut[1]/255, self.ColorOut[2]/255, self.ColorOut[3]/255)
+    else
+      love.graphics.setColor(255/255,255/255,255/255)
+    end
+    if self.Image == nil then
+      love.graphics.rectangle("line", self.X, self.Y, self.W, self.H)
+    else
+      love.graphics.setColor(255/255,255/255,255/255)
+      love.graphics.draw(self.Image, self.X, self.Y)
+    end
+  end
 
   function myPanel:draw()
     if self.Visible == false then return end
