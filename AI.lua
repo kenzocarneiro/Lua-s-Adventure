@@ -29,9 +29,7 @@ end
 
 
 -- Returns the shortest path WITH NO GRID to the character
---- @param heuristic function The heuristic to use
-
-function IA:shortestPathFinder(heuristic)
+function IA:shortestPathFinder()
     local found = false
     local tempGoal = self.goal
     local stateTile = self.currentRoom.findTileWithPos(self.state)
@@ -166,31 +164,122 @@ function IA:shortestPathFinder(heuristic)
             until !moreCollision
             -- Yes ! We found the collision zone. Now, to go around it :
 
-            if directoryCoeff < 0 then 
-                if (collisionZone["top"].x < self.goal.x) and (collisionZone["top"].y > self.goal.y) then
-                    -- For first path
-                    local nextDestOne = Vector:new(collisionZone["top"].x,collisionZone["top"].y)
-                    while self.currentRoom.tiles[nextDestOne.x+1][nextDestOne.y].collision do
-                        nextDestOne.x = nextDestOne.x+1
-                    end
-                    nextDestOne.x=nextDestOne.x+1+self.entity.hbWidth
+            local zone1 = nil
+            local add1 = {coord=nil,add=0}
+            local zone2 = nil
+            local add2 = {coord=nil,add=0}
 
-                    -- For second path
-                    local nextDestTwo = Vector:new(collisionZone["top"].x,collisionZone["top"].y)
-                    while self.currentRoom.tiles[nextDestTwo.x+1][nextDestTwo.y].collision do
-                        nextDestTwo.y = nextDestTwo.y+1
+            if directoryCoeff <= 0 then 
+                if (collisionZone["left"].x > self.state.x) then
+                    if (collisionZone["top"].y < self.state.y) then
+                        zone1 = "top"
+                        add1.coord = collisionZone["top"].x
+                        add1.add = 1
+                        zone2 = "left"
+                        add2.coord = collisionZone["left"].y
+                        add2.add = -1
+                    else -- -- à voir si un else suffit et si ça n'englobe pas trop des cas auxquels je n'ai pas pensé
+                        --if (collisionZone["top"].y > self.state.y > collisionZone["bottom"].y) then
+                        zone1 = "top"
+                        add1.coord = collisionZone["top"].y
+                        add1.add = -1
+                        zone2 = "bottom"
+                        add2.coord = collisionZone["bottom"].x
+                        add2.add = -1
+                   -- else 
+                        --zone1 = "bottom"
+                       -- zone2 = "bottom"
                     end
-                    nextDestTwo.y=nextDestTwo.y+1+self.entity.hbHeight
-
-                    local costOne=#(nextDestOne-self.state)+#(nextDestOne-self.currentRoom.enemies[1]["pos"])
-                    local costTwo=#(nextDestTwo-self.state)+#(nextDestTwo-self.currentRoom.enemies[1]["pos"])
-
-                    if costOne <= costTwo then
-                        path[#path+1] = nextDestOne
-                    else
-                        path[#path+1] = nextDestTwo
+                elseif (collisionZone["right"].x < self.state.x) then
+                    if (collisionZone["bottom"].y > self.state.y) then
+                        zone1 = "bottom"
+                        add1.coord = collisionZone["bottom"].x
+                        add1.add = -1
+                        zone2 = "right"
+                        add2.coord = collisionZone["right"].y
+                        add2.add = 1
+                    else 
+                        zone1 = "top"
+                        add1.coord = collisionZone["top"].x
+                        add1.add = 1
+                        zone2 = "bottom"
+                        add2.coord = collisionZone["bottom"].x
+                        add2.add = 1
                     end
+                else
+                    zone1 = "left"
+                    add1.coord = collisionZone["left"].y
+                    add1.add = -1
+                    zone2 = "right"
+                    add2.coord = collisionZone["right"].y
+                    add2.add = -1
                 end
+            else
+                -- same but if a >= 0
+                if (collisionZone["left"].x > self.state.x) then
+                    if (collisionZone["bottom"].y > self.state.y) then
+                        zone1 = "left"
+                        add1.coord = collisionZone["left"].y
+                        add1.add = 1
+                        zone2 = "bottom"
+                        add2.coord = collisionZone["bottom"].x
+                        add2.add = 1
+                    else 
+                        zone1 = "top"
+                        add1.coord = collisionZone["top"].x
+                        add1.add = -1
+                        zone2 = "bottom"
+                        add2.coord = collisionZone["bottom"].x
+                        add2.add = -1
+                    end
+                elseif (collisionZone["right"].x < self.state.x) then
+                    if (collisionZone["top"].y < self.state.y) then
+                        zone1 = "top"
+                        add1.coord = collisionZone["top"].x
+                        add1.add = -1
+                        zone2 = "right"
+                        add2.coord = collisionZone["right"].y
+                        add2.add = -1
+                    else 
+                        zone1 = "top"
+                        add1.coord = collisionZone["top"].x
+                        add1.add = 1
+                        zone2 = "bottom"
+                        add2.coord = collisionZone["bottom"].x
+                        add2.add = 1
+                    end
+                else
+                    zone1 = "left"
+                    add1.coord = collisionZone["left"].y
+                    add1.add = 1
+                    zone2 = "right"
+                    add2.coord = collisionZone["right"].y
+                    add2.add = 1
+                end
+            end
+
+            local nextDestOne = collisionZone[zone1]
+            while self.currentRoom.tiles[nextDestOne.x][nextDestOne.y].collision do
+                add1.coord = add1.coord + add1.add
+            end
+
+            add1.coord = add1.coord + add1.add
+
+            -- For second path
+            local nextDestTwo = collisionZone[zone2]
+            while self.currentRoom.tiles[nextDestTwo.x+1][nextDestTwo.y].collision do
+                add1.cood = add2.coord + add2.add
+            end
+            
+            add2.coord = add2.coord + add2.add
+
+            local costOne=#(nextDestOne-self.state)+#(nextDestOne-self.currentRoom.enemies[1]["pos"])
+            local costTwo=#(nextDestTwo-self.state)+#(nextDestTwo-self.currentRoom.enemies[1]["pos"])
+
+            if costOne <= costTwo then
+                path[#path+1] = nextDestOne
+            else
+                path[#path+1] = nextDestTwo 
             end
         end
 
