@@ -30,9 +30,9 @@ end
 function Checkbox:setState(pbState)
     self.isPressed = pbState
 end
-  
+
 function Checkbox:update(dt)
-    self:updatePanel(dt)
+    Panel.update(self, dt)
     if self.isHover and love.mouse.isDown(1) and self.isPressed == false and self.oldButtonState == false then
         self.isPressed = true
         if self.lstEvents["pressed"] ~= nil then
@@ -51,7 +51,7 @@ function Checkbox:draw()
     love.graphics.setColor(1,1,1)
     if self.isPressed then
         if self.imgPressed == nil then
-            self:drawPanel()
+            Panel.draw(self)
             love.graphics.setColor(1,1,1,.2)
             love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
         else
@@ -59,10 +59,10 @@ function Checkbox:draw()
         end
     else
         if self.imgDefault == nil then
-            self:drawPanel()
+            Panel.draw(self)
         else
             love.graphics.draw(self.imgDefault, self.x, self.y)
-        end 
+        end
     end
 end
 
