@@ -6,10 +6,10 @@ local Field = require("tests/Pong/field")
 
 -- Load function (call one time)
 function Pong.load()
-    racketLeft = Racket:new(90, 250)
-    racketRight = Racket:new(710, 250)
-    ball = Ball:new(400, 300)
-    field = Field:new(50, 50)
+    G_racketLeft = Racket:new(90, 250)
+    G_racketRight = Racket:new(710, 250)
+    G_ball = Ball:new(400, 300)
+    G_field = Field:new(50, 50)
 end
 
 -- Main loop for calcul
@@ -17,33 +17,33 @@ function Pong.update(dt)
     -- keypress
     --racketLeft
     if love.keyboard.isDown("z") then
-        racketLeft:moveY(-5)
+        G_racketLeft:moveY(-5)
     end
     if love.keyboard.isDown("s") then
-        racketLeft:moveY(5)
+        G_racketLeft:moveY(5)
     end
     --racketRight
     if love.keyboard.isDown("up") then
-        racketRight:moveY(-5)
+        G_racketRight:moveY(-5)
     end
     if love.keyboard.isDown("down") then
-        racketRight:moveY(5)
+        G_racketRight:moveY(5)
     end
     --print(racketLeft:top(), racketLeft:bottom())
     -- ball
-    ball:move()
+    G_ball:move()
 
     --bounce at the top or at the bottom
-    if ball:top() == field:top() or ball:bottom() == field:bottom() then
-        ball:mulDY(-1)
+    if G_ball:top() == G_field:top() or G_ball:bottom() == G_field:bottom() then
+        G_ball:mulDY(-1)
     end
 
-    if (ball:left() == racketLeft:right() and racketLeft:top() <= ball:top() and ball:bottom() <= racketLeft:bottom()) or (ball:right() == racketRight:left() and racketRight:top() <= ball:top() and ball:bottom() <= racketRight:bottom()) then
-        ball:mulDX(-1)
+    if (G_ball:left() == G_racketLeft:right() and G_racketLeft:top() <= G_ball:top() and G_ball:bottom() <= G_racketLeft:bottom()) or (G_ball:right() == G_racketRight:left() and G_racketRight:top() <= G_ball:top() and G_ball:bottom() <= G_racketRight:bottom()) then
+        G_ball:mulDX(-1)
     end
 
-    if ball:left() <= field:left() or ball:right() >= field:right() then
-        ball:place(400, 300)
+    if G_ball:left() <= G_field:left() or G_ball:right() >= G_field:right() then
+        G_ball:place(400, 300)
     end
 
 end
@@ -53,10 +53,10 @@ end
 --     love.graphics.print("Hello World", 400, 300)
 -- end
 function Pong.draw()
-    racketLeft:draw()
-    racketRight:draw()
-    ball:draw()
-    field:draw()
+    G_racketLeft:draw()
+    G_racketRight:draw()
+    G_ball:draw()
+    G_field:draw()
 end
 
 -- functions

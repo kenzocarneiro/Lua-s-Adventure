@@ -35,26 +35,44 @@ function Hitbox:new(pos, width, height, offset)
     return h
 end
 
+-- --- Tests if the Hitbox is overlapping with another Hitbox h after a move m
+-- --- @param m Vector
+-- --- @param h Hitbox
+-- --- @return boolean
+-- function Hitbox:collideBugged(m, h)
+--     local temp_pos = self.pos + m
+--     -- correspond au cas ou la hitbox h collide en haut à gauche de la hitbox self
+--     if temp_pos.x <= (h.pos.x+h.width) and temp_pos.x >= h.pos.x and temp_pos.y <= (h.pos.y+h.height) and temp_pos.y >= h.pos.y then
+--         return true
+--     -- correspond au cas ou la hitbox h collide en bas à gauche de la hitbox self
+--     elseif (temp_pos.x+self.width) <= (h.pos.x+h.width) and (temp_pos.x+self.width) >= h.pos.x and temp_pos.y <= (h.pos.y+h.height) and temp_pos.y >= h.pos.y then
+--         return true
+--     -- correspond au cas ou la hitbox h collide en haut à droite de la hitbox self
+--     elseif (h.pos.x+h.width) <= (temp_pos.x+self.width) and (h.pos.x+h.width) >= temp_pos.x and h.pos.y <= (temp_pos.y+self.height) and h.pos.y >= temp_pos.y then
+--         return true
+--     -- correspond au cas ou la hitbox h collide en bas à droite de la hitbox self
+--     elseif h.pos.x <= (temp_pos.x+self.width) and h.pos.x >= temp_pos.x and h.pos.y <= (temp_pos.y+self.height) and h.pos.y >= temp_pos.y then
+--         return true
+--     else
+--         return false
+--     end
+-- end
+
+
 --- Tests if the Hitbox is overlapping with another Hitbox h after a move m
 --- @param m Vector
 --- @param h Hitbox
 --- @return boolean
 function Hitbox:collide(m, h)
     local temp_pos = self.pos + m
-    -- correspond au cas ou la hitbox h collide en haut à gauche de la hitbox self
-    if temp_pos.x <= (h.pos.x+h.width) and temp_pos.x >= h.pos.x and temp_pos.y <= (h.pos.y+h.height) and temp_pos.y >= h.pos.y then
-        return true
-    -- correspond au cas ou la hitbox h collide en bas à gauche de la hitbox self
-    elseif (temp_pos.x+self.width) <= (h.pos.x+h.width) and (temp_pos.x+self.width) >= h.pos.x and temp_pos.y <= (h.pos.y+h.height) and temp_pos.y >= h.pos.y then
-        return true
-    -- correspond au cas ou la hitbox h collide en haut à droite de la hitbox self
-    elseif (h.pos.x+h.width) <= (temp_pos.x+self.width) and (h.pos.x+h.width) >= temp_pos.x and h.pos.y <= (temp_pos.y+self.height) and h.pos.y >= temp_pos.y then
-        return true
-    -- correspond au cas ou la hitbox h collide en bas à droite de la hitbox self
-    elseif h.pos.x <= (temp_pos.x+self.width) and h.pos.x >= temp_pos.x and h.pos.y <= (temp_pos.y+self.height) and h.pos.y >= temp_pos.y then
-        return true
-    else
+    -- Top left : (pos.x, pos.y)
+    -- Bottom Right : (pos.x+width, pos.y+height)
+    if temp_pos.x > (h.pos.x + h.width) or (temp_pos.x + self.width) < h.pos.x then
         return false
+    elseif (temp_pos.y + self.height) < h.pos.y or temp_pos.y > (h.pos.y + h.height) then
+        return false
+    else
+        return true
     end
 end
 

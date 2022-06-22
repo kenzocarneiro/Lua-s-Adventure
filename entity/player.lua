@@ -41,17 +41,18 @@ function Player:update(dt)
             end
             if collision_H and collision_V then
                 break
-            elseif (not collision_H and not collision_V) and self.hitbox:collide(move, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
-                collision_H = true
-                collision_V = true
             end
         end
+
+        local finalMove = Vector:new(0, 0)
         if not collision_H then
-            self.pos = self.pos + move_H
+            finalMove = finalMove + move_H
         end
         if not collision_V then
-            self.pos = self.pos + move_V
+            finalMove = finalMove + move_V
         end
+        self.pos = self.pos + finalMove
+
     else
         self:changeState("idle")
     end
