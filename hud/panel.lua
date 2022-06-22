@@ -31,6 +31,7 @@ end
 
 
 function Panel:setEvent(pEventType, pFunction)
+    print("setEvent : " .. pEventType)
     self.lstEvents[pEventType] = pFunction
 end
   

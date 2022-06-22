@@ -8,15 +8,16 @@ local Group = require("hud/group")
 local Panel = require("hud/panel")
 local Bar = require("hud/bar")
 local Text = require("hud/text")
+local Button = require("hud/button")
 
 local myGUI = require("GCGUI")
-function onPanelHover(pState)
-    print("Panel is hover:"..pState)
-  end
-  
-  function onCheckboxSwitch(pState)
-    print("Switch is:"..pState)
-  end
+local function onPanelHover(pState)
+  print("Panel is hover:"..pState)
+end
+
+local function onCheckboxSwitch(pState)
+  print("Switch is:"..pState)
+end
 
 local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
 love.graphics.setFont(mainFont)
@@ -127,18 +128,6 @@ function love.load()
 
 end
 
---test de la barre de vie
-function love.keypressed(k)
-    if k == "space" then
-        G_healthBar:modifyValue(-2)
-    end
-
-    if k == "n" then
-        G_healthBar:modifyValue(2)
-    end
-end
-
-
 function love.update(dt)
     -- player movements
     G_player:update()
@@ -146,10 +135,17 @@ function love.update(dt)
    G_groupTest:update(dt)
 end
 
-function love.draw()
-  G_groupTest:draw()
+function love.keypressed(k)
+  if k == "m" then
+    G_healthBar:modifyValue(2)
+  elseif k == "l" then
+    G_healthBar:modifyValue(-2)
+  end
+end
+
+  function love.draw()
+    G_groupTest:draw()
     love.graphics.scale(4, 4)
     G_health:draw()
     G_player:draw()
-
 end
