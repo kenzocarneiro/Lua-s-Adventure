@@ -70,7 +70,8 @@ function love.load()
     G_player = Player:new()
     -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
     -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
-    G_player:init({}, 10, 1, "epee", Vector:new(100, 100), player_sc, 4, 10, Vector:new(-2, -2))
+    G_player:init({}, 15, 1, "epee", Vector:new(100, 100), player_sc, 4, 10, Vector:new(-2, -2))
+    G_hitboxes[#G_hitboxes+1] = G_player.hitbox
 
     local m = Monster:new()
     m:init(0.5, 1, "epee", Vector:new(70, 70), monster_sc, 5, 11, Vector:new(-2, -2))
@@ -172,6 +173,7 @@ function love.update(dt)
     -- Monster updates
     for i = 1,#G_monsterList do
         if G_monsterList[i] then
+            G_monsterList[i].goal = G_player.pos
             G_monsterList[i]:update(dt)
         end
     end
