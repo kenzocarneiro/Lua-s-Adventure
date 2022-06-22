@@ -8,7 +8,6 @@ function love.load()
     local Monster = require("entity/monster")
     local Sprite = require("sprite/sprite")
     local SpriteCollection = require("sprite/spriteC")
-    local SpriteTimer = require("sprite/spriteTimer")
     -- local Bullet = require("entity/bullet")
     local Room = require("Room")
 

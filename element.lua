@@ -1,5 +1,6 @@
 Vector = require("vector")
 Hitbox = require("hitbox")
+SpriteTimer = require("sprite/spriteTimer")
 
 --- Class representing elements in the game: anything that is displayed.
 --- @class Element
