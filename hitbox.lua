@@ -25,7 +25,7 @@ function Hitbox:new(pos, width, height, offset)
     h.pos = pos or Vector:new(0, 0)
 
     if offset then
-        self.offset = offset
+        h.offset = offset
         h.pos = h.pos + offset
     end
 
