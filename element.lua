@@ -24,6 +24,9 @@ end
 --- Initializes the element.
 --- @param pos Vector
 --- @param spriteCollection SpriteCollection
+--- @param hbWidth number
+--- @param hbHeight number
+--- @param hbOffset Vector
 function Element:init(pos, spriteCollection, hbWidth, hbHeight, hbOffset)
     self.pos = pos or Vector:new(0, 0)
 
