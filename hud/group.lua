@@ -13,8 +13,12 @@ function Group:new()
     return myGroup
 end
 
-function Group:addElement(pElement)
-    table.insert(self.elements, pElement)
+function Group:addElement(pElement, key)
+    if key == nil then
+        table.insert(self.elements, pElement)
+    else
+        self.elements[key] = pElement
+    end
   end
 
 function Group:setVisible(pVisible)
@@ -37,5 +41,12 @@ function Group:update(dt)
     end
 end
 
+function Group:__tostring()
+    local str = "Group :\n"
+    for k, v in pairs(self.elements) do
+        str = str .. k .. " : " .. v .. "\n"
+    end
+    return str
+end
 
 return Group
