@@ -55,7 +55,6 @@ function Bar:modifyValue(pValue)
 end
 
 function Bar:getValue()
-    print("valeur : " ..self.value .. " max : " .. self.max)
     return self.value
 end
 

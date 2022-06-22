@@ -34,7 +34,8 @@ function Button:setImages(pImageDefault, pImageHover, pImagePressed)
 end
 
 function Button:update(dt)
-  self:updatePanel(dt)
+
+  Panel.update(self,dt)
   if self.isHover and love.mouse.isDown(1) and
       self.isPressed == false and
       self.oldButtonState == false then
@@ -57,7 +58,7 @@ function Button:draw()
   love.graphics.setColor(1,1,1)
   if self.isPressed then
     if self.imgPressed == nil then
-      self:drawPanel()
+      Panel.draw(self)
       love.graphics.setColor(1,1,1,.2)
       love.graphics.rectangle("fill", self.X, self.Y, self.W, self.H)
     else
@@ -65,7 +66,7 @@ function Button:draw()
     end
   elseif self.isHover then
     if self.imgHover == nil then
-      self:drawPanel()
+      Panel.draw(self)
       love.graphics.setColor(1,1,1)
       love.graphics.rectangle("line", self.X+2, self.Y+2, self.W-4, self.H-4)
     else
@@ -73,7 +74,7 @@ function Button:draw()
     end
   else
     if self.imgDefault == nil then
-      self:drawPanel()
+      Panel.draw(self)
     else
       love.graphics.draw(self.imgDefault, self.X, self.Y)
     end    
