@@ -46,7 +46,7 @@ function love.load()
     G_fireballSC = SpriteCollection:new("fireball")
     G_fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
 
-    G_fireballHF = HitboxFactory:new({"hitbox", 3, 3, Vector:new(-2, -2)})
+    G_fireballHF = HitboxFactory:new({"hitbox", {"projectiles"}, 3, 3, Vector:new(-2, -2)})
 
     --declaration des variables globales de controle
     --- @type Hitbox[]
@@ -67,21 +67,21 @@ function love.load()
         Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9))})
 
     local playerHF = HitboxFactory:new(
-        -- {"hurtbox", 5, 5, Vector:new(-5, -5)},
-        {"hitbox", 4, 10, Vector:new(-2, -2)}
+        -- {"hurtbox", {"enemy"}, 5, 5, Vector:new(-5, -5)},
+        {"hitbox", {"player"}, 4, 10, Vector:new(-2, -2)}
     )
 
     local monster_sc = SpriteCollection:new("monster")
     monster_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6))})
 
     local monsterHF = HitboxFactory:new(
-        {name="hitbox", width=5, height=11, offset=Vector:new(-2, -2)}
+        {name="hitbox", layers={"enemy"}, width=5, height=11, offset=Vector:new(-2, -2)}
     )
 
     local item_sc = SpriteCollection:new("item")
     item_sc:init({Sprite:new("img/axe.png", false, "idle", 16, 16, Vector:new(7, 6))})
     local itemHF = HitboxFactory:new(
-        {"hitbox", 4, 7, Vector:new(-5, -5)}
+        {"hitbox", "enemy", 4, 7, Vector:new(-5, -5)}
     )
 
 

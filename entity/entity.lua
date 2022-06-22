@@ -34,12 +34,12 @@ function Entity:move(move)
     local move_V = Vector:new(0, move.y)
     local collision_H = false
     local collision_V = false
-    for i = 1,#G_hitboxes do
-        if G_hitboxes[i] then
-            if self.hitboxes["hitbox"]:collide(move_H, G_hitboxes[i]) and self.hitboxes["hitbox"] ~= G_hitboxes[i] then
+    for i, v in pairs(G_hitboxes) do
+        if v then
+            if self.hitboxes["hitbox"]:collide(move_H, v) and self.hitboxes["hitbox"] ~= v then
                 collision_H = true
             end
-            if self.hitboxes["hitbox"]:collide(move_V, G_hitboxes[i]) and self.hitboxes["hitbox"] ~= G_hitboxes[i] then
+            if self.hitboxes["hitbox"]:collide(move_V, v) and self.hitboxes["hitbox"] ~= v then
                 collision_V = true
             end
             if collision_H and collision_V then

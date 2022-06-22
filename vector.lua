@@ -17,6 +17,10 @@ function Vector:new(x, y)
     return e
 end
 
+function Vector:cpy()
+    return Vector:new(self.x, self.y)
+end
+
 --- String conversion for Vector.
 --- @return string
 function Vector:__tostring()
