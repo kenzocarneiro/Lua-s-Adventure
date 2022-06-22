@@ -1,22 +1,52 @@
+local Sprite = require("sprite/sprite")
+
+--- Class representing the Room.
+--- @class Room
+--- @field defaultLength number
+--- @field defaultHeight number
+--- @field isFinished boolean
+--- @field tileSize number
+--- @field tileRealSize number
+--- @field tiles any
+--- @field walls any
+--- @field objectsGrid string[][]
+--- @field spawnCharacters boolean
 Room = {defaultLength = 40, defaultHeight = 30}
 
-function Room:new(length, height, entrance, exit, enemies)
+local dungeon_tileset = Sprite:new("img/dungeon_topdown.png", true, "idle", 8, 8, Vector:new(0, 0), false)
+
+local collision_tiles_list = {[1]="full", [2]="full", [3]="right", [4]="left", [5]="full", [6]="full", [7]="obj",
+    [9]="right", [10]="left", [11]="right", [12]="left", [13]="full", [14]="full",
+    [17]="right", [18]="left", [19]="right", [20]="left", [21]="full", [22]="full"}
+
+local tiled_rooms = {require("maps/room1")}
+
+--- Constructor of Room
+--- @param roomNbr number
+--- @return Room r
+function Room:new(roomNbr)
     local r = {}
     setmetatable(r, self)
     self.__index = self
 
     r.isFinished = false
-    r.layer = nil
-    r.mask = nil
-    r.tileSize = 32
+    r.tileRealSize = 32
+    r.tileSize = 8
 
-    -- Initialisation de la carte : 
+    local tiled_room = tiled_rooms[roomNbr]
+    local tile_layer = tiled_room.layers[1]
+    local map_width = tile_layer.width
+    local map_height = tile_layer.height
+    local entrance = {}
+    local exit = {}
+
+    -- Initialisation de la carte :
     local t = {}
-    for l = 1,height do
+    for l = 1,map_height do
         local line = {}
-        for c = 1, length do
-            -- C'est du full bullshit, c'est juste pour remplir la carte pour l'instant
-            local tile = {pixelPos=Vector:new()}
+        for c = 1, map_width do
+            -- print(tile_layer.data[(l-1)*map_width + c])
+            local tile = {data=tile_layer.data[(l-1)*map_width + c]}
             line[c]=tile
         end
         t[l]=line
@@ -24,11 +54,41 @@ function Room:new(length, height, entrance, exit, enemies)
 
     r.tiles = t
 
-    -- Initialisation de la grille pour placer les objets : 
-    local obj = {}
-    for l = 1,height do
+    -- Initialisation des murs :
+    local wall_layer = tiled_room.layers[2]
+
+    local w = {}
+    for l = 1,map_height do
         local line = {}
-        for c = 1, length do
+        for c = 1, map_width do
+            -- print(tile_layer.data[(l-1)*map_width + c])
+            local tile = {data=wall_layer.data[(l-1)*map_width + c]}
+            if collision_tiles_list[tile.data] then
+                local wall_type = collision_tiles_list[tile.data]
+
+                if wall_type == "full" then
+                    tile.hitbox=Hitbox:new(Vector:new((c-1)*8 + r.tileSize, (l-1)*8 + r.tileSize), 8, 8, Vector:new(0, 0))
+                elseif wall_type == "right" then
+                    tile.hitbox=Hitbox:new(Vector:new((c-1)*8 + r.tileSize + 4, (l-1)*8 + r.tileSize), 4, 8, Vector:new(0, 0))
+                elseif wall_type == "left" then
+                    tile.hitbox=Hitbox:new(Vector:new((c-1)*8 + r.tileSize, (l-1)*8 + r.tileSize), 4, 8, Vector:new(0, 0))
+                else
+                    error("Unknown wall type : " .. wall_type)
+                end
+                G_hitboxes[#G_hitboxes+1]=tile.hitbox
+            end
+            line[c]=tile
+        end
+        w[l]=line
+    end
+
+    r.walls = w
+
+    -- Initialisation de la grille pour placer les objets :
+    local obj = {}
+    for l = 1,map_height do
+        local line = {}
+        for c = 1, map_width do
             -- Pas le bon type pour le moment mais pg
             local object = {id=true}
             line[c]=object
@@ -37,29 +97,55 @@ function Room:new(length, height, entrance, exit, enemies)
     end
 
     r.objectsGrid = obj
-    r.spawnCharacter = Vector() -- syntaxe à mettre
+    r.spawnCharacter = Vector:new(0, 0) -- syntaxe à mettre
 
-    r.objectsGrid[entrance[1]][entrance[2]] = "entrance" -- à ajuster en fonction de la forme de spawn (ici je considère que c'est juste un tableau avec les indices d'une tile dedans)
-    r.objectsGrid[exit[1]][exit[2]] = "exit" -- meme chose
+    -- r.objectsGrid[entrance[1]][entrance[2]] = "entrance" -- à ajuster en fonction de la forme de spawn (ici je considère que c'est juste un tableau avec les indices d'une tile dedans)
+    -- r.objectsGrid[exit[1]][exit[2]] = "exit" -- meme chose
 
-    -- Ici instancier le character
+    -- -- Ici instancier le character
 
-    local chara = "."
+    -- local chara = "."
 
-    -- Puis :
-    r.entities[1] = chara
+    -- -- Puis :
+    -- r.entities[1] = chara
 
-    -- Faire de même avec les ennemis
+    -- -- Faire de même avec les ennemis
 
-    for nbEnmy = 1,#enemies do
-        -- Ici instancier l'ennemi
-        r.entities[nbEnmy + 1] = chara
-    end
+    -- for nbEnmy = 1,#enemies do
+    --     -- Ici instancier l'ennemi
+    --     r.entities[nbEnmy + 1] = chara
+    -- end
+    return r
 end
 
+function Room:draw(draw_hitbox)
+    -- Draw the tiles
+    for i = 1, #self.tiles do
+        for j = 1, #self.tiles[i] do
+            local tile = self.tiles[i][j]
+            if tile.data ~= 0 then
+                local x = (j - 1) * self.tileSize
+                local y = (i - 1) * self.tileSize
+                love.graphics.draw(dungeon_tileset.loveImg, dungeon_tileset.frames[tile.data], x+self.tileSize, y+self.tileSize)
+            end
+        end
+    end
 
-function Room:draw()
-    -- A voir comment c'est importé avec le JSON etc.
+    -- Draw the walls
+    for i = 1, #self.walls do
+        for j = 1, #self.walls[i] do
+            local tile = self.walls[i][j]
+            if tile.data ~= 0 then
+                local x = (j - 1) * self.tileSize
+                local y = (i - 1) * self.tileSize
+                love.graphics.draw(dungeon_tileset.loveImg, dungeon_tileset.frames[tile.data], x+self.tileSize, y+self.tileSize)
+
+                if draw_hitbox then
+                    tile.hitbox:draw()
+                end
+            end
+        end
+    end
 end
 
 -- Returns the tile where the indicated position is
@@ -69,7 +155,7 @@ function Room:findTileWithPos(pos)
     -- i doit être le x du coin supérieur gauche de la carte
     local i = 0
     repeat
-        if i*self.tileSize <= pos.x <= (i+1)*self.tileSize then
+        if i*self.tileRealSize <= pos.x <= (i+1)*self.tileRealSize then
             index.row = i + 1
         end
         i = i + 1
@@ -78,7 +164,7 @@ function Room:findTileWithPos(pos)
     -- j doit être le y du coin inférieur gauche de la carte
     local j = 0
     repeat
-        if j*self.tileSize <= pos.x <= (j+1)*self.tileSize then
+        if j*self.tileRealSize <= pos.x <= (j+1)*self.tileRealSize then
             index.col = j + 1
         end
         j = j + 1
