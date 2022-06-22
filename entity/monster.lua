@@ -29,8 +29,8 @@ end
 --- @return table --the table of Monsters with him deleted
 function Monster:die(monsterList)
     for i = 1,#monsterList do
-        if monsterList[i] == self
-            then monsterList[i] = nil
+        if monsterList[i] == self then
+            monsterList[i] = nil
         end
     end
     return monsterList
@@ -45,6 +45,7 @@ function Monster:drop()
 
     local i = Item:new()
     i:init("AXE !", Vector:new(self.pos.x, self.pos.y), item_sc, 5, 7, Vector:new(-3, -2))
+
     if math.random() <= self.chanceOfDrop then
         return i
     else
