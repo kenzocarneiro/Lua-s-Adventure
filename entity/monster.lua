@@ -30,7 +30,7 @@ end
 function Monster:die(monsterList)
     for i = 1,#monsterList do
         if monsterList[i] == self then
-            monsterList[i] = nil
+            table.remove(monsterList, i)
         end
     end
     return monsterList

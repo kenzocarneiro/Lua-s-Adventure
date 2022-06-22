@@ -153,7 +153,7 @@ function love.update(dt)
                         table.remove(G_hitboxes, j)
                     end
                 end
-                G_itemList[i] = nil
+                table.remove(G_itemList, i)
             end
         end
     end
