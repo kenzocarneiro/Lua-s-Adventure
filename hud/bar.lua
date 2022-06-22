@@ -81,4 +81,8 @@ function Bar:draw()
   end
 end
 
+function Bar:__tostring()
+  return "Bar"
+end
+
 return Bar

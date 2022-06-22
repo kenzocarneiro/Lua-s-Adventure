@@ -25,4 +25,9 @@ function Element:setVisible(pVisible)
     self.visible = pVisible
 end
 
+function Element:__tostring()
+    return "Element"
+end
+
+
 return Element

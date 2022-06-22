@@ -19,7 +19,7 @@ function Group:addElement(pElement, key)
     else
         self.elements[key] = pElement
     end
-  end
+end
 
 function Group:setVisible(pVisible)
     for n,v in pairs(self.elements) do
@@ -44,7 +44,7 @@ end
 function Group:__tostring()
     local str = "Group :\n"
     for k, v in pairs(self.elements) do
-        str = str .. k .. " : " .. v .. "\n"
+        str = str .. k .. " : " .. tostring(v) .. "\n"
     end
     return str
 end
