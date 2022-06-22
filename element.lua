@@ -43,7 +43,9 @@ end
 --- Update the element (called every frames).
 --- @param dt number
 function Element:update(dt)
-    self.spriteTimer:update(dt, self.spriteCollection:getNumberOfSprites(self.state))
+    if self.spriteCollection:isSpriteSheet(self.state) then
+        self.spriteTimer:update(dt, self.spriteCollection:getNumberOfSprites(self.state))
+    end
     self.hitbox:move(self.pos) -- TODO: move hitbox with element
 end
 

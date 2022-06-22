@@ -40,7 +40,18 @@ end
 function SpriteCollection:draw(state, pos, frameNumber, flipH, flipV)
     flipH = flipH or self.flipH
     flipV = flipV or self.flipV
-    love.graphics.draw(self.sprites[state].loveImg, self.sprites[state].frames[frameNumber], pos.x, pos.y, 0, flipH, flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
+    if self.sprites[state].isSheet then
+        love.graphics.draw(self.sprites[state].loveImg, self.sprites[state].frames[frameNumber], pos.x, pos.y, 0, flipH, flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
+    else
+        love.graphics.draw(self.sprites[state].loveImg, pos.x, pos.y, 0, flipH, flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
+    end
+end
+
+--- Tests if the sprite corresponding to this state is a spriteSheet
+--- @param state string
+--- @return boolean isSheet
+function SpriteCollection:isSpriteSheet(state)
+    return self.sprites[state].isSheet
 end
 
 --- Get number of sprites in spriteCollection for the given state.

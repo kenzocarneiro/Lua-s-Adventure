@@ -15,6 +15,8 @@ function Entity:new() return Element.new(self) end
 --- Initializes the entity.
 --- @param speed number
 --- @param weapon string
+--- @param pos Vector
+--- @param spriteCollection SpriteCollection
 --- @param hbWidth number
 --- @param hbHeight number
 --- @param hbOffset Vector
