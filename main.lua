@@ -1,17 +1,21 @@
 if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
 
+
 --- Load the game
 function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
     love.graphics.setDefaultFilter("nearest", "nearest")
     local Player = require("entity/player")
     local Monster = require("entity/monster")
+    local Room = require("Room")
+    local Vector = require("vector")
     local Sprite = require("sprite/sprite")
     local SpriteCollection = require("sprite/spriteC")
-    -- local Bullet = require("entity/bullet")
-    local Room = require("Room")
+    G_fireballSC = SpriteCollection:new("fireball")
+    G_fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
 
     G_hitboxes = {}
+    G_projectiles = {}
 
     G_room = Room:new(1)
 
@@ -27,13 +31,13 @@ function love.load()
     G_player = Player:new()
     -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
     -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
-    G_player:init(1, "epee", Vector:new(100, 100), player_sc, 5, 10, Vector:new(0, 10))
+    G_player:init(1, "epee", Vector:new(100, 100), player_sc, 4, 10, Vector:new(-2, -2))
 
     G_monster = Monster:new()
-    G_monster:init(1, "epee", Vector:new(50, 70), monster_sc, 5, 9, Vector:new(0, 3))
+    G_monster:init(1, "epee", Vector:new(50, 70), monster_sc, 5, 9, Vector:new(-2, 0))
 
     G_monster2 = Monster:new()
-    G_monster2:init(1, "epee", Vector:new(150, 130), monster_sc, 5, 9, Vector:new(0, 3))
+    G_monster2:init(1, "epee", Vector:new(150, 130), monster_sc, 5, 9, Vector:new(-2, 0))
 
     G_hitboxes[#G_hitboxes + 1] = G_player.hitbox
     G_hitboxes[#G_hitboxes + 1] = G_monster.hitbox
@@ -68,6 +72,9 @@ function love.update(dt)
     G_player:update(dt)
     G_monster:update(dt)
     G_monster2:update(dt)
+    for i, v in ipairs(G_projectiles) do
+        v:update(dt)
+    end
 end
 
 --- Draw the game (called every frames)
@@ -79,7 +86,11 @@ function love.draw()
     end
     love.graphics.scale(4, 4)
     G_room:draw(true)
-    G_player:draw(true)
     G_monster:draw(true)
     G_monster2:draw(true)
+
+    for i, v in ipairs(G_projectiles) do
+        v:draw(true)
+    end
+    G_player:draw(true)
 end

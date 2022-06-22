@@ -1,3 +1,5 @@
+local Sprite = require("sprite/sprite")
+
 --- Class representing the Room.
 --- @class Room
 --- @field defaultLength number

@@ -34,8 +34,13 @@ end
 --- Draw function of SpriteCollection.
 --- @param state string
 --- @param pos number
-function SpriteCollection:draw(state, pos, frameNumber)
-    love.graphics.draw(self.sprites[state].loveImg, self.sprites[state].frames[frameNumber], pos.x, pos.y, 0, self.flipH, self.flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
+--- @param frameNumber number
+--- @param flipH number|nil
+--- @param flipV number|nil
+function SpriteCollection:draw(state, pos, frameNumber, flipH, flipV)
+    flipH = flipH or self.flipH
+    flipV = flipV or self.flipV
+    love.graphics.draw(self.sprites[state].loveImg, self.sprites[state].frames[frameNumber], pos.x, pos.y, 0, flipH, flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
 end
 
 --- Get number of sprites in spriteCollection for the given state.

@@ -22,7 +22,7 @@ Sprite = {}
 --- @return Sprite s sprite table created on the fly.
 function Sprite:new(img, isSheet, state, width, height, middle, twoDFrames)
     -- Sprites are created on the fly
-    local s = {loveImg = love.graphics.newImage(img), isSheet=isSheet, state=state, width=width, height=height, middle=middle or Vector:new(width/2, height/2), twoDFrames=twoDFrames}
+    local s = {loveImg = love.graphics.newImage(img), isSheet=isSheet, state=state, width=width, height=height, middle=middle or Vector:new(math.floor(width/2), math.floor(height/2)), twoDFrames=twoDFrames}
     setmetatable(s, self)
     self.__index = self
     if isSheet then

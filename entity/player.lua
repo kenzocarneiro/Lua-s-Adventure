@@ -1,4 +1,5 @@
 Entity = require("entity/entity")
+Projectile = require("entity/projectile")
 
 --- Class representing the Player.
 --- @class Player:Entity Player is a subclass of Entity.
@@ -22,6 +23,9 @@ function Player:update(dt)
     end
     if love.keyboard.isDown("up", "z") then
         move = move + Vector:new(0, -self.speed)
+    end
+    if love.keyboard.isDown("down", "s") then
+        move = move + Vector:new(0, self.speed)
     end
 
     if love.keyboard.isDown("space") then
@@ -63,9 +67,20 @@ function Player:update(dt)
     self.hitbox:move(self.pos) -- TODO: move hitbox with element
 
     -- TODO: Using the sprite frame to define the attack fireRate isn't a good idea.
-    if self.state == "attack" and not self.hasShoot and currentFrame == self.spriteCollection:getNumberOfSprites(self.state) - 1 then
+    if self.state == "attack" and currentFrame == self.spriteCollection:getNumberOfSprites(self.state) - 1 then
         self.hasShoot = true
-        local bullet = Bullet:new()
+        local p = Projectile:new()
+        local direction = Vector:new(self.spriteCollection.flipH, 0)
+
+        if self.spriteCollection.flipH == 1 then
+            p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, 3, 3, Vector:new(-2, -2))
+        elseif self.spriteCollection.flipH == -1 then
+            p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, 3, 3, Vector:new(-1, -2))
+        end
+
+        G_projectiles[#G_projectiles+1] = p
+        G_hitboxes[#G_hitboxes+1] = p.hitbox
+        self.state = "idle"
     end
 end
 
