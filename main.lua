@@ -20,6 +20,7 @@ function onPanelHover(pState)
 
 local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
 love.graphics.setFont(mainFont)
+local Checkbox = require("hud/checkbox")
 
 function love.load()
     love.graphics.setBackgroundColor(55, 55, 55)
@@ -29,12 +30,9 @@ function love.load()
     G_player.health = 10
 
     -- test perso
+    -- tests du HUD
     G_healthHeart = Panel:new(0, 0)
     G_healthHeart:setImage(love.graphics.newImage("sprites/hud/health.png"), 0.1)
-    
-    
-    --pos x, pos y, largeur, longueur, max, couleur ext, couleur int
-    -- healthBar = myGUI.newProgressBar(100,100, 220, 26, 100,    {50,50,50}, {250, 129, 50})
 
     G_panelTest1 = Panel:new(10, 50)
     G_panelTest1:setImage(love.graphics.newImage("sprites/hud/panel1.png"), 0.1)
@@ -68,9 +66,7 @@ function love.load()
     love.graphics.newImage("sprites/hud/button_hover.png"),
     love.graphics.newImage("sprites/hud/button_pressed.png")
     )
-  
-  buttonTest3 = myGUI.newButton(55, 100, 120, 80,"No images", mainFont, {250, 250, 250})
-  
+    
   panelTest1 = myGUI.newPanel(10, 220, 300, 200)
   panelTest1:setImage(love.graphics.newImage("sprites/hud/panel1.png"))
   panelTest1:setEvent("sprites/hud/hover", onPanelHover)
@@ -112,7 +108,6 @@ function love.load()
   groupTest = myGUI.newGroup()
   groupTest:addElement(buttonYes)
   groupTest:addElement(buttonNo)
-  groupTest:addElement(buttonTest3)
   groupTest:addElement(panelTest1)
   groupTest:addElement(panelTest2)
   groupTest:addElement(checkBoxTest1)
@@ -131,8 +126,21 @@ G_groupTest = Group:new()
 
    -- G_groupTest:addElement(G_button)
     
+    G_checkbox = Checkbox:new(30, 30, 10, 10)
+    G_checkbox:setImages(love.graphics.newImage("sprites/hud/dotGreen.png"), love.graphics.newImage("sprites/hud/dotRed.png"))
+
+    G_groupTest = Group:new()
+    G_health = Group:new()
+    G_groupTest:addElement(G_panelTest1)
+    G_groupTest:addElement(G_healthBar)
+    G_groupTest:addElement(G_checkbox)
+    G_health:addElement(G_healthBar)
+    G_health:addElement(G_healthHeart)
+   
+
 end
 
+--test de la barre de vie
 function love.keypressed(k)
     if k == "space" then
         G_healthBar:modifyValue(-2)
@@ -141,12 +149,10 @@ function love.keypressed(k)
     if k == "n" then
         G_healthBar:modifyValue(2)
     end
-
 end
 
 
 function love.update(dt)
-
     -- player movements
     G_player:update()
    
@@ -155,12 +161,10 @@ function love.update(dt)
 end
 
 function love.draw()
-
   groupTest:draw()
-
+  G_groupTest:draw()
     love.graphics.scale(4, 4)
+    G_health:draw()
     G_player:draw()
-    G_groupTest:draw()
-    
 
 end
