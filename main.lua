@@ -45,7 +45,7 @@ function love.update(dt)
         return
     end
 
-    if love.keyboard.isDown("p") and love.keyboard.isDown("o") and love.keyboard.isDown("n") and love.keyboard.isDown("g") then
+    if love.keyboard.isDown("p") and love.keyboard.isDown("i") and love.keyboard.isDown("n") and love.keyboard.isDown("g") then
         Pong = require("tests/pong/pong")
         Pong.load()
         G_PONG = true
