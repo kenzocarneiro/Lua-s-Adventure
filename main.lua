@@ -14,6 +14,7 @@ function love.load()
     --declaration des variables globales de controle
     G_hitboxes = {}
     G_itemList = {}
+    G_monsterList = {}
     G_hitboxActivated = true
 
     --initialize sprite collections for monster player and item
@@ -36,13 +37,15 @@ function love.load()
     G_player:init({}, 15, 1, "epee", Vector:new(120, 120), player_sc, 5, 10, Vector:new(0, 3))
     G_hitboxes[#G_hitboxes+1] = G_player.hitbox
 
-    G_monster = Monster:new()
-    G_monster:init(1, "epee", Vector:new(70, 70), monster_sc, 5, 11, Vector:new(0, 3))
-    G_hitboxes[#G_hitboxes+1] = G_monster.hitbox
+    local m = Monster:new()
+    m:init(1, 1, "epee", Vector:new(70, 70), monster_sc, 5, 11, Vector:new(0, 3))
+    G_hitboxes[#G_hitboxes+1] = m.hitbox
+    G_monsterList[#G_monsterList+1] = m
 
-    G_monster2 = Monster:new()
-    G_monster2:init(1, "epee", Vector:new(150, 150), monster_sc, 5, 11, Vector:new(0, 3))
-    G_hitboxes[#G_hitboxes+1] = G_monster2.hitbox
+    m = Monster:new()
+    m:init(1, 1, "epee", Vector:new(150, 150), monster_sc, 5, 11, Vector:new(0, 3))
+    G_hitboxes[#G_hitboxes+1] = m.hitbox
+    G_monsterList[#G_monsterList+1] = m
 
     G_axe = Item:new()
     G_axe:init("AXE !", Vector:new(90, 90), item_sc, 5, 7, Vector:new(-3, -2))
@@ -54,22 +57,71 @@ end
 --- Update the game (called every frames)
 --- @param dt number the time elapsed since the last frame
 function love.update(dt)
+    --INPUTS
+    --affichage des hitboxes
+    if love.keyboard.isDown("lshift") then 
+        G_hitboxActivated = true
+    else
+        G_hitboxActivated = false
+    end
+
+    --affichage du radius de collect
+    if love.keyboard.isDown("lctrl") then 
+        G_player.radiusDisplay = true
+    else
+        G_player.radiusDisplay = false
+    end
+
+    -- TO TEST, DELETE AFTER
+    --kills a monster (to debug drop)
+    if love.mouse.isDown(1) then 
+        local index = 1
+        if G_monsterList[index] then
+            for j = 1,#G_hitboxes do
+                if G_hitboxes[j] then
+                    if G_hitboxes[j] == G_monsterList[index].hitbox then
+                        G_hitboxes[j] = nil
+                        break
+                    end
+                end
+            end
+            local i = G_monsterList[index]:drop()
+            if i then
+                G_hitboxes[#G_hitboxes+1] = i.hitboxes
+                G_itemList[#G_itemList+1] = i
+            end
+            G_monsterList = G_monsterList[index]:die(G_monsterList)
+        end
+    end
+
+
+
     -- player movements
     G_player:update(dt)
-    G_monster:update(dt)
-    G_monster2:update(dt)
+
+    -- Monster updates
+    for i = 1,#G_monsterList do
+        if G_monsterList[i] then
+            G_monsterList[i]:update(dt)
+        end
+    end
     
     --updating all the items of the game
-    if G_itemList then
-        for i = 1,#G_itemList do
+    for i = 1,#G_itemList do
+        if G_itemList[i] then
             G_itemList[i]:update(dt)
         end
     end
 
     --trying to pick up item
-    if G_itemList then
-        for i = 1,#G_itemList do
+    for i = 1,#G_itemList do
+        if G_itemList[i] then
             if G_player:pickup(G_itemList[i]) then
+                for j = 1,#G_hitboxes do
+                    if G_hitboxes[j] == G_itemList[i].hitbox then
+                        G_hitboxes[j] = nil
+                    end
+                end
                 G_itemList[i] = nil
             end
         end
@@ -80,12 +132,17 @@ end
 function love.draw()
     love.graphics.scale(4, 4)
     G_player:draw(G_hitboxActivated)
-    G_monster:draw(G_hitboxActivated)
-    G_monster2:draw(G_hitboxActivated)
+
+    -- drawing Monsters
+    for i = 1,#G_monsterList do
+        if G_monsterList[i] then
+            G_monsterList[i]:draw(G_hitboxActivated)
+        end
+    end
     
-    --drawing items on the map
-    if G_itemList then
-        for i = 1,#G_itemList do
+    --drawing Items on the map
+    for i = 1,#G_itemList do
+        if G_itemList[i] then
             G_itemList[i]:draw(G_hitboxActivated)
         end
     end

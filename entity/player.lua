@@ -39,38 +39,27 @@ function Player:update(dt)
         move = move + Vector:new(0, self.speed)
     end
 
-    --affichage des hitboxes
-    if love.keyboard.isDown("lshift") then 
-        G_hitboxActivated = true
-    else
-        G_hitboxActivated = false
-    end
-
-    --affichage du radius de collect
-    if love.keyboard.isDown("lctrl") then 
-        self.radiusDisplay = true
-    else
-        self.radiusDisplay = false
-    end
-
+    --moving and verifying collision
     if move ~= Vector:new(0, 0) then
         self:changeState("run")
         local move_H = Vector:new(move.x, 0)
         local move_V = Vector:new(0, move.y)
         local collision_H = false
         local collision_V = false
-        for i = 1,#G_hitboxes,1 do
-            if self.hitbox:collide(move_H, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
-                collision_H = true
-            end
-            if self.hitbox:collide(move_V, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
-                collision_V = true
-            end
-            if collision_H and collision_V then
-                break
-            elseif (not collision_H and not collision_V) and self.hitbox:collide(move, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
-                collision_H = true
-                collision_V = true
+        for i = 1,#G_hitboxes do
+            if G_hitboxes[i] then
+                if self.hitbox:collide(move_H, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
+                    collision_H = true
+                end
+                if self.hitbox:collide(move_V, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
+                    collision_V = true
+                end
+                if collision_H and collision_V then
+                    break
+                elseif (not collision_H and not collision_V) and self.hitbox:collide(move, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
+                    collision_H = true
+                    collision_V = true
+                end
             end
         end
         if not collision_H then
@@ -89,6 +78,8 @@ function Player:update(dt)
     Entity.update(self, dt)
 end
 
+--- Draw the Player.
+--- @param draw_hitbox boolean
 function Player:draw(draw_hitbox)
     if self.radiusDisplay then
         love.graphics.setLineWidth(0.3)
@@ -99,6 +90,9 @@ function Player:draw(draw_hitbox)
 end
 
 
+--- allow the Player to pickup items
+--- @param item Item
+--- @return boolean --true if we pickup the item, false if we cant
 function Player:pickup(item)
     local itemX = item.pos.x
     local itemY = item.pos.y
