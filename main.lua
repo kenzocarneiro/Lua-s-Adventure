@@ -9,7 +9,7 @@ function love.load()
     local Sprite = require("sprite/sprite")
     local SpriteCollection = require("sprite/spriteC")
     local SpriteTimer = require("sprite/spriteTimer")
-
+    -- local Bullet = require("entity/bullet")
 
     local player_sc = SpriteCollection:new("player")
     player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9)),
@@ -34,6 +34,14 @@ function love.load()
     G_hitboxes = {G_player.hitbox, G_monster.hitbox, G_monster2.hitbox}
 end
 
+function love.keypressed(k)
+    if k == "space" then
+        G_player:changeState("attack")
+        print("BOOM")
+    elseif k == "escape" then
+        love.event.quit()
+    end
+end
 
 --- Update the game (called every frames)
 --- @param dt number the time elapsed since the last frame

@@ -10,6 +10,7 @@ function Player:new() return Entity.new(self) end
 --- Update the player (called every frames).
 --- @param dt number
 function Player:update(dt)
+
     local move = Vector:new(0, 0)
     if love.keyboard.isDown("right", "d") then
         move = move + Vector:new(self.speed, 0)
@@ -22,12 +23,13 @@ function Player:update(dt)
     if love.keyboard.isDown("up", "z") then
         move = move + Vector:new(0, -self.speed)
     end
-    if love.keyboard.isDown("down", "s") then
-        move = move + Vector:new(0, self.speed)
+
+    if love.keyboard.isDown("space") then
+        print("BOOM")
     end
 
     if move ~= Vector:new(0, 0) then
-        self:changeState("run")
+        if self.state ~= "attack" then self:changeState("run") end
         local move_H = Vector:new(move.x, 0)
         local move_V = Vector:new(0, move.y)
         local collision_H = false
@@ -53,13 +55,17 @@ function Player:update(dt)
             self.pos = self.pos + move_V
         end
     else
-        self:changeState("idle")
+        if self.state ~= "attack" then self:changeState("idle") end
     end
 
+    local currentFrame, animationFinished = self.spriteTimer:update(dt, self.spriteCollection:getNumberOfSprites(self.state))
+    self.hitbox:move(self.pos) -- TODO: move hitbox with element
 
-
-
-    Entity.update(self, dt)
+    -- TODO: Using the sprite frame to define the attack fireRate isn't a good idea.
+    if self.state == "attack" and not self.hasShoot and currentFrame == self.spriteCollection:getNumberOfSprites(self.state) - 1 then
+        self.hasShoot = true
+        local bullet = Bullet:new()
+    end
 end
 
 function Player:__tostring()

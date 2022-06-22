@@ -17,6 +17,7 @@ end
 --- Update function of the SpriteTimer (called every frames).
 --- @param dt number
 --- @param maxFrames number
+--- @return number currentFrame, boolean animationFinished
 function SpriteTimer:update(dt, maxFrames)
     self.frameTimer = self.frameTimer + dt
     if self.frameTimer > self.interval then
@@ -25,7 +26,9 @@ function SpriteTimer:update(dt, maxFrames)
         if self.currentFrame > maxFrames then
             self.currentFrame = 1
         end
+        return self.currentFrame, true
     end
+    return self.currentFrame, false
 end
 
 --- Changes the state of the SpriteTimer.

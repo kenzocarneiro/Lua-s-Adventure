@@ -18,6 +18,7 @@ function Entity:new() return Element.new(self) end
 function Entity:init(speed, weapon, ...)
     self.speed = speed or 1
     self.weapon = weapon or "epee"
+    self.hasShoot = false
 
     Element.init(self, ...)
 end
