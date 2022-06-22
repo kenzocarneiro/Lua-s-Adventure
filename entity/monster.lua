@@ -71,53 +71,9 @@ function Monster:move(vect)
     --initialization of the move we want to do
     local move = Vector:new(vect.x-self.pos.x,vect.y-self.pos.y)
 
-    --reduction of the values to the speed
-    if math.abs(move.x) > self.speed then
-        if move.x < 0 then
-            move.x = -self.speed
-        else
-            move.x = self.speed
-        end
-    end
-    if math.abs(move.y) > self.speed then
-        if move.y < 0 then
-            move.y = -self.speed
-        else
-            move.y = self.speed
-        end
-    end
-
     --if we have a goal
     if self.goal then
-
-        local move_H = Vector:new(move.x, 0)
-        local move_V = Vector:new(0, move.y)
-        local collision_H = false
-        local collision_V = false
-        for i = 1,#G_hitboxes do
-            if G_hitboxes[i] then
-                if self.hitboxes["hitbox"]:collide(move_H, G_hitboxes[i]) and self.hitboxes["hitbox"] ~= G_hitboxes[i] then
-                    collision_H = true
-                end
-                if self.hitboxes["hitbox"]:collide(move_V, G_hitboxes[i]) and self.hitboxes["hitbox"] ~= G_hitboxes[i] then
-                    collision_V = true
-                end
-                if collision_H and collision_V then
-                    self.goal = nil
-                    break
-                end
-            end
-        end
-
-        local finalMove = Vector:new(0, 0)
-        if not collision_H then
-            finalMove = finalMove + move_H
-        end
-        if not collision_V then
-            finalMove = finalMove + move_V
-        end
-        self.pos = self.pos + finalMove
-
+        Entity.move(self, move)
     end
 end
 
