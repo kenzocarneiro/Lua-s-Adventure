@@ -42,6 +42,7 @@ function love.load()
     local Sprite = require("sprite/sprite")
     local SpriteCollection = require("sprite/spriteC")
     local Consumable = require("consumable")
+    local Coin = require("coin")
 
     G_fireballSC = SpriteCollection:new("fireball")
     G_fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
@@ -68,6 +69,9 @@ function love.load()
 
     local potion_sc = SpriteCollection:new("consumable")
     potion_sc:init({Sprite:new("img/potion_blue.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+    local coin_sc = SpriteCollection:new("coin")
+    coin_sc:init({Sprite:new("img/coin.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
 
     -- G_player because player is a global variable
@@ -98,9 +102,14 @@ function love.load()
     G_itemList[#G_itemList+1] = axe2
 
     local speedPotion = Consumable:new()
-    speedPotion:init("speed", 3, "potion of speed", Vector:new(250, 150), potion_sc, 5, 6, Vector:new(-6, -5))
+    speedPotion:init("speed", 1, "potion of speed", Vector:new(250, 150), potion_sc, 5, 6, Vector:new(-6, -5))
     G_hitboxes[#G_hitboxes+1] = speedPotion.hitbox
     G_itemList[#G_itemList+1] = speedPotion
+
+    local goldCoin = Coin:new()
+    goldCoin:init(3, "coin of value 5", Vector:new(200, 20), coin_sc, 5, 6, Vector:new(-6, -5))
+    G_hitboxes[#G_hitboxes+1] = goldCoin.hitbox
+    G_itemList[#G_itemList+1] = goldCoin
 
     G_hud = Hud:new()
     -- print(G_hud.player[14]) debug A ne pas supprimer
@@ -201,22 +210,24 @@ function love.update(dt)
                 print("pickup")
                 print(G_player.inventory[#G_player.inventory])
                 if G_player.inventory[#G_player.inventory].__tostring() == "Consumable" then
-                    print("Consume")
                     local buffs = G_itemList[i]:consume(G_player)
-                    print(buffs)
                     table.remove(G_player.inventory, #G_player.inventory)
                     G_player.health = buffs[1]
                     G_player.speed = buffs[2]
                     G_player.damage = buffs[3]
-
+                elseif G_player.inventory[#G_player.inventory].__tostring() == "Coin" then
+                    G_player.gold = G_player.gold + G_itemList[i].value
+                    table.remove(G_player.inventory, #G_player.inventory)
                 end
 
                 for j = 1,#G_hitboxes do
                     if G_hitboxes[j] == G_itemList[i].hitbox then
                         table.remove(G_hitboxes, j)
+                        break
                     end
                 end
                 table.remove(G_itemList, i)
+                break
             end
         end
     end

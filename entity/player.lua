@@ -17,6 +17,7 @@ function Player:init(inventory, collectRadius, ...)
     self.inventory = inventory or {}
     self.collectRadius = collectRadius or 10
     self.radiusDisplay = false
+    self.gold = 0
 
     Entity.init(self, ...)
 end
@@ -99,7 +100,6 @@ end
 --- Draw the Player.
 --- @param draw_hitbox boolean
 function Player:draw(draw_hitbox)
-    self.hitbox:draw()
 
     if self.radiusDisplay then
         love.graphics.setLineWidth(0.3)
