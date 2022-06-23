@@ -68,11 +68,17 @@ function love.load()
     local item_sc = SpriteCollection:new("item")
     item_sc:init({Sprite:new("img/axe.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
-    local potion_sc = SpriteCollection:new("consumable")
-    potion_sc:init({Sprite:new("img/potion_blue.png", false, "idle", 16, 16, Vector:new(7, 6))})
+    local bluePotionSc = SpriteCollection:new("consumable")
+    bluePotionSc:init({Sprite:new("img/potion_blue.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
-    local coin_sc = SpriteCollection:new("coin")
-    coin_sc:init({Sprite:new("img/coin.png", false, "idle", 16, 16, Vector:new(7, 6))})
+    local redPotionSc = SpriteCollection:new("consumable")
+    redPotionSc:init({Sprite:new("img/potion_red.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+    local yellowPotionSc = SpriteCollection:new("consumable")
+    yellowPotionSc:init({Sprite:new("img/potion_yellow.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+    local coinSc = SpriteCollection:new("coin")
+    coinSc:init({Sprite:new("img/coin.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
 
     -- G_player because player is a global variable
@@ -103,12 +109,22 @@ function love.load()
     G_itemList[#G_itemList+1] = axe2
 
     local speedPotion = Consumable:new()
-    speedPotion:init("speed", 1, "potion of speed", Vector:new(250, 150), potion_sc, 5, 6, Vector:new(-6, -5))
+    speedPotion:init("speed", 1, "potion of speed", Vector:new(250, 150), bluePotionSc, 5, 6, Vector:new(-6, -5))
     G_hitboxes[#G_hitboxes+1] = speedPotion.hitbox
     G_itemList[#G_itemList+1] = speedPotion
 
+    local healthPotion = Consumable:new()
+    healthPotion:init("speed", 1, "potion of speed", Vector:new(30, 150), redPotionSc, 5, 6, Vector:new(-6, -5))
+    G_hitboxes[#G_hitboxes+1] = healthPotion.hitbox
+    G_itemList[#G_itemList+1] = healthPotion
+
+    local damagePotion = Consumable:new()
+    damagePotion:init("speed", 1, "potion of speed", Vector:new(30, 50), yellowPotionSc, 5, 6, Vector:new(-6, -5))
+    G_hitboxes[#G_hitboxes+1] = damagePotion.hitbox
+    G_itemList[#G_itemList+1] = damagePotion
+
     local goldCoin = Coin:new()
-    goldCoin:init(3, "coin of gold", Vector:new(200, 20), coin_sc, 6, 8, Vector:new(-6, -6))
+    goldCoin:init(3, "coin of gold", Vector:new(200, 20), coinSc, 6, 8, Vector:new(-6, -6))
     G_hitboxes[#G_hitboxes+1] = goldCoin.hitbox
     G_itemList[#G_itemList+1] = goldCoin
 
