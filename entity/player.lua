@@ -153,9 +153,9 @@ function Player:ApplyHealthPotionEffect(pAmount)
             self.currentHealth =self.currentHealth + pAmount
         end
         G_hud.player.elements["healthBar"]:modifyValue(pAmount)
-    elseif self.currentPotion == 2 then
+    elseif self.currentPotion == 2 and not self.timer1 then
         self:consume()
-    elseif self.currentPotion == 3 then
+    elseif self.currentPotion == 3 and not self.timer2 then
         self:consume()
     end
 
