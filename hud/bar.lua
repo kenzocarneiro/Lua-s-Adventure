@@ -60,6 +60,7 @@ end
 
 
 function Bar:draw()
+    if not self.visible then return end
     love.graphics.setColor(1,1,1)
     local barSize = (self.w - 2) * (self.value / self.max)
     -- si on a une image pour la barre

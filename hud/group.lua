@@ -9,6 +9,7 @@ function Group:new()
     
     -- initialisation
     myGroup.elements = {}
+    myGroup.visible = true
 
     return myGroup
 end
@@ -22,6 +23,7 @@ function Group:addElement(pElement, key)
 end
 
 function Group:setVisible(pVisible)
+    self.visible = pVisible
     for n,v in pairs(self.elements) do
         v:setVisible(pVisible)
     end
