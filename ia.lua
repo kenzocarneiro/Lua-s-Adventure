@@ -1,7 +1,8 @@
 Room = require("room")
 Vector = require("vector")
 
-IA = {Room,searchType = AStarSearch(Room,IA:nullHeuristic())}
+-- IA = {Room,searchType = AStarSearch(Room,IA:nullHeuristic())}
+IA = {Room}
 
 -- Constructor
 --- @param searchType function The name of the function to use
@@ -59,7 +60,7 @@ function IA:shortestPathFinder()
             end
             tempGoal.y = tempGoal.y + tempGoal.x*directoryCoeff
             goalTile = self.currentRoom.findTileWithPos(tempGoal)
-            collision = self.currentRoom.tiles[goalTile[1]][goalTile[2]].collision 
+            collision = self.currentRoom.tiles[goalTile[1]][goalTile[2]].collision
 
         until (collision or self.currentRoom.isOnTheSameTile(tempGoal,stateTile))
 
@@ -160,7 +161,7 @@ function IA:shortestPathFinder()
                         end
                     end
                 end
-          
+
             until !moreCollision
             -- Yes ! We found the collision zone. Now, to go around it :
 
@@ -169,7 +170,7 @@ function IA:shortestPathFinder()
             local zone2 = nil
             local add2 = {coord=nil,add=0}
 
-            if directoryCoeff <= 0 then 
+            if directoryCoeff <= 0 then
                 if (collisionZone["left"].x > self.state.x) then
                     if (collisionZone["top"].y < self.state.y) then
                         zone1 = "top"
@@ -186,7 +187,7 @@ function IA:shortestPathFinder()
                         zone2 = "bottom"
                         add2.coord = collisionZone["bottom"].x
                         add2.add = -1
-                   -- else 
+                   -- else
                         --zone1 = "bottom"
                        -- zone2 = "bottom"
                     end
@@ -198,7 +199,7 @@ function IA:shortestPathFinder()
                         zone2 = "right"
                         add2.coord = collisionZone["right"].y
                         add2.add = 1
-                    else 
+                    else
                         zone1 = "top"
                         add1.coord = collisionZone["top"].x
                         add1.add = 1
@@ -224,7 +225,7 @@ function IA:shortestPathFinder()
                         zone2 = "bottom"
                         add2.coord = collisionZone["bottom"].x
                         add2.add = 1
-                    else 
+                    else
                         zone1 = "top"
                         add1.coord = collisionZone["top"].x
                         add1.add = -1
@@ -240,7 +241,7 @@ function IA:shortestPathFinder()
                         zone2 = "right"
                         add2.coord = collisionZone["right"].y
                         add2.add = -1
-                    else 
+                    else
                         zone1 = "top"
                         add1.coord = collisionZone["top"].x
                         add1.add = 1
@@ -270,7 +271,7 @@ function IA:shortestPathFinder()
             while self.currentRoom.tiles[nextDestTwo.x+1][nextDestTwo.y].collision do
                 add1.cood = add2.coord + add2.add
             end
-            
+
             add2.coord = add2.coord + add2.add
 
             local costOne=#(nextDestOne-self.state)+#(nextDestOne-self.currentRoom.enemies[1]["pos"])
@@ -279,7 +280,7 @@ function IA:shortestPathFinder()
             if costOne <= costTwo then
                 path[#path+1] = nextDestOne
             else
-                path[#path+1] = nextDestTwo 
+                path[#path+1] = nextDestTwo
             end
         end
 
@@ -288,5 +289,3 @@ function IA:shortestPathFinder()
     return path
 
 end
-
-

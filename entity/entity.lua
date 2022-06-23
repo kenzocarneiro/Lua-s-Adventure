@@ -17,22 +17,48 @@ function Entity:new() return Element.new(self) end
 --- @param weapon string
 --- @param pos Vector
 --- @param spriteCollection SpriteCollection
---- @param hbWidth number
---- @param hbHeight number
---- @param hbOffset Vector
-function Entity:init(speed, weapon, pos, spriteCollection, hbWidth, hbHeight, hbOffset)
+--- @param hitboxFactory HitboxFactory
+function Entity:init(speed, weapon, pos, spriteCollection, hitboxFactory)
     self.speed = speed or 1
     self.weapon = weapon or "epee"
     self.hasShoot = false
     self.damage = 1
 
-    Element.init(self, pos, spriteCollection, hbWidth, hbHeight, hbOffset)
+    Element.init(self, pos, spriteCollection, hitboxFactory)
 end
 
 --- Move the entity (not done yet).
---- @param dx number
---- @param dy number
-function Entity:move(dx, dy) end
+--- @param move Vector
+function Entity:move(move)
+    move = move:normalized() * self.speed
+    local move_H = Vector:new(move.x, 0)
+    local move_V = Vector:new(0, move.y)
+    local collision_H = false
+    local collision_V = false
+    for i, v in pairs(G_hitboxes) do
+        if v then
+            if self.hitboxes["hitbox"]:collide(move_H, v) and self.hitboxes["hitbox"] ~= v then
+                collision_H = true
+            end
+            if self.hitboxes["hitbox"]:collide(move_V, v) and self.hitboxes["hitbox"] ~= v then
+                collision_V = true
+            end
+            if collision_H and collision_V then
+                self.goal = nil
+                break
+            end
+        end
+    end
+
+    local finalMove = Vector:new(0, 0)
+    if not collision_H then
+        finalMove = finalMove + move_H
+    end
+    if not collision_V then
+        finalMove = finalMove + move_V
+    end
+    self.pos = self.pos + finalMove
+end
 
 --- Update the entity (called every frames).
 --- @param dt number
