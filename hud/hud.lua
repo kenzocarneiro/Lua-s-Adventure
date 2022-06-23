@@ -54,7 +54,7 @@ function Hud.setPlayer()
     local skillHotkey1 = myGUI.newText(skill_1.W/2 , hauteur - skill_1.H -20, 0, 0,"A", mainFont, "", "", {10, 150, 10})
     -- nombre en doré
     --local skilChargesNum1 = Text:new(skill_1.W -15 , hauteur -23, 0, 0,G_player.potion_stock, mainFont, "", "", {100, 84, 0})
-    local skilChargesNum1 = Text:new(skill_1.W -15 , hauteur -23, 0, 0,G_player.potion_stock, mainFont, "", "", {238, 226, 123})
+    local skilChargesNum1 = Text:new(skill_1.W -15 , hauteur -23, 0, 0,G_player.potion_stock[G_player.currentPotion], mainFont, "", "", {238, 226, 123})
 
     local skillHotkey2 = myGUI.newText(skill_1.W/2 + skill_2.W , hauteur - skill_1.H -20, 0, 0,"E", mainFont, "", "", {10, 150, 10})
 
@@ -83,6 +83,11 @@ function Hud.setPlayer()
 
     local title3 = myGUI.newText(skill_1.W/2 + skill_2.W*2 , hauteur - skill_1.H -20, 0, 0,"T", mainFont, "", "", {25, 150, 25})
     
+    local buff_1 = Panel:new(210,0)
+    buff_1:setImage(love.graphics.newImage("sprites/hud/damage_buff.png"), 3)
+    local buff_2 = Panel:new(260,0)
+    buff_2:setImage(love.graphics.newImage("sprites/hud/speed_buff.png"), 3)
+
     group:addElement(skill_3, "skill_3")
     group:addElement(skill_2, "skill_2")
     group:addElement(skill_1, "skill_1")
@@ -108,26 +113,53 @@ function Hud.setPlayer()
     group:addElement(healthBar, "healthBar")
     group:addElement(healthHeart, "healthHeart")
 
+    group:addElement(buff_1, "buff_1")
+    group:addElement(buff_2, "buff_2")
+
     return group
 end
 
 function Hud:keypressed(k)
     if k == "m" then
         self.player.elements["healthBar"]:modifyValue(2)
-        G_player.currentHealth =G_player.currentHealth + 2
+        G_player.currentHealth = G_player.currentHealth + 2
     elseif k == "l" then
         self.player.elements["healthBar"]:modifyValue(-2)
-        G_player.currentHealth =G_player.currentHealth - 2
+        G_player.currentHealth = G_player.currentHealth - 2
     
     --potion de soin
     elseif k == "a" then
         G_player:ApplyHealthPotionEffect(3)
     elseif k == "m" then
-        G_player.currentHealth =G_player.currentHealth - 2
+        G_player.currentHealth = G_player.currentHealth - 2
     end
 end
 
 function Hud:update(dt)
+    if G_player.currentPotion == 1 then
+        self.player.elements["skill_1"]:setImages(love.graphics.newImage("sprites/hud/health_potion.png"))
+    elseif G_player.currentPotion == 2 then
+        self.player.elements["skill_1"]:setImages(love.graphics.newImage("sprites/hud/damage_potion.png"))
+    elseif G_player.currentPotion == 3 then
+        self.player.elements["skill_1"]:setImages(love.graphics.newImage("sprites/hud/speed_potion.png"))
+    end
+
+
+    --update buffs display
+    if G_player.buffs[1] ~= 0 then
+        self.player.elements["buff_1"]:setImage(love.graphics.newImage("sprites/hud/damage_buff.png"), 3)
+    else
+        self.player.elements["buff_1"]:setImage(love.graphics.newImage("sprites/hud/transparent.png"), 3)
+    end
+        
+    if G_player.buffs[2] ~= 0 then
+        self.player.elements["buff_2"]:setImage(love.graphics.newImage("sprites/hud/speed_buff.png"), 3)
+    else
+        self.player.elements["buff_2"]:setImage(love.graphics.newImage("sprites/hud/transparent.png"), 3)
+    end
+
+    self:updatePotionStock()
+
     self.player:update(dt)
 end
 
@@ -138,7 +170,7 @@ function Hud:draw()
 end
 
 function Hud:updatePotionStock()
-    self.player.elements["t_skillCharges1"]:edit(G_player.potion_stock)
+    self.player.elements["t_skillCharges1"]:edit(G_player.potion_stock[G_player.currentPotion])
     --self.player.elements["healthBar"]:modifyValue(pHealth)
 end
 
