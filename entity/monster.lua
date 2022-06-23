@@ -30,7 +30,7 @@ end
 --- Update the monster (called every frames).
 --- @param dt number
 function Monster:update(dt)
-    self:move(self.goal)
+    --self:move(self.goal)
 
 
     Entity.update(self, dt)

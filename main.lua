@@ -107,7 +107,7 @@ function love.load()
     G_hitboxes[#G_hitboxes+1] = G_player.hitboxes["hitbox"]
 
     local m = Monster:new()
-    m:init(0.5, 0.5, "epee", Vector:new(70, 70), monster_sc, monsterHF)
+    m:init(0.5, 0.5, "epee", Vector:new(70, 80), monster_sc, monsterHF)
     G_hitboxes[#G_hitboxes+1] = m.hitboxes["hitbox"]
     G_monsterList[#G_monsterList+1] = m
 
@@ -298,4 +298,5 @@ function love.draw()
 
     love.graphics.scale(1/4, 1/4)
     G_hud:draw()
+
 end
