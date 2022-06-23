@@ -15,7 +15,6 @@ function Player:new() return Entity.new(self) end
 --- @param collectRadius number
 function Player:init(inventory, collectRadius, ...)
     self.inventory = inventory or {}
-    self.potion_stock = 3
     self.maxHealth = 100
     self.currentHealth = self.maxHealth
     self.collectRadius = collectRadius or 10
@@ -23,6 +22,8 @@ function Player:init(inventory, collectRadius, ...)
     self.gold = 0
 
     --for potion consumming
+    self.potion_stock = {3, 1, 1} -- {health, damage, speed}
+    self.currentPotion = 1
     self.timer = nil
     self.buffs = {0, 0}  --damage and speed
 
@@ -33,6 +34,10 @@ end
 --- @param dt number
 function Player:update(dt)
 
+    --update buffs
+    self:buffsUpdate(dt)
+
+    --moving
     local move = Vector:new(0, 0)
     if love.keyboard.isDown("right", "d") then
         move = move + Vector:new(1, 0)
@@ -104,8 +109,13 @@ function Player:pickup(item)
         
         --potion de vie
         if tostring(item)=="Consumable" and item.target =="health" then
-            self.potion_stock = self.potion_stock + 1
-            G_hud:updatePotionStock()
+            self.potion_stock[1] = self.potion_stock[1] + 1
+        end
+        if tostring(item)=="Consumable" and item.target =="damage" then
+            self.potion_stock[2] = self.potion_stock[2] + 1
+        end
+        if tostring(item)=="Consumable" and item.target =="speed" then
+            self.potion_stock[3] = self.potion_stock[3] + 1
         end
         return true
     end
@@ -117,21 +127,45 @@ function Player:__tostring()
 end
 
 function Player:ApplyHealthPotionEffect(pAmount)
-    if (self.potion_stock == 0) then
+    if (self.potion_stock[self.currentPotion] == 0) then
         print(" t'as plus de potions frérot !")
-    else
-        self.potion_stock = self.potion_stock - 1
+    elseif self.currentPotion == 1 then
+        self.potion_stock[1] = self.potion_stock[1] - 1
         -- on s'assure qu'il ne peut pas regen plus que sa vie max
         if self.currentHealth +  pAmount > self.maxHealth then
             self.currentHealth = self.maxHealth
         else
             self.currentHealth =self.currentHealth + pAmount
         end
-        G_hud:updatePotionStock()
         G_hud.player.elements["healthBar"]:modifyValue(pAmount)
-
+    elseif self.currentPotion == 2 then
+        self:consume()
+    elseif self.currentPotion == 3 then
+        self:consume()
     end
     
+end
+
+
+function Player:consume()
+    self.potion_stock[self.currentPotion] = self.potion_stock[self.currentPotion] - 1
+    self.timer = Timer:new(10)
+    if self.currentPotion == 2 then
+        self.buffs = {5, 0}
+    elseif self.currentPotion == 3 then
+        self.buffs = {0, 2}
+    end
+    self.damage = self.damage + self.buffs[1]
+    self.speed = self.speed + self.buffs[2]
+end
+
+function Player:buffsUpdate(dt)
+    if self.timer and self.timer:update(dt) then
+        self.damage = self.damage - self.buffs[1]
+    self.speed = self.speed - self.buffs[2]
+        self.buffs = {0, 0}
+        self.timer = nil
+    end
 end
 
 return Player

@@ -54,7 +54,7 @@ function Hud.setPlayer()
     local skillHotkey1 = myGUI.newText(skill_1.W/2 , hauteur - skill_1.H -20, 0, 0,"A", mainFont, "", "", {10, 150, 10})
     -- nombre en doré
     --local skilChargesNum1 = Text:new(skill_1.W -15 , hauteur -23, 0, 0,G_player.potion_stock, mainFont, "", "", {100, 84, 0})
-    local skilChargesNum1 = Text:new(skill_1.W -15 , hauteur -23, 0, 0,G_player.potion_stock, mainFont, "", "", {238, 226, 123})
+    local skilChargesNum1 = Text:new(skill_1.W -15 , hauteur -23, 0, 0,G_player.potion_stock[G_player.currentPotion], mainFont, "", "", {238, 226, 123})
 
     local skillHotkey2 = myGUI.newText(skill_1.W/2 + skill_2.W , hauteur - skill_1.H -20, 0, 0,"E", mainFont, "", "", {10, 150, 10})
 
@@ -128,6 +128,16 @@ function Hud:keypressed(k)
 end
 
 function Hud:update(dt)
+    if G_player.currentPotion == 1 then
+        self.player.elements["skill_1"]:setImages(love.graphics.newImage("sprites/hud/health_potion.png"))
+    elseif G_player.currentPotion == 2 then
+        self.player.elements["skill_1"]:setImages(love.graphics.newImage("sprites/hud/damage_potion.png"))
+    elseif G_player.currentPotion == 3 then
+        self.player.elements["skill_1"]:setImages(love.graphics.newImage("sprites/hud/speed_potion.png"))
+    end
+
+    self:updatePotionStock()
+
     self.player:update(dt)
 end
 
@@ -138,7 +148,7 @@ function Hud:draw()
 end
 
 function Hud:updatePotionStock()
-    self.player.elements["t_skillCharges1"]:edit(G_player.potion_stock)
+    self.player.elements["t_skillCharges1"]:edit(G_player.potion_stock[G_player.currentPotion])
     --self.player.elements["healthBar"]:modifyValue(pHealth)
 end
 
