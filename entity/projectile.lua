@@ -17,8 +17,13 @@ end
 --- @param dt number
 function Projectile:update(dt)
     -- convert angle to vector
-    local move = self.direction:cpy()
-    move = move
+    local move
+    if type(self.direction) == "number" then
+        -- TODO: INSERT CONVERSION FUNCTION
+        -- move = ...
+    else
+        move = self.direction:cpy()
+    end
 
     self:move(move)
 
@@ -26,7 +31,14 @@ function Projectile:update(dt)
 end
 
 function Projectile:draw(draw_hitbox)
-    self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), self.direction.x)
+    if type(self.direction) ~= "number" then
+        local flip_H = 1
+        if self.direction.x < 0 then flip_H = -1 end
+        self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), flip_H)
+    else
+        self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), 1, 1, self.direction)
+    end
+
     if draw_hitbox then
         self.hitboxes["hurtbox"]:draw()
     end
