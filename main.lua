@@ -43,6 +43,7 @@ function love.load()
     local SpriteCollection = require("sprite/spriteC")
     local Consumable = require("consumable")
     local Coin = require("coin")
+    local Weapon = require("weapon")
 
     G_fireballSC = SpriteCollection:new("fireball")
     G_fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
@@ -91,13 +92,13 @@ function love.load()
     G_hitboxes[#G_hitboxes+1] = m2.hitbox
     G_monsterList[#G_monsterList+1] = m2
 
-    local axe = Item:new()
-    axe:init("AXE !", Vector:new(190, 90), item_sc, 4, 7, Vector:new(-5, -5))
+    local axe = Weapon:new()
+    axe:init(5, "AXE !", Vector:new(190, 90), item_sc, 4, 7, Vector:new(-5, -5))
     G_hitboxes[#G_hitboxes+1] = axe.hitbox
     G_itemList[#G_itemList+1] = axe
 
-    local axe2 = Item:new()
-    axe2:init("AXE !", Vector:new(150, 90), item_sc, 4, 7, Vector:new(-5, -5))
+    local axe2 = Weapon:new()
+    axe2:init(5, "AXE !", Vector:new(150, 90), item_sc, 4, 7, Vector:new(-5, -5))
     G_hitboxes[#G_hitboxes+1] = axe2.hitbox
     G_itemList[#G_itemList+1] = axe2
 
@@ -107,7 +108,7 @@ function love.load()
     G_itemList[#G_itemList+1] = speedPotion
 
     local goldCoin = Coin:new()
-    goldCoin:init(3, "coin of value 5", Vector:new(200, 20), coin_sc, 5, 6, Vector:new(-6, -5))
+    goldCoin:init(3, "coin of gold", Vector:new(200, 20), coin_sc, 6, 8, Vector:new(-6, -6))
     G_hitboxes[#G_hitboxes+1] = goldCoin.hitbox
     G_itemList[#G_itemList+1] = goldCoin
 
