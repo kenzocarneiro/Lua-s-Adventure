@@ -115,7 +115,7 @@ function love.load()
     G_hitboxes[#G_hitboxes+1] = G_player.hitboxes["hitbox"]
 
     local m = Monster:new()
-    m:init(0.5, 0.5, "epee", Vector:new(70, 70), monster_sc, monsterHF)
+    m:init(0.5, 0.5, "epee", Vector:new(70, 80), monster_sc, monsterHF)
     G_hitboxes[#G_hitboxes+1] = m.hitboxes["hitbox"]
     G_monsterList[#G_monsterList+1] = m
 
@@ -271,6 +271,17 @@ function love.update(dt)
         G_player.radiusDisplay = false
     end
 
+    if love.keyboard.isDown("1") then
+        G_player.currentPotion = 1 --health
+    end
+    if love.keyboard.isDown("2") then
+        G_player.currentPotion = 2 --speed
+    end
+    if love.keyboard.isDown("3") then
+        G_player.currentPotion = 3 --damage
+    end
+
+
     if G_PONG then
         Pong.update(dt)
         return
@@ -313,7 +324,6 @@ function love.update(dt)
                 if tostring(G_player.inventory[#G_player.inventory]) == "Coin" then
                     G_player.gold = G_player.gold + G_itemList[i].value
                     table.remove(G_player.inventory, #G_player.inventory)
-                    print(G_player.gold)
                 end
 
                 for j = 1,#G_hitboxes do
@@ -365,4 +375,5 @@ function love.draw()
 
     love.graphics.scale(1/4, 1/4)
     G_hud:draw()
+
 end
