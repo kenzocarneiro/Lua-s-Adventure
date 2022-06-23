@@ -20,6 +20,7 @@ function Player:init(inventory, collectRadius, ...)
     self.currentHealth = self.maxHealth
     self.collectRadius = collectRadius or 10
     self.radiusDisplay = false
+    self.gold = 0
 
     Entity.init(self, ...)
 end
@@ -30,56 +31,31 @@ function Player:update(dt)
 
     local move = Vector:new(0, 0)
     if love.keyboard.isDown("right", "d") then
-        move = move + Vector:new(self.speed, 0)
+        move = move + Vector:new(1, 0)
         self.spriteCollection.flipH = 1
     end
     if love.keyboard.isDown("left", "q") then
-        move = move + Vector:new(-self.speed, 0)
+        move = move + Vector:new(-1, 0)
         self.spriteCollection.flipH = -1
     end
     if love.keyboard.isDown("up", "z") then
-        move = move + Vector:new(0, -self.speed)
+        move = move + Vector:new(0, -1)
     end
     if love.keyboard.isDown("down", "s") then
-        move = move + Vector:new(0, self.speed)
+        move = move + Vector:new(0, 1)
     end
 
     --moving and verifying collision
     if move ~= Vector:new(0, 0) then
         if self.state ~= "attack" then self:changeState("run") end
-        local move_H = Vector:new(move.x, 0)
-        local move_V = Vector:new(0, move.y)
-        local collision_H = false
-        local collision_V = false
-        for i = 1,#G_hitboxes do
-            if G_hitboxes[i] then
-                if self.hitbox:collide(move_H, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
-                    collision_H = true
-                end
-                if self.hitbox:collide(move_V, G_hitboxes[i]) and self.hitbox ~= G_hitboxes[i] then
-                    collision_V = true
-                end
-                if collision_H and collision_V then
-                    break
-                end
-            end
-        end
-
-        local finalMove = Vector:new(0, 0)
-        if not collision_H then
-            finalMove = finalMove + move_H
-        end
-        if not collision_V then
-            finalMove = finalMove + move_V
-        end
-        self.pos = self.pos + finalMove
-
+        self:move(move)
     else
         if self.state ~= "attack" then self:changeState("idle") end
     end
 
     local currentFrame, animationFinished = self.spriteTimer:update(dt, self.spriteCollection:getNumberOfSprites(self.state))
-    self.hitbox:move(self.pos) -- TODO: move hitbox with element
+
+    self.hitboxes["hitbox"]:move(self.pos) -- TODO: move hitbox with element
 
     -- TODO: Using the sprite frame to define the attack fireRate isn't a good idea.
     if self.state == "attack" and currentFrame == self.spriteCollection:getNumberOfSprites(self.state) - 1 then
@@ -88,13 +64,13 @@ function Player:update(dt)
         local direction = Vector:new(self.spriteCollection.flipH, 0)
 
         if self.spriteCollection.flipH == 1 then
-            p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, 3, 3, Vector:new(-2, -2))
+            p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
         elseif self.spriteCollection.flipH == -1 then
-            p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, 3, 3, Vector:new(-1, -2))
+            p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
         end
 
         G_projectiles[#G_projectiles+1] = p
-        G_hitboxes[#G_hitboxes+1] = p.hitbox
+        G_hitboxes[#G_hitboxes+1] = p.hitboxes["hitbox"]
         self.state = "idle"
     end
 end
@@ -102,6 +78,7 @@ end
 --- Draw the Player.
 --- @param draw_hitbox boolean
 function Player:draw(draw_hitbox)
+
     if self.radiusDisplay then
         love.graphics.setLineWidth(0.3)
         love.graphics.circle("line", self.pos.x, self.pos.y, self.collectRadius)
@@ -120,8 +97,12 @@ function Player:pickup(item)
 
     if ((itemX-self.pos.x)^2 + (itemY - self.pos.y)^2) <= (self.collectRadius^2) then
         self.inventory[#self.inventory+1] = item
-        self.potion_stock =self.potion_stock + 1
-        G_hud:updatePotionStock()
+        
+        --potion de vie
+        if tostring(item)=="Consumable" and item.target =="health" then
+            self.potion_stock =self.potion_stock + 1
+            G_hud:updatePotionStock()
+        end
         return true
     end
     return false

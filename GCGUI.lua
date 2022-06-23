@@ -31,7 +31,7 @@ function GCGUI.newPanel(pX, pY, pW, pH, pColorOut)
     self.W = pImage:getWidth()
     self.H = pImage:getHeight()
   end
-  
+
   function myPanel:setEvent(pEventType, pFunction)
     self.lstEvents[pEventType] = pFunction
   end
@@ -73,11 +73,11 @@ function GCGUI.newPanel(pX, pY, pW, pH, pColorOut)
     if self.Visible == false then return end
     self:drawPanel()
   end
-  
+
   function myPanel:update(dt)
     self:updatePanel()
   end
-  
+
   return myPanel
 end
 
@@ -113,7 +113,7 @@ function GCGUI.newText(pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pColor)
     if self.Visible == false then return end
     self:drawText()
   end
-  
+
   return myText
 end
 
@@ -179,17 +179,17 @@ function GCGUI.newButton(pX, pY, pW, pH, pText, pFont, pColor)
         self:drawPanel()
       else
         love.graphics.draw(self.imgDefault, self.X, self.Y)
-      end    
+      end
     end
     self.Label:draw()
   end
-  
+
   return myButton
 end
 
 function GCGUI.newCheckbox(pX, pY, pW, pH)
   local myCheckbox = GCGUI.newPanel(pX, pY, pW, pH)
-  myCheckbox.Text = pText
+  -- myCheckbox.Text = pText --- Y'a pas de ptext ici visiblement, d'après le warning
   myCheckbox.imgDefault = nil
   myCheckbox.imgPressed = nil
   myCheckbox.isPressed = false
@@ -201,7 +201,7 @@ function GCGUI.newCheckbox(pX, pY, pW, pH)
     self.W = pImageDefault:getWidth()
     self.H = pImageDefault:getHeight()
   end
-  
+
   function myCheckbox:setState(pbState)
     self.isPressed = pbState
   end
@@ -241,10 +241,10 @@ function GCGUI.newCheckbox(pX, pY, pW, pH)
         self:drawPanel()
       else
         love.graphics.draw(self.imgDefault, self.X, self.Y)
-      end    
+      end
     end
   end
-  
+
   return myCheckbox
 end
 
@@ -289,24 +289,24 @@ function GCGUI.newProgressBar(pX, pY, pW, pH, pMax, pColorOut, pColorIn)
       love.graphics.rectangle("fill", self.X + 1, self.Y + 1, barSize, self.H - 2)
     end
   end
-  
+
   return myProgressBar
 end
 
 function GCGUI.newGroup()
   local myGroup = {}
   myGroup.elements = {}
-  
+
   function myGroup:addElement(pElement)
     table.insert(self.elements, pElement)
   end
-  
+
   function myGroup:setVisible(pVisible)
     for n,v in pairs(myGroup.elements) do
       v:setVisible(pVisible)
     end
   end
-  
+
   function myGroup:draw()
     love.graphics.push()
     for n,v in pairs(myGroup.elements) do
@@ -314,13 +314,13 @@ function GCGUI.newGroup()
     end
     love.graphics.pop()
   end
-    
+
   function myGroup:update(dt)
     for n,v in pairs(myGroup.elements) do
       v:update(dt)
     end
   end
-  
+
   return myGroup
 end
 

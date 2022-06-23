@@ -9,7 +9,7 @@ SpriteTimer = require("sprite/spriteTimer")
 --- @field state string
 --- @field spriteCollection SpriteCollection
 --- @field spriteTimer SpriteTimer
---- @field hitbox Hitbox
+--- @field hitboxes table<string, Hitbox> Example: {["hitbox"] = Hitbox, ["hurtbox"] = Hitbox}
 Element = {health = 1, state = "idle"}
 
 --- Constructor of Element.
@@ -24,20 +24,14 @@ end
 --- Initializes the element.
 --- @param pos Vector
 --- @param spriteCollection SpriteCollection
---- @param hbWidth number
---- @param hbHeight number
---- @param hbOffset Vector
-function Element:init(pos, spriteCollection, hbWidth, hbHeight, hbOffset)
+--- @param hitboxFactory HitboxFactory
+function Element:init(pos, spriteCollection, hitboxFactory)
     self.pos = pos or Vector:new(0, 0)
 
     self.spriteCollection = spriteCollection
     self.spriteTimer = SpriteTimer:new()
 
-    hbWidth = hbWidth
-    hbHeight = hbHeight
-    hbOffset = hbOffset or Vector:new(0, 0)
-
-    self.hitbox = Hitbox:new(self.pos, hbWidth, hbHeight, hbOffset)
+    self.hitboxes = hitboxFactory:produceAll(pos)
 end
 
 --- Update the element (called every frames).
@@ -46,7 +40,7 @@ function Element:update(dt)
     if self.spriteCollection:isSpriteSheet(self.state) then
         self.spriteTimer:update(dt, self.spriteCollection:getNumberOfSprites(self.state))
     end
-    self.hitbox:move(self.pos) -- TODO: move hitbox with element
+    self.hitboxes["hitbox"]:move(self.pos) -- TODO: move hitbox with element
 end
 
 --- Draw the element.
@@ -54,7 +48,9 @@ end
 function Element:draw(draw_hitbox)
     self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame())
     if draw_hitbox then
-        self.hitbox:draw()
+        for k, v in pairs(self.hitboxes) do
+            v:draw()
+        end
     end
 end
 
