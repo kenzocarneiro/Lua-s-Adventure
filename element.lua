@@ -11,6 +11,9 @@ SpriteTimer = require("sprite/spriteTimer")
 --- @field spriteCollection SpriteCollection
 --- @field spriteTimer SpriteTimer
 --- @field hitboxes table<string, Hitbox> Example: {["hitbox"] = Hitbox, ["hurtbox"] = Hitbox}
+--- @field flipH number
+--- @field flipV number
+--- @field angle number
 Element = {health = 1, damage = 1, state = "idle"}
 
 --- Constructor of Element.
@@ -30,7 +33,7 @@ end
 --- @param pos Vector
 --- @param spriteCollection SpriteCollection
 --- @param hitboxFactory HitboxFactory|nil
-function Element:init(pos, spriteCollection, hitboxFactory)
+function Element:init(pos, spriteCollection, hitboxFactory, flipH, flipV, angle)
     self.pos = pos or Vector:new(0, 0)
 
     self.spriteCollection = spriteCollection
@@ -42,6 +45,10 @@ function Element:init(pos, spriteCollection, hitboxFactory)
     else
         self.hitboxes = {}
     end
+
+    self.flipH = flipH or 1
+    self.flipV = flipV or 1
+    self.angle = angle or 0
 end
 
 --- Update the element (called every frames).
@@ -57,7 +64,7 @@ end
 --- Draw the element.
 --- @param draw_hitbox boolean
 function Element:draw(draw_hitbox)
-    self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame())
+    self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), self.flipH, self.flipV, self.angle)
     if draw_hitbox then
         local i = 1
         for k, v in pairs(self.hitboxes) do

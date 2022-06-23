@@ -53,8 +53,8 @@ function love.load()
 
     --initialize sprite collections for monster player and item
     local player_sc = SpriteCollection:new("player")
-    player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9)),
-        Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9)),
+    player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
+        Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9), false),
         Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9))})
 
     local playerHF = HitboxFactory:new(
@@ -63,7 +63,8 @@ function love.load()
     )
 
     local monster_sc = SpriteCollection:new("monster")
-    monster_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6))})
+    monster_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6)),
+    Sprite:new("img/troll_run-Sheet.png", true, "run", 16, 16, Vector:new(7, 6), false, {0.12, 0.12, 0.12, 0.12})})
 
     local monsterHF = HitboxFactory:new(
         {name="hitbox", layers={enemy=true}, width=5, height=11, offset=Vector:new(-2, -2)}

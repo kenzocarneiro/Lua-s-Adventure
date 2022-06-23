@@ -43,11 +43,11 @@ function Player:update(dt)
     local move = Vector:new(0, 0)
     if love.keyboard.isDown("right", "d") then
         move = move + Vector:new(1, 0)
-        self.spriteCollection.flipH = 1
+        self.flipH = 1
     end
     if love.keyboard.isDown("left", "q") then
         move = move + Vector:new(-1, 0)
-        self.spriteCollection.flipH = -1
+        self.flipH = -1
     end
     if love.keyboard.isDown("up", "z") then
         move = move + Vector:new(0, -1)
@@ -73,11 +73,11 @@ function Player:update(dt)
         if currentFrame == 4 and not self.hasShoot then
             self.hasShoot = true
             local p = Projectile:new()
-            local direction = Vector:new(self.spriteCollection.flipH, 0)
+            local direction = Vector:new(self.flipH, 0)
 
-            if self.spriteCollection.flipH == 1 then
+            if self.flipH == 1 then
                 p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-            elseif self.spriteCollection.flipH == -1 then
+            elseif self.flipH == -1 then
                 p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
             end
             G_hurtboxes[#G_hurtboxes + 1] = p.hitboxes["hurtbox"]

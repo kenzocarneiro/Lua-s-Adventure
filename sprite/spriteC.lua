@@ -2,11 +2,8 @@
 --- Class representing the collection of Sprites of an Element
 --- @class SpriteCollection
 --- @field sprites table<string, Sprite>
---- @field flipH number
---- @field flipV number
---- @field angle number
 --- @field frames number
-SpriteCollection = {flipH = 1, flipV = 1, angle=0, sprites = nil}
+SpriteCollection = {sprites = nil}
 
 --- Constructor of SpriteCollection.
 --- @param el string The name of the corresponding Element.
@@ -40,9 +37,9 @@ end
 --- @param flipV number|nil
 --- @param angle number|nil
 function SpriteCollection:draw(state, pos, frameNumber, flipH, flipV, angle)
-    flipH = flipH or self.flipH
-    flipV = flipV or self.flipV
-    angle = angle or self.angle
+    flipH = flipH or 1
+    flipV = flipV or 1
+    angle = angle or 0
     if self.sprites[state].isSheet then
         love.graphics.draw(self.sprites[state].loveImg, self.sprites[state].frames[frameNumber], pos.x, pos.y, angle, flipH, flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
     else

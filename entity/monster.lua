@@ -33,7 +33,6 @@ end
 function Monster:update(dt)
     self:betterMove(self.goal)
 
-
     Entity.update(self, dt)
 end
 
@@ -67,7 +66,6 @@ function Monster:drop()
     end
 end
 
-
 function Monster:move(vect)
     --initialization of the move we want to do
     local move = Vector:new(vect.x-self.pos.x,vect.y-self.pos.y)
@@ -76,11 +74,25 @@ function Monster:move(vect)
     if self.goal then
         Entity.move(self, move)
     end
+
+    if self.state == "idle" then
+        self:changeState("run")
+    end
+
+    if move.x < 0 then
+        self.flipH = -1
+    else
+        self.flipH = 1
+    end
 end
 
 function Monster:betterMove(vect)
     --initialization of the move we want to do
     local move = Vector:new(vect.x-self.pos.x,vect.y-self.pos.y)
+
+    if self.state == "idle" then
+        self:changeState("run")
+    end
 
     --if we have a goal
     if self.goal then
@@ -106,6 +118,11 @@ function Monster:betterMove(vect)
         end
     end
 
+    if move.x < 0 then
+        self.flipH = -1
+    else
+        self.flipH = 1
+    end
 end
 
 -- function Monster:advancedMove(vect, time)
