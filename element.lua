@@ -50,7 +50,8 @@ function Element:update(dt)
     if self.spriteCollection:isSpriteSheet(self.state) then
         self.spriteTimer:update(dt, self.spriteCollection:getNumberOfSprites(self.state))
     end
-    if self.hitboxes["hitbox"] then self.hitboxes["hitbox"]:move(self.pos) end -- TODO: move hitbox with element
+    if self.hitboxes["hitbox"] then self.hitboxes["hitbox"]:move(self.pos) end
+    if self.hitboxes["hurtbox"] then self.hitboxes["hurtbox"]:move(self.pos) end
 end
 
 --- Draw the element.
@@ -72,6 +73,8 @@ function Element:draw(draw_hitbox)
     end
 end
 
+--- Change the Element state and its corresponding sprite
+--- @param state string
 function Element:changeState(state)
     if self.state ~= state then
         self.state = state
@@ -79,6 +82,8 @@ function Element:changeState(state)
     end
 end
 
+--- Hurt the Element and check if the Element is dead.
+--- @param damage number
 function Element:hurt(damage)
     self.health = self.health - damage
     if self.health <= 0 then
@@ -86,6 +91,7 @@ function Element:hurt(damage)
     end
 end
 
+--- Converts the Element to a string.
 function Element:__tostring()
     return "Element"
 end

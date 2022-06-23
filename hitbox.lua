@@ -75,12 +75,15 @@ end
 -- ------------------------------------------------------
 
 
---- Tests if the Hitbox is overlapping with another Hitbox h after a move m
---- @param m Vector
+--- Tests if the Hitbox is overlapping with another Hitbox h right now, or after a move m if m is given.
 --- @param h Hitbox
+--- @param m Vector|nil
 --- @return boolean
-function Hitbox:collide(m, h)
-    local temp_pos = self.pos + m
+function Hitbox:collide(h, m)
+    local temp_pos = self.pos
+    if m then
+        temp_pos = self.pos + m
+    end
     -- Top left : (pos.x, pos.y)
     -- Bottom Right : (pos.x+width, pos.y+height)
     if temp_pos.x > (h.pos.x + h.width) or (temp_pos.x + self.width) < h.pos.x then

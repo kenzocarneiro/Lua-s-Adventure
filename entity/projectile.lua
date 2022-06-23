@@ -28,7 +28,7 @@ end
 function Projectile:draw(draw_hitbox)
     self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), self.direction.x)
     if draw_hitbox then
-        self.hitboxes["hitbox"]:draw()
+        self.hitboxes["hurtbox"]:draw()
     end
 end
 

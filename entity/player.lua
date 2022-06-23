@@ -72,6 +72,7 @@ function Player:update(dt)
         elseif self.spriteCollection.flipH == -1 then
             p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
         end
+        G_hurtboxes[#G_hurtboxes + 1] = p.hitboxes["hurtbox"]
 
         G_projectiles[#G_projectiles+1] = p
         G_hitboxes[#G_hitboxes+1] = p.hitboxes["hitbox"]
@@ -101,7 +102,7 @@ function Player:pickup(item)
 
     if ((itemX-self.pos.x)^2 + (itemY - self.pos.y)^2) <= (self.collectRadius^2) then
         self.inventory[#self.inventory+1] = item
-        
+
         --potion de vie
         if tostring(item)=="Consumable" and item.target =="health" then
             self.potion_stock = self.potion_stock + 1
@@ -131,7 +132,7 @@ function Player:ApplyHealthPotionEffect(pAmount)
         G_hud.player.elements["healthBar"]:modifyValue(pAmount)
 
     end
-    
+
 end
 
 return Player

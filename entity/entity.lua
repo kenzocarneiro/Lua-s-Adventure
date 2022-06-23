@@ -28,17 +28,19 @@ function Entity:init(speed, weapon, pos, spriteCollection, hitboxFactory)
 end
 
 
---
-function Entity:collision(move)
+--- Test if the entity will collide with another entity if it moves with the move vector
+--- @param move Vector
+--- @return boolean, boolean
+function Entity:willCollide(move)
     local move_H = Vector:new(move.x, 0)
     local move_V = Vector:new(0, move.y)
-    local collision_H, collision_V
+    local collision_H, collision_V = false, false
     for i, v in pairs(G_hitboxes) do
         if v then
-            if self.hitboxes["hitbox"]:collide(move_H, v) and self.hitboxes["hitbox"] ~= v then
+            if self.hitboxes["hitbox"]:collide(v, move_H) and self.hitboxes["hitbox"] ~= v then
                 collision_H = true
             end
-            if self.hitboxes["hitbox"]:collide(move_V, v) and self.hitboxes["hitbox"] ~= v then
+            if self.hitboxes["hitbox"]:collide(v, move_V) and self.hitboxes["hitbox"] ~= v then
                 collision_V = true
             end
         end
@@ -76,7 +78,7 @@ function Entity:move(move)
     --     end
     -- end
 
-    collision_H, collision_V = self:collision(move)
+    if self.hitboxes["hitbox"] then collision_H, collision_V = self:willCollide(move) end
 
     local finalMove = Vector:new(0, 0)
     if not collision_H then
@@ -87,12 +89,12 @@ function Entity:move(move)
     end
     self.pos = self.pos + finalMove
 
-    if collision_H or collision_V then
-        if self.hitboxes["hitbox"].layers["projectile"] then
-            G_deadElements[#G_deadElements + 1] = self
-            if collider ~= -1 then collider:hurt(self.damage) end
-        end
-    end
+    -- if collision_H or collision_V then
+    --     if self.hitboxes["hitbox"].layers["projectileP"] then
+    --         G_deadElements[#G_deadElements + 1] = self
+    --         if collider ~= -1 then collider:hurt(self.damage) end
+    --     end
+    -- end
 
 end
 

@@ -85,7 +85,7 @@ function Monster:betterMove(vect)
     --if we have a goal
     if self.goal then
         move = move:normalized() * self.speed
-        local collision_H, collision_V = Entity.collision(self, move)
+        local collision_H, collision_V = Entity.willCollide(self, move)
         if collision_V then
             if move.y > 0 then
                 Entity.move(self, Vector:new(-self.speed, 0))
