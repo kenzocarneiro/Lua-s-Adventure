@@ -60,6 +60,7 @@ function love.load()
     G_hitboxActivated = true
     G_room = Room:new(1)
 
+    --- @type Element[]
     G_deadElements = {}
 
     --initialize sprite collections for monster player and item
@@ -82,9 +83,9 @@ function love.load()
 
     local item_sc = SpriteCollection:new("item")
     item_sc:init({Sprite:new("img/axe.png", false, "idle", 16, 16, Vector:new(7, 6))})
-    local itemHF = HitboxFactory:new(
-        {"hitbox", {item=true}, 4, 7, Vector:new(-5, -5)}
-    )
+    -- local itemHF = HitboxFactory:new(
+    --     {"hitbox", {item=true}, 4, 7, Vector:new(-5, -5)}
+    -- )
 
 
     -- G_player because player is a global variable
@@ -105,12 +106,12 @@ function love.load()
     G_monsterList[#G_monsterList+1] = m2
 
     G_axe = Item:new()
-    G_axe:init("AXE !", Vector:new(90, 70), item_sc, itemHF)
+    G_axe:init("AXE !", Vector:new(90, 70), item_sc, "None")
     G_hitboxes[#G_hitboxes+1] = G_axe.hitboxes["hitbox"]
     G_itemList[#G_itemList+1] = G_axe
 
     G_axe2 = Item:new()
-    G_axe2:init("AXE !", Vector:new(200, 90), item_sc, itemHF)
+    G_axe2:init("AXE !", Vector:new(200, 90), item_sc, "None")
     G_hitboxes[#G_hitboxes+1] = G_axe2.hitboxes["hitbox"]
     G_itemList[#G_itemList+1] = G_axe2
 
@@ -231,7 +232,7 @@ function love.update(dt)
             end
 
             for k2, v2 in pairs(G_hitboxes) do
-                if v2 == v then
+                if v2 == v.hitboxes["hitbox"] then
                     table.remove(G_hitboxes, k2)
                     break
                 end
@@ -243,10 +244,10 @@ function love.update(dt)
                     break
                 end
             end
-
             for k2, v2 in pairs(G_hitboxes) do
-                if v2 == v then
+                if v2 == v.hitboxes["hitbox"] then
                     table.remove(G_hitboxes, k2)
+                    print("HITBOX")
                     break
                 end
             end
@@ -260,7 +261,7 @@ function love.update(dt)
             end
 
             for k2, v2 in pairs(G_hitboxes) do
-                if v2 == v then
+                if v2 == v.hitboxes["hitbox"] then
                     table.remove(G_hitboxes, k2)
                     break
                 end
@@ -274,7 +275,7 @@ function love.update(dt)
             end
 
             for k2, v2 in pairs(G_hitboxes) do
-                if v2 == v then
+                if v2 == v.hitboxes["hitbox"] then
                     table.remove(G_hitboxes, k2)
                     break
                 end
