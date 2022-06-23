@@ -37,6 +37,8 @@ function Entity:move(move)
     local move_V = Vector:new(0, move.y)
     local collision_H = false
     local collision_V = false
+    local hurt = false
+
     for k, v in pairs(G_hitboxes) do
         if v then
             if self.hitboxes["hitbox"]:collide(move_H, v) and self.hitboxes["hitbox"] ~= v then
@@ -63,9 +65,11 @@ function Entity:move(move)
     end
     self.pos = self.pos + finalMove
 
-    if self.hitboxes["hitbox"].layers["projectile"] and (collision_H or collision_V) then
-        G_deadElements[#G_deadElements + 1] = self
-        if collider ~= -1 then collider:hurt(self.damage) end
+    if collision_H or collision_V then
+        if self.hitboxes["hitbox"].layers["projectile"] then
+            G_deadElements[#G_deadElements + 1] = self
+            if collider ~= -1 then collider:hurt(self.damage) end
+        end
     end
 
 end

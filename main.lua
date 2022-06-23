@@ -46,7 +46,7 @@ function love.load()
     G_fireballSC = SpriteCollection:new("fireball")
     G_fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
 
-    G_fireballHF = HitboxFactory:new({"hitbox", {projectile=true}, 3, 3, Vector:new(-2, -2)}, {"hurtbox", {projectile=true}, 3, 3, Vector:new(-2, -2)})
+    G_fireballHF = HitboxFactory:new({"hurtbox", {projectile=true}, 3, 3, Vector:new(-2, -2)})
 
     --declaration des variables globales de controle
     --- @type Hitbox[]
