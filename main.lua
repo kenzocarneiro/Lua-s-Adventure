@@ -11,24 +11,6 @@ local Hud = require("hud/hud")
 local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
 love.graphics.setFont(mainFont)
 
--- A ne pas supprimer => mais ça ne marche pas encore (lien avec HUD)
--- 
--- local function onPanelHover(pState)
---   print("Panel is hover:"..pState)
--- end
-
--- local function onCheckboxSwitch(pState)
---   print("Switch is:"..pState)
--- end
--- 
--- function love.keypressed(k)
---   if k == "m" then
---     G_hud.player["healthBar"]:modifyValue(2)
---   elseif k == "l" then
---     G_hud.player["healthBar"]:modifyValue(-2)
---   end
--- end
-
 --- Load the game
 function love.load()
     math.randomseed(os.time())
@@ -97,6 +79,7 @@ function love.load()
 end
 
 function love.keypressed(k)
+    G_hud:keypressed(k)
     if k == "space" then
         G_player:changeState("attack")
         print("BOOM")

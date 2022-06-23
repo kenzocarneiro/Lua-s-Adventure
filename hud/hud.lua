@@ -29,7 +29,7 @@ function Hud.drawPlayer()
     local healthHeart = Panel:new(0, 0)
         healthHeart:setImage(love.graphics.newImage("sprites/hud/health.png"), 0.1)
 
-    local healthBar = Bar:new(40,8, 164, 28, 10, nil,{0,255,0})
+    local healthBar = Bar:new(35,10, 164, 22, 10, nil,{0,255,0})
 
    -- G_button = Button:new(55, 100, 120, 80,"No images", mainFont, {250, 250, 250})
   --  print("g button h :" .. G_button.h)
@@ -76,26 +76,35 @@ function Hud.drawPlayer()
 
     local title3 = myGUI.newText(skill_1.W/2 + skill_2.W*2 , hauteur - skill_1.H -20, 0, 0,"T", mainFont, "", "", {25, 150, 25})
     
-    group:addElement(skill_3)
+    group:addElement(skill_3, "skill_3")
     
-    group:addElement(skill_2)
-    group:addElement(skill_1)
-    group:addElement(title1)
-    group:addElement(title2)
-    group:addElement(title3)
+    group:addElement(skill_2, "skill_2")
+    group:addElement(skill_1, "skill_1")
+    group:addElement(title1, "title1")
+    group:addElement(title2, "title2")
+    group:addElement(title3, "title3")
 
-    group:addElement(inventory_slot_1)
-    group:addElement(inventory_slot_2)
-    group:addElement(inventory_slot_3)
-    group:addElement(inventory_slot_4)
-    group:addElement(inventory_slot_5)
+    group:addElement(inventory_slot_1, "inventory_slot_1")
+    group:addElement(inventory_slot_2, "inventory_slot_2")
+    group:addElement(inventory_slot_3, "inventory_slot_3")
+    group:addElement(inventory_slot_4, "inventory_slot_4")
+    group:addElement(inventory_slot_5, "inventory_slot_5")
 
-    group:addElement(buttonParam)
+    group:addElement(buttonParam, "buttonParam")
 
-    group:addElement(healthBar)--, "healthBar")
-    group:addElement(healthHeart)--, "healthHeart")
+    
+    group:addElement(healthBar, "healthBar")
+    group:addElement(healthHeart, "healthHeart")
 
     return group
+end
+
+function Hud:keypressed(k)
+    if k == "m" then
+        G_hud.player.elements["healthBar"]:modifyValue(2)
+    elseif k == "l" then
+        G_hud.player.elements["healthBar"]:modifyValue(-2)
+    end
 end
 
 function Hud:update(dt)
@@ -104,6 +113,8 @@ end
 
 function Hud:draw()
     self.player:draw()
+    
+    love.graphics.setColor(1,1,1)
 end
 
 
@@ -114,3 +125,12 @@ end
 -- end
 
 return Hud
+
+-- local function onPanelHover(pState)
+--   print("Panel is hover:"..pState)
+-- end
+
+-- local function onCheckboxSwitch(pState)
+--   print("Switch is:"..pState)
+-- end
+
