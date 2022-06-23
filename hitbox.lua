@@ -103,11 +103,13 @@ function Hitbox:move(pos)
 end
 
 --- Draws the hitbox (used for debugging).
-function Hitbox:draw()
+--- @param color number[]|nil (optional) 3 numbers must be given: RGB
+function Hitbox:draw(color)
 
     -- Hitbox rectangles
     love.graphics.setLineWidth(1)
-    love.graphics.setColor(0/255, 255/255, 255/255, 100/255)
+    if color == nil then love.graphics.setColor(0/255, 255/255, 255/255, 100/255)
+    else love.graphics.setColor(color[1], color[2], color[3], 100/255) end
     love.graphics.rectangle("line", self.pos.x + 0.5, self.pos.y + 0.5, self.width, self.height)
 
     -- -- Hitbox corners

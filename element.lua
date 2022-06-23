@@ -53,8 +53,16 @@ end
 function Element:draw(draw_hitbox)
     self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame())
     if draw_hitbox then
+        local i = 1
         for k, v in pairs(self.hitboxes) do
-            v:draw()
+            if i == 1 then
+                v:draw({0, 255, 255})
+            elseif i == 2 then
+                v:draw({255, 255, 0})
+            elseif i >= 3 then
+                v:draw({255, 0, 255})
+            end
+            i = i + 1
         end
     end
 end
