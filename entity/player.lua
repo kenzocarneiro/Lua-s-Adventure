@@ -11,7 +11,7 @@ Player = Entity:new()
 function Player:new() return Entity.new(self) end
 
 --- Initializes the item.
---- @param inventory table
+--- @param inventory Item[]|Weapon[]|Consumable[]|Coin[]
 --- @param collectRadius number
 function Player:init(inventory, collectRadius, ...)
     self.inventory = inventory or {}
@@ -89,7 +89,7 @@ end
 
 
 --- allow the Player to pickup items
---- @param item Item
+--- @param item Item|Weapon|Consumable|Coin
 --- @return boolean --true if we pickup the item, false if we cant
 function Player:pickup(item)
     local itemX = item.pos.x
@@ -100,7 +100,7 @@ function Player:pickup(item)
         
         --potion de vie
         if tostring(item)=="Consumable" and item.target =="health" then
-            self.potion_stock =self.potion_stock + 1
+            self.potion_stock = self.potion_stock + 1
             G_hud:updatePotionStock()
         end
         return true
