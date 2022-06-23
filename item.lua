@@ -1,7 +1,7 @@
 Element = require("element")
 
---- Class representing entities in the game: anything that is alive.
---- @class Item:Element Entity is a subclass of Element
+--- Class representing Items in the game:
+--- @class Item:Element Item is a subclass of Entity
 --- @field description string
 Item = Element:new()
 

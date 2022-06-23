@@ -22,8 +22,28 @@ function Entity:init(speed, weapon, pos, spriteCollection, hitboxFactory)
     self.speed = speed or 1
     self.weapon = weapon or "epee"
     self.hasShoot = false
+    self.damage = 1
 
     Element.init(self, pos, spriteCollection, hitboxFactory)
+end
+
+
+--
+function Entity:collision(move)
+    local move_H = Vector:new(move.x, 0)
+    local move_V = Vector:new(0, move.y)
+    local collision_H, collision_V
+    for i, v in pairs(G_hitboxes) do
+        if v then
+            if self.hitboxes["hitbox"]:collide(move_H, v) and self.hitboxes["hitbox"] ~= v then
+                collision_H = true
+            end
+            if self.hitboxes["hitbox"]:collide(move_V, v) and self.hitboxes["hitbox"] ~= v then
+                collision_V = true
+            end
+        end
+    end
+    return collision_H, collision_V
 end
 
 --- Move the entity (not done yet).
@@ -39,22 +59,24 @@ function Entity:move(move)
     local collision_V = false
     local hurt = false
 
-    for k, v in pairs(G_hitboxes) do
-        if v then
-            if self.hitboxes["hitbox"]:collide(move_H, v) and self.hitboxes["hitbox"] ~= v then
-                collision_H = true
-                collider = v.associatedElement
-            end
-            if self.hitboxes["hitbox"]:collide(move_V, v) and self.hitboxes["hitbox"] ~= v then
-                collision_V = true
-                collider = v.associatedElement
-            end
-            if collision_H and collision_V then
-                self.goal = nil
-                break
-            end
-        end
-    end
+    -- for k, v in pairs(G_hitboxes) do
+    --     if v then
+    --         if self.hitboxes["hitbox"]:collide(move_H, v) and self.hitboxes["hitbox"] ~= v then
+    --             collision_H = true
+    --             collider = v.associatedElement
+    --         end
+    --         if self.hitboxes["hitbox"]:collide(move_V, v) and self.hitboxes["hitbox"] ~= v then
+    --             collision_V = true
+    --             collider = v.associatedElement
+    --         end
+    --         if collision_H and collision_V then
+    --             self.goal = nil
+    --             break
+    --         end
+    --     end
+    -- end
+
+    collision_H, collision_V = self:collision(move)
 
     local finalMove = Vector:new(0, 0)
     if not collision_H then

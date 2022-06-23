@@ -41,4 +41,9 @@ function Text:draw()
     end
     love.graphics.print(self.text, x, y)
   end
+
+  function Text:edit(pString)
+    self.text =pString
+  end
+  
 return Text

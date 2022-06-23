@@ -11,23 +11,6 @@ G_eltCounter = 0
 local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
 love.graphics.setFont(mainFont)
 
--- A ne pas supprimer => mais ça ne marche pas encore (lien avec HUD)
---
--- local function onPanelHover(pState)
---   print("Panel is hover:"..pState)
--- end
-
--- local function onCheckboxSwitch(pState)
---   print("Switch is:"..pState)
--- end
---
--- function love.keypressed(k)
---   if k == "m" then
---     G_hud.player["healthBar"]:modifyValue(2)
---   elseif k == "l" then
---     G_hud.player["healthBar"]:modifyValue(-2)
---   end
--- end
 
 --- Load the game
 function love.load()
@@ -41,6 +24,9 @@ function love.load()
     local Vector = require("vector")
     local Sprite = require("sprite/sprite")
     local SpriteCollection = require("sprite/spriteC")
+    local Consumable = require("consumable")
+    local Coin = require("coin")
+    local Weapon = require("weapon")
     local HitboxFactory = require("hitboxF")
 
     G_fireballSC = SpriteCollection:new("fireball")
@@ -53,7 +39,7 @@ function love.load()
     G_hitboxes = {}
     --- @type Projectile[]
     G_projectiles = {}
-    --- @type Item[]
+    --- @type Item[]|Coin[]|Weapon[]|Consumable[]
     G_itemList = {}
     --- @type Monster[]
     G_monsterList = {}
@@ -86,6 +72,37 @@ function love.load()
     -- local itemHF = HitboxFactory:new(
     --     {"hitbox", {item=true}, 4, 7, Vector:new(-5, -5)}
     -- )
+    local itemHF = HitboxFactory:new(
+        {"hitbox", {"item"}, 4, 7, Vector:new(-5, -5)}
+    )
+
+    local bluePotionSc = SpriteCollection:new("consumable")
+    bluePotionSc:init({Sprite:new("img/potion_blue.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+    local redPotionSc = SpriteCollection:new("consumable")
+    redPotionSc:init({Sprite:new("img/potion_red.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+    local yellowPotionSc = SpriteCollection:new("consumable")
+    yellowPotionSc:init({Sprite:new("img/potion_yellow.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+    local bluePotionHF = HitboxFactory:new(
+        {"hitbox", {"potion"}, 5, 6, Vector:new(-6, -5)}
+    )
+
+    local redPotionHF = HitboxFactory:new(
+        {"hitbox", {"potion"}, 5, 6, Vector:new(-6, -5)}
+    )
+
+    local yellowPotionHF = HitboxFactory:new(
+        {"hitbox", {"potion"}, 5, 6, Vector:new(-6, -5)}
+    )
+
+    local coinSc = SpriteCollection:new("coin")
+    coinSc:init({Sprite:new("img/coin.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+    local coinHF = HitboxFactory:new(
+        {"hitbox", {"coin"}, 6, 8, Vector:new(-6, -6)}
+    )
 
 
     -- G_player because player is a global variable
@@ -105,13 +122,34 @@ function love.load()
     G_hitboxes[#G_hitboxes+1] = m2.hitboxes["hitbox"]
     G_monsterList[#G_monsterList+1] = m2
 
-    G_axe = Item:new()
-    G_axe:init("AXE !", Vector:new(90, 70), item_sc, nil)
+
+    local speedPotion = Consumable:new()
+    speedPotion:init("speed", 1, "potion of speed", Vector:new(250, 150), bluePotionSc, bluePotionHF)
+    G_hitboxes[#G_hitboxes+1] = speedPotion.hitboxes["hitbox"]
+    G_itemList[#G_itemList+1] = speedPotion
+
+    local healthPotion = Consumable:new()
+    healthPotion:init("health", 1, "potion of heatlh", Vector:new(30, 150), redPotionSc, redPotionHF)
+    G_hitboxes[#G_hitboxes+1] = healthPotion.hitboxes["hitbox"]
+    G_itemList[#G_itemList+1] = healthPotion
+
+    local damagePotion = Consumable:new()
+    damagePotion:init("damage", 1, "potion of health", Vector:new(30, 50), yellowPotionSc, yellowPotionHF)
+    G_hitboxes[#G_hitboxes+1] = damagePotion.hitboxes["hitbox"]
+    G_itemList[#G_itemList+1] = damagePotion
+
+    local goldCoin = Coin:new()
+    goldCoin:init(3, "coin of gold", Vector:new(200, 20), coinSc, coinHF)
+    G_hitboxes[#G_hitboxes+1] = goldCoin.hitboxes["hitbox"]
+    G_itemList[#G_itemList+1] = goldCoin
+
+    G_axe = Weapon:new()
+    G_axe:init(5, "AXE !", Vector:new(90, 70), item_sc, itemHF)
     G_hitboxes[#G_hitboxes+1] = G_axe.hitboxes["hitbox"]
     G_itemList[#G_itemList+1] = G_axe
 
-    G_axe2 = Item:new()
-    G_axe2:init("AXE !", Vector:new(200, 90), item_sc, nil)
+    G_axe2 = Weapon:new()
+    G_axe2:init(5, "AXE !", Vector:new(200, 90), item_sc, itemHF)
     G_hitboxes[#G_hitboxes+1] = G_axe2.hitboxes["hitbox"]
     G_itemList[#G_itemList+1] = G_axe2
 
@@ -120,6 +158,7 @@ function love.load()
 end
 
 function love.keypressed(k)
+    G_hud:keypressed(k)
     if k == "space" then
         G_player:changeState("attack")
         print("BOOM")
@@ -130,6 +169,7 @@ function love.keypressed(k)
     elseif k == "escape" then
         love.event.quit()
     end
+
 end
 
 --- Update the game (called every frames)
@@ -211,12 +251,22 @@ function love.update(dt)
     for i = 1,#G_itemList do
         if G_itemList[i] then
             if G_player:pickup(G_itemList[i]) then
+                print("pickup")
+                print(G_player.inventory[#G_player.inventory])
+                if tostring(G_player.inventory[#G_player.inventory]) == "Coin" then
+                    G_player.gold = G_player.gold + G_itemList[i].value
+                    table.remove(G_player.inventory, #G_player.inventory)
+                    print(G_player.gold)
+                end
+
                 for j = 1,#G_hitboxes do
                     if G_hitboxes[j] == G_itemList[i].hitboxes["hitbox"] then
                         table.remove(G_hitboxes, j)
+                        break
                     end
                 end
                 table.remove(G_itemList, i)
+                break
             end
         end
     end
