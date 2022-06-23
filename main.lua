@@ -63,7 +63,7 @@ function love.load()
     monster_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6))})
 
     local item_sc = SpriteCollection:new("item")
-    item_sc:init({Sprite:new("img/axe.png", false, "idle", 16, 16, Vector:new(7, 6))})
+    item_sc:init({Sprite:new("img/potion_red.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
 
     -- G_player because player is a global variable
@@ -106,7 +106,20 @@ function love.keypressed(k)
         end
     elseif k == "escape" then
         love.event.quit()
+    --inventory
+    elseif k == "a" then
+        G_player:ApplyHealthPotionEffect(3)
+    elseif k == "m" then
+        G_player.currentHealth =G_player.currentHealth - 2
+        G_hud.updateHealthPlayer(- 2)
+    -- DIMINER vie joueur
+    elseif k == "l" then
+        print(G_hud.player.elements)
+        G_hud.player.elements["healthBar"]:setValue(5)
+        G_player.currentHealth =G_player.currentHealth - 2
+        G_hud.updateHealthPlayer(- 2)
     end
+
 end
 
 --- Update the game (called every frames)
