@@ -39,7 +39,7 @@ function love.load()
     G_hitboxes = {}
     --- @type Projectile[]
     G_projectiles = {}
-    --- @type Item[]|Coin[]|Weapon[]
+    --- @type Item[]|Coin[]|Weapon[]|Consumable[]
     G_itemList = {}
     --- @type Monster[]
     G_monsterList = {}
@@ -186,27 +186,16 @@ function love.update(dt)
         G_player.radiusDisplay = false
     end
 
-    -- TO TEST, DELETE AFTER
-    --kills a monster (to debug drop)
-    if love.mouse.isDown(1) then
-        local index = 1
-        if G_monsterList[index] then
-            for j = 1,#G_hitboxes do
-                if G_hitboxes[j] then
-                    if G_hitboxes[j] == G_monsterList[index].hitboxes["hitbox"] then
-                        table.remove(G_hitboxes, j)
-                        break
-                    end
-                end
-            end
-            local i = G_monsterList[index]:drop()
-            if i then
-                G_hitboxes[#G_hitboxes+1] = i.hitboxes["hitbox"]
-                G_itemList[#G_itemList+1] = i
-            end
-            G_monsterList = G_monsterList[index]:die(G_monsterList)
-        end
+    if love.keyboard.isDown("1") then
+        G_player.currentPotion = 1 --health
     end
+    if love.keyboard.isDown("2") then
+        G_player.currentPotion = 2 --speed
+    end
+    if love.keyboard.isDown("3") then
+        G_player.currentPotion = 3 --damage
+    end
+
 
     if G_PONG then
         Pong.update(dt)
@@ -250,7 +239,6 @@ function love.update(dt)
                 if tostring(G_player.inventory[#G_player.inventory]) == "Coin" then
                     G_player.gold = G_player.gold + G_itemList[i].value
                     table.remove(G_player.inventory, #G_player.inventory)
-                    print(G_player.gold)
                 end
 
                 for j = 1,#G_hitboxes do

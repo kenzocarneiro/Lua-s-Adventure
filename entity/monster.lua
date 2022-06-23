@@ -22,6 +22,7 @@ function Monster:new() return Entity.new(self) end
 function Monster:init(chanceOfDrop, speed, weapon, pos, spriteCollection, hitboxFactory)
     self.chanceOfDrop = chanceOfDrop or 0
     self.goal = nil
+    self.direction = nil
 
     Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)
 end
@@ -30,7 +31,7 @@ end
 --- Update the monster (called every frames).
 --- @param dt number
 function Monster:update(dt)
-    --self:move(self.goal)
+    self:betterMove(self.goal)
 
 
     Entity.update(self, dt)
@@ -75,6 +76,36 @@ function Monster:move(vect)
     if self.goal then
         Entity.move(self, move)
     end
+end
+
+function Monster:betterMove(vect)
+    --initialization of the move we want to do
+    local move = Vector:new(vect.x-self.pos.x,vect.y-self.pos.y)
+
+    --if we have a goal
+    if self.goal then
+        move = move:normalized() * self.speed
+        local collision_H, collision_V = Entity.collision(self, move)
+        if collision_V then
+            if move.y > 0 then
+                Entity.move(self, Vector:new(-self.speed, 0))
+            elseif move.y < 0 then
+                Entity.move(self, Vector:new(self.speed, 0))
+            end
+        end
+        if collision_H then
+            if move.x > 0 then
+                Entity.move(self, Vector:new(0, self.speed))
+            elseif move.x < 0 then
+                Entity.move(self, Vector:new(0, -self.speed))
+            end
+        end
+        if not collision_V and not collision_H then
+            move = Vector:new(vect.x-self.pos.x,vect.y-self.pos.y)
+            Entity.move(self, move)
+        end
+    end
+
 end
 
 -- function Monster:advancedMove(vect, time)
