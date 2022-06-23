@@ -141,7 +141,7 @@ function Player:__tostring()
     return "Player"
 end
 
-function Player:ApplyHealthPotionEffect(pAmount)
+function Player:applyPotionEffect(pAmount)
     if (self.potion_stock[self.currentPotion] == 0) then
         print(" t'as plus de potions frérot !")
     elseif self.currentPotion == 1 then
@@ -176,7 +176,7 @@ function Player:consume()
 
 end
 
-function Player:CastSpell()
+function Player:castSpell()
 local p = {}
 -- local direction = {}
 --     for i=1, 6 do
