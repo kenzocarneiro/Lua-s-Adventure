@@ -41,6 +41,7 @@ function love.load()
     local Vector = require("vector")
     local Sprite = require("sprite/sprite")
     local SpriteCollection = require("sprite/spriteC")
+    local Consumable = require("consumable")
 
     G_fireballSC = SpriteCollection:new("fireball")
     G_fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
@@ -65,6 +66,9 @@ function love.load()
     local item_sc = SpriteCollection:new("item")
     item_sc:init({Sprite:new("img/axe.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
+    local potion_sc = SpriteCollection:new("consumable")
+    potion_sc:init({Sprite:new("img/potion_blue.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
 
     -- G_player because player is a global variable
     G_player = Player:new()
@@ -83,15 +87,20 @@ function love.load()
     G_hitboxes[#G_hitboxes+1] = m2.hitbox
     G_monsterList[#G_monsterList+1] = m2
 
-    G_axe = Item:new()
-    G_axe:init("AXE !", Vector:new(90, 90), item_sc, 4, 7, Vector:new(-5, -5))
-    G_hitboxes[#G_hitboxes+1] = G_axe.hitbox
-    G_itemList[#G_itemList+1] = G_axe
+    local axe = Item:new()
+    axe:init("AXE !", Vector:new(190, 90), item_sc, 4, 7, Vector:new(-5, -5))
+    G_hitboxes[#G_hitboxes+1] = axe.hitbox
+    G_itemList[#G_itemList+1] = axe
 
-    G_axe2 = Item:new()
-    G_axe2:init("AXE !", Vector:new(200, 90), item_sc, 4, 7, Vector:new(-5, -5))
-    G_hitboxes[#G_hitboxes+1] = G_axe2.hitbox
-    G_itemList[#G_itemList+1] = G_axe2
+    local axe2 = Item:new()
+    axe2:init("AXE !", Vector:new(150, 90), item_sc, 4, 7, Vector:new(-5, -5))
+    G_hitboxes[#G_hitboxes+1] = axe2.hitbox
+    G_itemList[#G_itemList+1] = axe2
+
+    local speedPotion = Consumable:new()
+    speedPotion:init("speed", 3, "potion of speed", Vector:new(250, 150), potion_sc, 5, 6, Vector:new(-6, -5))
+    G_hitboxes[#G_hitboxes+1] = speedPotion.hitbox
+    G_itemList[#G_itemList+1] = speedPotion
 
     G_hud = Hud:new()
     -- print(G_hud.player[14]) debug A ne pas supprimer
@@ -189,6 +198,19 @@ function love.update(dt)
     for i = 1,#G_itemList do
         if G_itemList[i] then
             if G_player:pickup(G_itemList[i]) then
+                print("pickup")
+                print(G_player.inventory[#G_player.inventory])
+                if G_player.inventory[#G_player.inventory].__tostring() == "Consumable" then
+                    print("Consume")
+                    local buffs = G_itemList[i]:consume(G_player)
+                    print(buffs)
+                    table.remove(G_player.inventory, #G_player.inventory)
+                    G_player.health = buffs[1]
+                    G_player.speed = buffs[2]
+                    G_player.damage = buffs[3]
+
+                end
+
                 for j = 1,#G_hitboxes do
                     if G_hitboxes[j] == G_itemList[i].hitbox then
                         table.remove(G_hitboxes, j)

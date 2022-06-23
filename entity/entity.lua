@@ -24,6 +24,7 @@ function Entity:init(speed, weapon, pos, spriteCollection, hbWidth, hbHeight, hb
     self.speed = speed or 1
     self.weapon = weapon or "epee"
     self.hasShoot = false
+    self.damage = 1
 
     Element.init(self, pos, spriteCollection, hbWidth, hbHeight, hbOffset)
 end
