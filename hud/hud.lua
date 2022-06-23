@@ -14,12 +14,12 @@ function Hud:new()
     setmetatable(myHud, self)
 
 
-    myHud.player = self.drawPlayer()
+    myHud.player = self.setPlayer()
 
     return myHud
 end
 
-function Hud.drawPlayer()
+function Hud.setPlayer()
     local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
     love.graphics.setFont(mainFont)
 
@@ -29,7 +29,7 @@ function Hud.drawPlayer()
     local healthHeart = Panel:new(0, 0)
         healthHeart:setImage(love.graphics.newImage("sprites/hud/health.png"), 0.1)
 
-    local healthBar = Bar:new(40,8, 164, 28, 10, nil,{0,255,0})
+    local healthBar = Bar:new(35,10, 164, 22, 10, nil,{0,255,0})
 
    -- G_button = Button:new(55, 100, 120, 80,"No images", mainFont, {250, 250, 250})
   --  print("g button h :" .. G_button.h)
@@ -81,28 +81,50 @@ function Hud.drawPlayer()
         inventory_slot_5:setImages(love.graphics.newImage("sprites/hud/blank_slot.png"))
 
 
-    group:addElement(skill_3)
+    local title3 = myGUI.newText(skill_1.W/2 + skill_2.W*2 , hauteur - skill_1.H -20, 0, 0,"T", mainFont, "", "", {25, 150, 25})
     
-    group:addElement(skill_2)
-    group:addElement(skill_1)
-    group:addElement(skillHotkey1)
-    group:addElement(skillHotkey2)
-    group:addElement(skillHotKey3)
-    group:addElement(skilChargesNum1, "skillCharges1")
+    group:addElement(skill_3, "skill_3")
+    group:addElement(skill_2, "skill_2")
+    group:addElement(skill_1, "skill_1")
+
+    group:addElement(skilChargesNum1, "t_skillCharges1")
+    
+    group:addElement(skillHotkey1, "skillHotkey1")
+    group:addElement(skillHotkey2, "skillHotkey2")
+    group:addElement(skillHotKey3, "skillHotkey3")
 
 
-    group:addElement(inventory_slot_1)
-    group:addElement(inventory_slot_2)
-    group:addElement(inventory_slot_3)
-    group:addElement(inventory_slot_4)
-    group:addElement(inventory_slot_5)
 
-    group:addElement(buttonParam)
 
+    group:addElement(inventory_slot_1, "inventory_slot_1")
+    group:addElement(inventory_slot_2, "inventory_slot_2")
+    group:addElement(inventory_slot_3, "inventory_slot_3")
+    group:addElement(inventory_slot_4, "inventory_slot_4")
+    group:addElement(inventory_slot_5, "inventory_slot_5")
+
+    group:addElement(buttonParam, "buttonParam")
+
+    
     group:addElement(healthBar, "healthBar")
     group:addElement(healthHeart, "healthHeart")
-    print(group)
+
     return group
+end
+
+function Hud:keypressed(k)
+    if k == "m" then
+        self.player.elements["healthBar"]:modifyValue(2)
+        G_player.currentHealth =G_player.currentHealth + 2
+    elseif k == "l" then
+        self.player.elements["healthBar"]:modifyValue(-2)
+        G_player.currentHealth =G_player.currentHealth - 2
+    
+    --potion de soin
+    elseif k == "a" then
+        G_player:ApplyHealthPotionEffect(3)
+    elseif k == "m" then
+        G_player.currentHealth =G_player.currentHealth - 2
+    end
 end
 
 function Hud:update(dt)
@@ -111,15 +133,17 @@ end
 
 function Hud:draw()
     self.player:draw()
+    
+    love.graphics.setColor(1,1,1)
 end
 
-function Hud:updatePotion(pHealth)
-    self.player.elements["skillCharges1"]:edit(G_player.potion_stock)
-    self.updateHealthPlayer(pHealth)
+function Hud:updatePotionStock()
+    self.player.elements["t_skillCharges1"]:edit(G_player.potion_stock)
+    --self.player.elements["healthBar"]:modifyValue(pHealth)
 end
 
 function Hud:updateHealthPlayer(pAmount)
-   self.player.elements["healthBar"]:modifyValue(pAmount)
+    self.player.elements["healthBar"]:modifyValue(pAmount)
 end
 
 
@@ -130,3 +154,12 @@ end
 -- end
 
 return Hud
+
+-- local function onPanelHover(pState)
+--   print("Panel is hover:"..pState)
+-- end
+
+-- local function onCheckboxSwitch(pState)
+--   print("Switch is:"..pState)
+-- end
+
