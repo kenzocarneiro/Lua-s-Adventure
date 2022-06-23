@@ -109,8 +109,8 @@ function Hud.setPlayer()
 end
 
 function Hud.setParameter()
-    local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
-    love.graphics.setFont(mainFont)
+    local mainFontMenu = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 40)
+    love.graphics.setFont(mainFontMenu)
 
     local screenWidth = love.graphics.getWidth()
     local screenHeight = love.graphics.getHeight()
@@ -121,20 +121,41 @@ function Hud.setParameter()
     local offset = screenWidth / 2
     local distanceBetweenInvSlot = 65
 
-    local inventory = Panel:new(screenWidth/2, screenHeight/2, 200, 100)
-        inventory:setImage(love.graphics.newImage("sprites/hud/button_white_default.png"), 3)
+    local inventoryPanel = Panel:new(0, screenHeight/2 - 2*7*16) --16px * (zoom+espace) * decalage
+        inventoryPanel:setImage(love.graphics.newImage("sprites/hud/button_white_default.png"), 6)
+        inventoryPanel.x = screenWidth/2 - 2*inventoryPanel.w --2*inventory.w pour que le bouton soit centré (*4 pour le zoom et /2 pour le décalage)
+        local inventoryText = Text:new(inventoryPanel.x + inventoryPanel.w/2, inventoryPanel.y + inventoryPanel.h/2, 0, 0, "Inventory", mainFontMenu, "", "", {0, 0, 0})
 
-    local options = Panel:new(screenWidth/2, screenHeight/2 + 50, 200, 100)
-        options:setImage(love.graphics.newImage("sprites/hud/button_lightblue_default.png"), 3)
+    local optionsPanel = Panel:new(inventoryPanel.x, screenHeight/2 - 1*7*16)
+        optionsPanel:setImage(love.graphics.newImage("sprites/hud/button_lightblue_default.png"), 6)
+        local optionsText = Text:new(optionsPanel.x + optionsPanel.w/2, optionsPanel.y + optionsPanel.h/2, 0, 0, "Options", mainFontMenu, "", "", {0, 0, 0})
 
+    local savePanel = Panel:new(inventoryPanel.x, screenHeight/2 + 0*7*16)
+        savePanel:setImage(love.graphics.newImage("sprites/hud/button_blue_default.png"), 6)
+        local saveText = Text:new(savePanel.x + savePanel.w/2, savePanel.y + savePanel.h/2, 0, 0, "Save", mainFontMenu, "", "", {0, 0, 0})
+
+    local exitPanel = Panel:new(inventoryPanel.x, screenHeight/2 + 1*7*16)
+        exitPanel:setImage(love.graphics.newImage("sprites/hud/button_darkblue_default.png"), 6)
+        local exitText = Text:new(exitPanel.x + exitPanel.w/2, exitPanel.y + exitPanel.h/2, 0, 0, "Exit", mainFontMenu, "", "", {0, 0, 0})
 
     --parameters du joueur (en bas à droite)
+    local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
+    love.graphics.setFont(mainFont)
     local buttonParam = Panel:new(screenWidth - 60 , screenHeight - 70, 40, 40)
         buttonParam:setImage(love.graphics.newImage("sprites/hud/gear2.jpg"))
     local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , screenHeight - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {10, 150, 10})
 
-    group:addElement(inventory, "inventory")
-    group:addElement(options, "options")
+    group:addElement(inventoryPanel, "inventoryPanel")
+    group:addElement(inventoryText, "inventoryText")
+
+    group:addElement(optionsPanel, "optionsPanel")
+    group:addElement(optionsText, "optionsText")
+
+    group:addElement(savePanel, "savePanel")
+    group:addElement(saveText, "saveText")
+
+    group:addElement(exitPanel, "exitPanel")
+    group:addElement(exitText, "exitText")
 
 
     group:addElement(buttonParam, "buttonParam")
