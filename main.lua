@@ -5,7 +5,7 @@ if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
 
 -- Pour notre magnifique HUD
 local Hud = require("hud/hud")
-
+G_eltCounter = 0
 
 
 local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
@@ -59,6 +59,8 @@ function love.load()
     G_monsterList = {}
     G_hitboxActivated = true
     G_room = Room:new(1)
+
+    G_deadElements = {}
 
     --initialize sprite collections for monster player and item
     local player_sc = SpriteCollection:new("player")
@@ -217,6 +219,71 @@ function love.update(dt)
             end
         end
     end
+
+    -- TODO: This is not optimized, should be replaced with a globalID system.
+    for k, v in pairs(G_deadElements) do
+        if tostring(v) == "Projectile" then
+            for k2, v2 in pairs(G_projectiles) do
+                if v2 == v then
+                    table.remove(G_projectiles, k2)
+                    break
+                end
+            end
+
+            for k2, v2 in pairs(G_hitboxes) do
+                if v2 == v then
+                    table.remove(G_hitboxes, k2)
+                    break
+                end
+            end
+        elseif tostring(v) == "Monster" then
+            for k2, v2 in pairs(G_monsterList) do
+                if v2 == v then
+                    table.remove(G_monsterList, k2)
+                    break
+                end
+            end
+
+            for k2, v2 in pairs(G_hitboxes) do
+                if v2 == v then
+                    table.remove(G_hitboxes, k2)
+                    break
+                end
+            end
+        elseif tostring(v) == "Item" then
+            print("colliding with an item")
+            for k2, v2 in pairs(G_itemList) do
+                if v2 == v then
+                    table.remove(G_itemList, k2)
+                    break
+                end
+            end
+
+            for k2, v2 in pairs(G_hitboxes) do
+                if v2 == v then
+                    table.remove(G_hitboxes, k2)
+                    break
+                end
+            end
+        elseif tostring(v) == "Player" then
+            for k2, v2 in pairs(G_player) do
+                if v2 == v then
+                    table.remove(G_player, k2)
+                    break
+                end
+            end
+
+            for k2, v2 in pairs(G_hitboxes) do
+                if v2 == v then
+                    table.remove(G_hitboxes, k2)
+                    break
+                end
+            end
+        else
+            print("Unknown Element: " .. tostring(v))
+        end
+    end
+    G_deadElements = {}
 end
 
 --- Draw the game (called every frames)
@@ -246,7 +313,7 @@ function love.draw()
     end
 
     for i, v in ipairs(G_projectiles) do
-        v:draw(true)
+        v:draw(G_hitboxActivated)
     end
 
     love.graphics.scale(1/4, 1/4)

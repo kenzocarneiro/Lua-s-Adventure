@@ -36,16 +36,16 @@ end
 
 --- Produce an Hitbox from the pattern of the given name at the given position
 --- @return Hitbox
-function HitboxFactory:produce(pos, name)
-    return Hitbox:new(pos, name, self.hitboxesPattern[name].layers, self.hitboxesPattern[name].width, self.hitboxesPattern[name].height, self.hitboxesPattern[name].offset)
+function HitboxFactory:produce(pos, name, associatedE)
+    return Hitbox:new(pos, name, self.hitboxesPattern[name].layers, self.hitboxesPattern[name].width, self.hitboxesPattern[name].height, self.hitboxesPattern[name].offset, associatedE)
 end
 
 --- Produce an Hitbox from the pattern of the given name at the given position
 --- @return table<string, Hitbox>
-function HitboxFactory:produceAll(pos)
+function HitboxFactory:produceAll(pos, associatedE)
     local hitboxes = {}
     for k, v in pairs(self.hitboxesPattern) do
-        hitboxes[k] = Hitbox:new(pos, v.name, v.layers, v.width, v.height, v.offset)
+        hitboxes[k] = Hitbox:new(pos, v.name, v.layers, v.width, v.height, v.offset, associatedE)
     end
     return hitboxes
 end

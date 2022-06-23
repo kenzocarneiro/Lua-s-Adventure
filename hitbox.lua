@@ -8,6 +8,7 @@ Vector = require("vector")
 --- @field width number
 --- @field height number
 --- @field offset Vector
+--- @field associatedElement Element TODO: should be replace with a global ID system
 Hitbox = {width=0, height=0}
 
 --- Constructor of Hitbox
@@ -17,8 +18,9 @@ Hitbox = {width=0, height=0}
 --- @param width number
 --- @param height number
 --- @param offset Vector
+--- @param associatedE Element
 --- @return Hitbox
-function Hitbox:new(pos, name, layers, width, height, offset)
+function Hitbox:new(pos, name, layers, width, height, offset, associatedE)
     -- offset n'est utile que si on change height et width pour avoir une hitbox personnalisée
     -- (sinon mettre la taille de l'image et pas d'offset)
     local h = {}
@@ -37,6 +39,8 @@ function Hitbox:new(pos, name, layers, width, height, offset)
 
     h.width=width - 1 or self.width
     h.height=height - 1 or self.height
+
+    h.associatedElement = associatedE
 
     return h
 end

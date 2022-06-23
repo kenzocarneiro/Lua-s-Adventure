@@ -17,10 +17,10 @@ end
 --- @param dt number
 function Projectile:update(dt)
     -- convert angle to vector
-    local move = Vector:new(0, 0)
-    move = move + self.direction
-    move = move * self.speed
-    self.pos = self.pos + move
+    local move = self.direction:cpy()
+    move = move
+
+    self:move(move)
 
     Entity.update(self, dt)
 end
@@ -30,6 +30,10 @@ function Projectile:draw(draw_hitbox)
     if draw_hitbox then
         self.hitboxes["hitbox"]:draw()
     end
+end
+
+function Projectile:__tostring()
+    return "Projectile"
 end
 
 return Projectile
