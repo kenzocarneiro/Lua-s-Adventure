@@ -24,7 +24,8 @@ function Player:init(inventory, collectRadius, ...)
     --for potion consumming
     self.potion_stock = {3, 1, 1} -- {health, damage, speed}
     self.currentPotion = 1
-    self.timer = nil
+    self.timer1 = nil
+    self.timer2 = nil
     self.buffs = {0, 0}  --damage and speed
 
     Entity.init(self, ...)
@@ -149,22 +150,28 @@ end
 
 function Player:consume()
     self.potion_stock[self.currentPotion] = self.potion_stock[self.currentPotion] - 1
-    self.timer = Timer:new(10)
     if self.currentPotion == 2 then
-        self.buffs = {5, 0}
+        self.buffs[1] = self.buffs[1] + 5
+        self.damage = self.damage + self.buffs[1]
+        self.timer1 = Timer:new(10)
     elseif self.currentPotion == 3 then
-        self.buffs = {0, 2}
+        self.buffs[2] = self.buffs[2] + 2
+        self.speed = self.speed + self.buffs[2]
+        self.timer2 = Timer:new(10)
     end
-    self.damage = self.damage + self.buffs[1]
-    self.speed = self.speed + self.buffs[2]
+    
 end
 
 function Player:buffsUpdate(dt)
-    if self.timer and self.timer:update(dt) then
+    if self.timer1 and self.timer1:update(dt) then
         self.damage = self.damage - self.buffs[1]
-    self.speed = self.speed - self.buffs[2]
-        self.buffs = {0, 0}
-        self.timer = nil
+        self.buffs[1] = self.buffs[1] - 5
+        self.timer1 = nil
+    end
+    if self.timer2 and self.timer2:update(dt) then
+        self.speed = self.speed - self.buffs[2]
+        self.buffs[2] = self.buffs[2] - 2
+        self.timer2 = nil
     end
 end
 
