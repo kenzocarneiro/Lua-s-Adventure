@@ -46,7 +46,7 @@ function love.load()
     G_fireballSC = SpriteCollection:new("fireball")
     G_fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
 
-    G_fireballHF = HitboxFactory:new({"hitbox", {projectile=true}, 3, 3, Vector:new(-2, -2)})
+    G_fireballHF = HitboxFactory:new({"hitbox", {projectile=true}, 3, 3, Vector:new(-2, -2)}, {"hurtbox", {projectile=true}, 3, 3, Vector:new(-2, -2)})
 
     --declaration des variables globales de controle
     --- @type Hitbox[]
@@ -106,12 +106,12 @@ function love.load()
     G_monsterList[#G_monsterList+1] = m2
 
     G_axe = Item:new()
-    G_axe:init("AXE !", Vector:new(90, 70), item_sc, "None")
+    G_axe:init("AXE !", Vector:new(90, 70), item_sc, nil)
     G_hitboxes[#G_hitboxes+1] = G_axe.hitboxes["hitbox"]
     G_itemList[#G_itemList+1] = G_axe
 
     G_axe2 = Item:new()
-    G_axe2:init("AXE !", Vector:new(200, 90), item_sc, "None")
+    G_axe2:init("AXE !", Vector:new(200, 90), item_sc, nil)
     G_hitboxes[#G_hitboxes+1] = G_axe2.hitboxes["hitbox"]
     G_itemList[#G_itemList+1] = G_axe2
 
