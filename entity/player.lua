@@ -20,6 +20,7 @@ function Player:init(inventory, collectRadius, ...)
     self.collectRadius = collectRadius or 10
     self.radiusDisplay = false
     self.gold = 0
+    self.nextFreeInventorySlotNum = 1
 
     --for potion consumming
     self.potion_stock = {3, 1, 1} -- {health, damage, speed}
@@ -102,21 +103,33 @@ end
 --- @param item Item|Weapon|Consumable|Coin
 --- @return boolean --true if we pickup the item, false if we cant
 function Player:pickup(item)
+local inventory_size = 5
+
     local itemX = item.pos.x
     local itemY = item.pos.y
 
     if ((itemX-self.pos.x)^2 + (itemY - self.pos.y)^2) <= (self.collectRadius^2) then
-        self.inventory[#self.inventory+1] = item
-        
-        --potion de vie
-        if tostring(item)=="Consumable" and item.target =="health" then
-            self.potion_stock[1] = self.potion_stock[1] + 1
-        end
-        if tostring(item)=="Consumable" and item.target =="damage" then
-            self.potion_stock[2] = self.potion_stock[2] + 1
-        end
-        if tostring(item)=="Consumable" and item.target =="speed" then
-            self.potion_stock[3] = self.potion_stock[3] + 1
+
+        --potions
+        if tostring(item)=="Consumable" then
+            --potion de vie
+            if item.target =="health" then
+                self.potion_stock[1] = self.potion_stock[1] + 1
+            --potion buff de dommages
+            elseif item.target =="damage" then
+                self.potion_stock[2] = self.potion_stock[2] + 1
+            --potion de vitesse
+            elseif item.target =="speed" then
+                self.potion_stock[3] = self.potion_stock[3] + 1
+            end
+
+        -- objet permanent
+        else
+            -- si on a de la place
+            if self.nextFreeInventorySlotNum <= 5 and tostring(item) ~= "Coin" then
+                self.nextFreeInventorySlotNum = self.nextFreeInventorySlotNum + 1
+                self.inventory[#self.inventory+1] = item
+            end
         end
         return true
     end
@@ -160,6 +173,97 @@ function Player:consume()
         self.timer2 = Timer:new(10)
     end
     
+end
+
+function Player:CastSpell()
+local p = {}
+-- local direction = {}
+--     for i=1, 6 do
+--         p[i] = Projectile:new()
+--         direction[i]= self:cylToCart(1, math.rad(i*45))
+--         p[i]:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+--         G_projectiles[#G_projectiles+1] = p[i]
+--         G_hitboxes[#G_hitboxes+1] = p[i].hitboxes["hitbox"]
+--     end
+
+    -- right
+    local p1 =  {}
+    p1 = Projectile:new()
+    local direction = self:cylToCart(1, 0)
+    p1:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+    G_projectiles[#G_projectiles+1] = p1
+    G_hitboxes[#G_hitboxes+1] = p1.hitboxes["hitbox"]
+
+    -- left
+    local p2 =  {}
+    p2 = Projectile:new()
+    direction = self:cylToCart(1, math.rad(180))
+    p2:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
+    G_projectiles[#G_projectiles+1] = p2
+    G_hitboxes[#G_hitboxes+1] = p2.hitboxes["hitbox"]
+           
+     -- top
+     local p3 =  {}
+     p3 = Projectile:new()
+    direction = Vector:new(0,1)
+     p3:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+     G_projectiles[#G_projectiles+1] = p3
+     G_hitboxes[#G_hitboxes+1] = p3.hitboxes["hitbox"]
+          
+    -- bottom
+    local p4 =  {}
+    p4 = Projectile:new()
+   direction = Vector:new(0,-1)
+    p4:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+    G_projectiles[#G_projectiles+1] = p4
+    G_hitboxes[#G_hitboxes+1] = p4.hitboxes["hitbox"]
+         
+
+    -- bottom
+    local p5 =  {}
+    p5 = Projectile:new()
+   direction = Vector:new(-1,-1)
+    p5:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+    G_projectiles[#G_projectiles+1] = p5
+    G_hitboxes[#G_hitboxes+1] = p5.hitboxes["hitbox"]
+         
+    -- bottom
+    local p6 =  {}
+    p6 = Projectile:new()
+   direction = Vector:new(1,-1)
+    p6:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+    G_projectiles[#G_projectiles+1] = p6
+    G_hitboxes[#G_hitboxes+1] = p6.hitboxes["hitbox"]
+         
+   -- bottom
+   local p8 =  {}
+   p8 = Projectile:new()
+  direction = Vector:new(-1,1)
+   p8:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+   G_projectiles[#G_projectiles+1] = p8
+   G_hitboxes[#G_hitboxes+1] = p8.hitboxes["hitbox"]
+        
+   -- bottom
+   local p7 =  {}
+   p7 = Projectile:new()
+  direction = Vector:new(1,1)
+   p7:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+   G_projectiles[#G_projectiles+1] = p7
+   G_hitboxes[#G_hitboxes+1] = p7.hitboxes["hitbox"]
+        
+  
+   
+end
+-- r : longueur : math.sqrt(x*x + y+y)
+-- theta en radian :  math.atan(y / x)
+function Player:convCartToCyl(x, y)
+    local resultat = Vector:new(math.sqrt(x*x + y+y),  math.atan(y / x))
+    return resultat
+end
+
+function Player:cylToCart(r, theta)
+    local resultat = Vector:new(r * math.cos(theta),  r * math.sin(theta))
+    return resultat
 end
 
 function Player:buffsUpdate(dt)
