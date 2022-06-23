@@ -22,6 +22,10 @@ function Player:init(inventory, collectRadius, ...)
     self.radiusDisplay = false
     self.gold = 0
 
+    --for potion consumming
+    self.timer = nil
+    self.buffs = {0, 0}  --damage and speed
+
     Entity.init(self, ...)
 end
 
