@@ -72,7 +72,7 @@ function Player:update(dt)
     if self.state == "attack" and currentFrame == self.spriteCollection:getNumberOfSprites(self.state) - 1 then
         self.hasShoot = true
         local p = Projectile:new()
-        local direction = 90
+        local direction = Vector:new(self.spriteCollection.flipH, 0)
 
         if self.spriteCollection.flipH == 1 then
             p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
