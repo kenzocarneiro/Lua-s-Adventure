@@ -39,7 +39,7 @@ function love.load()
     G_hitboxes = {}
     --- @type Projectile[]
     G_projectiles = {}
-    --- @type Item[]|Coin[]|Weapon[]
+    --- @type Item[]|Coin[]|Weapon[]|Consumable[]
     G_itemList = {}
     --- @type Monster[]
     G_monsterList = {}
