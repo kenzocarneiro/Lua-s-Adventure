@@ -64,26 +64,31 @@ function Player:update(dt)
         if self.state ~= "attack" then self:changeState("idle") end
     end
 
-    local currentFrame, animationFinished = self.spriteTimer:update(dt, self.spriteCollection:getNumberOfSprites(self.state))
+    local currentFrame, animationFinished = self.spriteTimer:update(dt, self.spriteCollection:getSpriteFramesDuration(self.state), self.spriteCollection:getNumberOfSprites(self.state))
 
     self.hitboxes["hitbox"]:move(self.pos) -- TODO: move hitbox with element
 
     -- TODO: Using the sprite frame to define the attack fireRate isn't a good idea.
-    if self.state == "attack" and currentFrame == self.spriteCollection:getNumberOfSprites(self.state) - 1 then
-        self.hasShoot = true
-        local p = Projectile:new()
-        local direction = Vector:new(self.spriteCollection.flipH, 0)
+    if self.state == "attack" then
+        if currentFrame == 4 and not self.hasShoot then
+            self.hasShoot = true
+            local p = Projectile:new()
+            local direction = Vector:new(self.spriteCollection.flipH, 0)
 
-        if self.spriteCollection.flipH == 1 then
-            p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-        elseif self.spriteCollection.flipH == -1 then
-            p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
+            if self.spriteCollection.flipH == 1 then
+                p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+            elseif self.spriteCollection.flipH == -1 then
+                p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
+            end
+            G_hurtboxes[#G_hurtboxes + 1] = p.hitboxes["hurtbox"]
+
+            G_projectiles[#G_projectiles+1] = p
+            G_hitboxes[#G_hitboxes+1] = p.hitboxes["hitbox"]
+            -- self.state = "idle"
+        elseif animationFinished then
+            self.state = "idle"
+            self.hasShoot = false
         end
-        G_hurtboxes[#G_hurtboxes + 1] = p.hitboxes["hurtbox"]
-
-        G_projectiles[#G_projectiles+1] = p
-        G_hitboxes[#G_hitboxes+1] = p.hitboxes["hitbox"]
-        self.state = "idle"
     end
 end
 
@@ -177,8 +182,8 @@ function Player:consume()
 end
 
 function Player:castSpell()
-local p = {}
--- local direction = {}
+    local p = {}
+    -- local direction = {}
 --     for i=1, 6 do
 --         p[i] = Projectile:new()
 --         direction[i]= self:cylToCart(1, math.rad(i*45))

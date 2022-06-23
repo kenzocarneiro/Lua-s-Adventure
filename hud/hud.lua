@@ -166,7 +166,7 @@ function Hud:keypressed(k)
 
     --compétence
     elseif k == "e" then
-        G_player:castSpell()
+        G_player:changeState("special")
 
     end
 end
@@ -222,10 +222,10 @@ function Hud:updateInvSlot(pNumberSlot, pImage)
 end
 
 function Hud:updateInventory()
-    print(G_player.nextFreeInventorySlotNum)
+    -- print(G_player.nextFreeInventorySlotNum)
     if G_player.nextFreeInventorySlotNum > 1 and G_player.nextFreeInventorySlotNum < 5 then
         for i = 1, G_player.nextFreeInventorySlotNum - 1 do
-            print(i, "inventaire")
+            -- print(i, "inventaire")
             self.inventorySlots.elements[tostring(i)]:setImage(G_player.inventory[i].spriteCollection.sprites["idle"].loveImg,5)
         end
     end

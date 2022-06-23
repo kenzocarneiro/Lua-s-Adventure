@@ -48,7 +48,7 @@ end
 --- @param dt number
 function Element:update(dt)
     if self.spriteCollection:isSpriteSheet(self.state) then
-        self.spriteTimer:update(dt, self.spriteCollection:getNumberOfSprites(self.state))
+        self.spriteTimer:update(dt, self.spriteCollection:getSpriteFramesDuration(self.state), self.spriteCollection:getNumberOfSprites(self.state))
     end
     if self.hitboxes["hitbox"] then self.hitboxes["hitbox"]:move(self.pos) end
     if self.hitboxes["hurtbox"] then self.hitboxes["hurtbox"]:move(self.pos) end

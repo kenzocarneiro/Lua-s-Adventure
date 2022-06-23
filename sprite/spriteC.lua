@@ -57,6 +57,13 @@ function SpriteCollection:isSpriteSheet(state)
     return self.sprites[state].isSheet
 end
 
+--- Get the duration of the frames in the sprite corresponding to the given state
+--- @param state string
+--- @return number[]|nil
+function SpriteCollection:getSpriteFramesDuration(state)
+    return self.sprites[state].framesDuration
+end
+
 --- Get number of sprites in spriteCollection for the given state.
 --- @param state string
 --- @return Sprite sprite
