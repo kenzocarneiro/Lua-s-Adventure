@@ -18,7 +18,7 @@ SPACE : shoot
 a : consume potion
 i : inventory (not yet implemented)
 
-*miscelleanous*
+*miscellanenous*
 p : parameters
 l : lose life
 m : regain life
