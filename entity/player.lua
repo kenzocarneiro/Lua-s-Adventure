@@ -15,6 +15,9 @@ function Player:new() return Entity.new(self) end
 --- @param collectRadius number
 function Player:init(inventory, collectRadius, ...)
     self.inventory = inventory or {}
+    self.potion_stock = 3
+    self.maxHealth = 100
+    self.currentHealth = self.maxHealth
     self.collectRadius = collectRadius or 10
     self.radiusDisplay = false
     self.gold = 0
@@ -94,6 +97,12 @@ function Player:pickup(item)
 
     if ((itemX-self.pos.x)^2 + (itemY - self.pos.y)^2) <= (self.collectRadius^2) then
         self.inventory[#self.inventory+1] = item
+        
+        --potion de vie
+        if tostring(item)=="Consumable" and item.target =="health" then
+            self.potion_stock =self.potion_stock + 1
+            G_hud:updatePotionStock()
+        end
         return true
     end
     return false
@@ -101,6 +110,24 @@ end
 
 function Player:__tostring()
     return "Player"
+end
+
+function Player:ApplyHealthPotionEffect(pAmount)
+    if (self.potion_stock == 0) then
+        print(" t'as plus de potions frérot !")
+    else
+        self.potion_stock = self.potion_stock - 1
+        -- on s'assure qu'il ne peut pas regen plus que sa vie max
+        if self.currentHealth +  pAmount > self.maxHealth then
+            self.currentHealth = self.maxHealth
+        else
+            self.currentHealth =self.currentHealth + pAmount
+        end
+        G_hud:updatePotionStock()
+        G_hud.player.elements["healthBar"]:modifyValue(pAmount)
+
+    end
+    
 end
 
 return Player

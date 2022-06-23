@@ -36,14 +36,14 @@ end
 --- Use the Consumable on the player
 --- @param player Player
 --- @return table --the {health, speed, damage} table of buffs applied to the player
-function Consumable:consume(player)
-    if self.target == "health" then
-        return {player.health + self.value, player.speed, 0}
-    elseif self.target == "speed" then
-        return {0, player.speed + self.value, 0}
-    elseif self.target == "damage" then
-        return {0, player.speed, player.damage + self.value}
-    end
-end
+-- function Consumable:consume(player)
+--     if self.target == "health" then
+--         return {player.health + self.value, player.speed, 0}
+--     elseif self.target == "speed" then
+--         return {0, player.speed + self.value, 0}
+--     elseif self.target == "damage" then
+--         return {0, player.speed, player.damage + self.value}
+--     end
+-- end
 
 return Consumable

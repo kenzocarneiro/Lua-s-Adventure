@@ -11,23 +11,6 @@ local Hud = require("hud/hud")
 local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
 love.graphics.setFont(mainFont)
 
--- A ne pas supprimer => mais ça ne marche pas encore (lien avec HUD)
---
--- local function onPanelHover(pState)
---   print("Panel is hover:"..pState)
--- end
-
--- local function onCheckboxSwitch(pState)
---   print("Switch is:"..pState)
--- end
---
--- function love.keypressed(k)
---   if k == "m" then
---     G_hud.player["healthBar"]:modifyValue(2)
---   elseif k == "l" then
---     G_hud.player["healthBar"]:modifyValue(-2)
---   end
--- end
 
 --- Load the game
 function love.load()
@@ -169,6 +152,7 @@ function love.load()
 end
 
 function love.keypressed(k)
+    G_hud:keypressed(k)
     if k == "space" then
         G_player:changeState("attack")
         print("BOOM")
@@ -179,6 +163,7 @@ function love.keypressed(k)
     elseif k == "escape" then
         love.event.quit()
     end
+
 end
 
 --- Update the game (called every frames)
@@ -262,13 +247,7 @@ function love.update(dt)
             if G_player:pickup(G_itemList[i]) then
                 print("pickup")
                 print(G_player.inventory[#G_player.inventory])
-                if tostring(G_player.inventory[#G_player.inventory]) == "Consumable" then
-                    local buffs = G_itemList[i]:consume(G_player)
-                    table.remove(G_player.inventory, #G_player.inventory)
-                    G_player.health = buffs[1]
-                    G_player.speed = buffs[2]
-                    G_player.damage = buffs[3]
-                elseif tostring(G_player.inventory[#G_player.inventory]) == "Coin" then
+                if tostring(G_player.inventory[#G_player.inventory]) == "Coin" then
                     G_player.gold = G_player.gold + G_itemList[i].value
                     table.remove(G_player.inventory, #G_player.inventory)
                     print(G_player.gold)
