@@ -37,11 +37,19 @@ function Hud.setPlayer()
     --barre de vie
     local healthHeart = Panel:new(0, 0)
         healthHeart:setImage(love.graphics.newImage("sprites/hud/health.png"), 0.1)
-    local healthBar = Bar:new(35,10, 164, 22, G_player.maxHealth, nil,{0,255,0})
+    local healthBar = Bar:new(35,11, 164, 20, G_player.maxHealth, nil,{0,255,0})
 
     -- barre d'energie
-    local energyBar = Bar:new(100, 100, 26, 100, G_player.maxEnergy, nil, {250, 129, 50})
-    energyBar:setImages(love.graphics.newImage("sprites/hud/empty_bar.png"),  love.graphics.newImage("sprites/hud/blue_bar.png"),12)
+    local energyBarImg = Panel:new(0, 40)
+        energyBarImg:setImage(love.graphics.newImage("sprites/hud/mana.png"), 0.1)
+    local energyBar = Bar:new(30,50, 153, 20, G_player.maxEnergy, nil,{0,0,200})
+
+
+    local manaCost = Panel:new(170,hauteur - 25)
+        manaCost:setImage(love.graphics.newImage("sprites/hud/mana_ball.png"),2.4)
+        local manaCostText = Text:new(176 , hauteur - 19, 0, 0,"10", mainFont, "", "", {200, 0, 0})
+        local HealthValueText = Text:new(176 , hauteur - 500, 0, 0, G_player.currentHealth .. "/" .. G_player.maxHealth, mainFont, "", "", {255, 255, 255})
+        local ManaValueText = Text:new(176 , hauteur - 400, 0, 0, G_player.currentEnergy .. "/" .. G_player.maxEnergy, mainFont, "", "", {255, 255, 255})
 
 
 
@@ -126,6 +134,12 @@ function Hud.setPlayer()
     group:addElement(buff_2, "buff_2")
 
     group:addElement(energyBar, "energyBar")
+    group:addElement(energyBarImg, "energyBarImg")
+    group:addElement(manaCost, "zManaCost")
+    group:addElement(manaCostText, "zManaCostText")
+  --  group:addElement(HealthValueText, "zHealthValueText")
+    --group:addElement(ManaValueText, "zEnergyValueText")
+
     return group
 end
 
@@ -244,6 +258,8 @@ function Hud:keypressed(k)
     elseif k == "e" then
         G_player:CastSpell()
 
+    elseif k == "t" then
+    G_player.currentEnergy = G_player.currentEnergy + 1
     end
 end
 
@@ -273,8 +289,10 @@ function Hud:update(dt)
 
     self.player:update(dt)
     self:updateHealthPlayer(G_player.currentHealth)
+    self:updateEnergyPlayer(G_player.currentEnergy)
     self:updateInventory()
     self:updatePotionStock()
+    self:updateManaCosts()
 
 
     for key, value in pairs(self) do
@@ -297,6 +315,10 @@ function Hud:updateHealthPlayer(pAmount)
     self.player.elements["healthBar"]:setValue(pAmount)
 end
 
+function Hud:updateEnergyPlayer(pAmount)
+    self.player.elements["energyBar"]:setValue(pAmount)
+end
+
 function Hud:updateInvSlot(pNumberSlot, pImage)
     self.inventorySlots.elements[tostring(pNumberSlot)]:setImage(pImage)
 end
@@ -305,13 +327,21 @@ function Hud:updateInventory()
     print(G_player.nextFreeInventorySlotNum)
     if G_player.nextFreeInventorySlotNum > 1 and G_player.nextFreeInventorySlotNum < 5 then
         for i = 1, G_player.nextFreeInventorySlotNum - 1 do
-            print(i, "inventaire")
             self.inventorySlots.elements[tostring(i)]:setImage(G_player.inventory[i].spriteCollection.sprites["idle"].loveImg,5)
         end
     end
 end
 
-
+function Hud:updateManaCosts()
+    local red = {255,0,0}
+    local white = {255, 255, 255}
+    -- pas assez de mana pour lancer la compétence
+    if G_player.currentEnergy < 9.9 then
+    self.player.elements["zManaCostText"]:setColor(red)
+    else
+        self.player.elements["zManaCostText"]:setColor(white)
+    end
+end
 
 -- function Hud:__tostring()
 --     for key, value in pairs(self) do

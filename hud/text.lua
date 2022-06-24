@@ -47,4 +47,7 @@ function Text:draw()
     self.text =pString
   end
   
+  function Text:setColor(pColor)
+    self.color = pColor
+  end
 return Text
