@@ -326,9 +326,8 @@ function love.update(dt)
         for i = 1,#G_itemList do
             if G_itemList[i] then
                 if G_player:pickup(G_itemList[i]) then
-                    if tostring(G_player.inventory[#G_player.inventory]) == "Coin" then
+                    if tostring(G_itemList[i]) == "Coin" then
                         G_player.gold = G_player.gold + G_itemList[i].value
-                        table.remove(G_player.inventory, #G_player.inventory)
                     end
 
                     for j = 1,#G_hitboxes do

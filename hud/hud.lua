@@ -17,14 +17,15 @@ function Hud:new()
 
     myHud.player = self.setPlayer()
     myHud.inventorySlots = self:setInventory()
+    myHud.characterSheet = self:setCharacterSheet()
     
     myHud.parameter = self.setParameter()
         myHud.parameter:setVisible(false)
-
     return myHud
 end
 
 function Hud.setPlayer()
+
     local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
     love.graphics.setFont(mainFont)
 
@@ -49,7 +50,7 @@ function Hud.setPlayer()
     local manaCost = Panel:new(170,hauteur - 25)
         manaCost:setImage(love.graphics.newImage("sprites/hud/mana_ball.png"),2.4)
         local manaCostText = Text:new(176 , hauteur - 19, 0, 0,"10", mainFont, "", "", {200, 0, 0})
-        local HealthValueText = Text:new(85 , 11, 0, 0, G_player.currentHealth .. "/" .. G_player.maxHealth, mainFont, "", "", {255, 255, 255})
+        local HealthValueText = Text:new(85 , 11, 0, 0, G_player.currentHealth .. "/" .. G_player.maxHealth, mainFont, "", "", {0, 0, 0})
         local ManaValueText = Text:new(90 , 51, 0, 0, G_player.currentEnergy .. "/" .. G_player.maxEnergy, mainFont, "", "", {255, 255, 255})
 
 
@@ -83,19 +84,19 @@ function Hud.setPlayer()
     local offset = largeur / 2
     local distanceBetweenInvSlot = 65
 
-    local inventory_slot_1 = Panel:new(offset - distanceBetweenInvSlot * 2, hauteur - 64, 40, 40)
+    local inventory_slot_1 = Panel:new(offset - distanceBetweenInvSlot * 2, hauteur - 60, 40, 40)
         inventory_slot_1:setImage(love.graphics.newImage("sprites/hud/blank_slot.png"))
 
-    local inventory_slot_2 = Panel:new(offset - distanceBetweenInvSlot, hauteur - 64, 40, 40)
+    local inventory_slot_2 = Panel:new(offset - distanceBetweenInvSlot, hauteur - 60, 40, 40)
         inventory_slot_2:setImage(love.graphics.newImage("sprites/hud/blank_slot.png"))
     
     local inventory_slot_3 = Panel:new(offset, hauteur - 64, 40, 40)
         inventory_slot_3:setImage(love.graphics.newImage("sprites/hud/blank_slot.png"))
     
-    local inventory_slot_4 = Panel:new(offset +distanceBetweenInvSlot, hauteur - 64, 40, 40)
+    local inventory_slot_4 = Panel:new(offset +distanceBetweenInvSlot, hauteur - 60, 40, 40)
         inventory_slot_4:setImage(love.graphics.newImage("sprites/hud/blank_slot.png"))
     
-    local inventory_slot_5 = Panel:new(offset +distanceBetweenInvSlot *2, hauteur - 64, 40, 40)
+    local inventory_slot_5 = Panel:new(offset +distanceBetweenInvSlot *2, hauteur - 60, 40, 40)
         inventory_slot_5:setImage(love.graphics.newImage("sprites/hud/blank_slot.png"))
 
     --parameters du joueur (en bas à droite)
@@ -237,6 +238,69 @@ function Hud.setParameter()
     return group
 end
 
+
+function Hud.setCharacterSheet()
+    
+    local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
+    love.graphics.setFont(mainFont)
+
+    local screenWidth = love.graphics.getWidth()
+    local screenHeight = love.graphics.getHeight()
+
+    local group = Group:new()
+  
+    --inventaire du joueur (icone du milieu pour l'instant)
+    local offset = screenWidth / 2
+    local distanceBetweenInvSlot = 65
+    local imageCharacterSheetLimits = love.graphics.newImage("sprites/hud/object_box.png")
+    local characterSheetLimits = Panel:new(screenWidth / 2 - 0.7*imageCharacterSheetLimits:getWidth() , screenHeight / 2 - imageCharacterSheetLimits:getHeight() *0.6)
+        characterSheetLimits:setImage(imageCharacterSheetLimits, 1.3)
+    group:addElement(characterSheetLimits, "characterSheetLimits")
+
+    local playerNameDesc = Text:new(screenWidth / 2 - 0.21*imageCharacterSheetLimits:getWidth(), screenHeight / 2 - imageCharacterSheetLimits:getHeight() *0.45, 0, 0,"player name", mainFont, "", "", {0, 0, 0})
+    local playerName = Text:new(screenWidth / 2 - 0.21*imageCharacterSheetLimits:getWidth()+ 15, screenHeight / 2 - imageCharacterSheetLimits:getHeight() *0.40, 0, 0,"Gandalf", mainFont, "", "", {215, 55, 0})
+
+    local playerIcon = Panel:new(screenWidth / 2 - 0.42*imageCharacterSheetLimits:getWidth(), screenHeight / 2 - imageCharacterSheetLimits:getHeight() *0.45)
+        playerIcon:setImage(love.graphics.newImage("sprites/hud/perso_icon.png"))
+    group:addElement(playerNameDesc, "playerNameDesc")
+    group:addElement(playerName, "playerName")
+    group:addElement(playerIcon, "playerIcon")
+
+    local playerHealthDesc = Text:new(screenWidth / 2 - 0.15*imageCharacterSheetLimits:getWidth(), screenHeight / 2 - imageCharacterSheetLimits:getHeight() *0.15, 0, 0," Max Health", mainFont, "", "", {0, 0, 0})
+    local playerHealth = Text:new(screenWidth / 2 - 0.1*imageCharacterSheetLimits:getWidth()+ 15, screenHeight / 2 - imageCharacterSheetLimits:getHeight() *0.10, 0, 0, tostring(G_player.currentHealth).. " / " ..tostring(G_player.maxHealth), mainFont, "", "", {0, 220, 0})
+
+    local healthIcon = Panel:new(screenWidth / 2 - 0.42*imageCharacterSheetLimits:getWidth(), screenHeight / 2 - imageCharacterSheetLimits:getHeight() *0.15)
+        healthIcon:setImage(love.graphics.newImage("sprites/hud/heart_icon.png"))
+    group:addElement(playerHealthDesc, "playerHealthDesc")
+    group:addElement(playerHealth, "playerHealth")
+    group:addElement(healthIcon, "healthIcon")
+
+
+    
+    local goldDesc = Text:new(screenWidth / 2 - 0.21*imageCharacterSheetLimits:getWidth(), screenHeight / 2 - imageCharacterSheetLimits:getHeight() *0.3, 0, 0,"Gold found", mainFont, "", "", {0, 0, 0})
+    local goldValue = Text:new(screenWidth / 2 - 0.13*imageCharacterSheetLimits:getWidth()+ 15, screenHeight / 2 - imageCharacterSheetLimits:getHeight() *0.25, 0, 0,tostring(G_player.gold), mainFont, "", "", {200, 200, 0})
+
+    local goldIcon = Panel:new(screenWidth / 2 - 0.42*imageCharacterSheetLimits:getWidth(), screenHeight / 2 - imageCharacterSheetLimits:getHeight() *0.30)
+        goldIcon:setImage(love.graphics.newImage("sprites/hud/gold_icon.png"))
+    group:addElement(goldDesc, "goldDesc")
+    group:addElement(goldValue, "goldValue")
+    group:addElement(goldIcon, "goldIcon")
+
+
+    local dmgDesc = Text:new(screenWidth / 2 - 0.21*imageCharacterSheetLimits:getWidth(), screenHeight / 2 - imageCharacterSheetLimits:getHeight() *0.01, 0, 0,"Damages dealt", mainFont, "", "", {0, 0, 0})
+    local dmgValue = Text:new(screenWidth / 2 - 0.13*imageCharacterSheetLimits:getWidth()+ 15, screenHeight / 2 - imageCharacterSheetLimits:getHeight() *0.01 +20 , 0, 0,tostring(G_player.damage), mainFont, "", "", {0, 0, 155})
+
+    local dmgIcon = Panel:new(screenWidth / 2 - 0.42*imageCharacterSheetLimits:getWidth(), screenHeight / 2 - imageCharacterSheetLimits:getHeight() *0.01)
+        dmgIcon:setImage(love.graphics.newImage("sprites/hud/damage_icon.png"))
+    group:addElement(dmgDesc, "dmgDesc")
+    group:addElement(dmgValue, "dmgValue")
+    group:addElement(dmgIcon, "dmgIcon")
+
+    group:setVisible(false)
+    return group
+end
+
+
 function Hud:keypressed(k)
     if k == "m" then
         G_player.currentHealth =G_player.currentHealth + 5
@@ -263,13 +327,30 @@ function Hud:keypressed(k)
 
     elseif k == "t" then
     G_player.currentEnergy = G_player.currentEnergy + 1
-    end
+    
 
+    elseif k ==  "i" then
+        self:displayCharacterSheet()
+    end
+    
     if self.parameter.visible then
         self:updateParameter(k)
     end
 
 end
+
+function Hud:displayCharacterSheet()
+    if self.characterSheet.visible then
+        self.player:setVisible(true)
+        self.inventorySlots:setVisible(true)
+        self.characterSheet:setVisible(false)
+    else
+        self.player:setVisible(false)
+        self.inventorySlots:setVisible(false)
+        self.characterSheet:setVisible(true)
+    end
+end
+
 
 function Hud:update(dt)
     love.graphics.setColor(1,1,1) --reset color
@@ -300,6 +381,7 @@ function Hud:update(dt)
     self:updateInventory()
     self:updatePotionStock()
     self:updateManaCosts()
+    self:updateCharacterSheet()
 
     for key, value in pairs(self) do
         value:update(dt)
@@ -310,7 +392,22 @@ function Hud:draw()
     for key, value in pairs(self) do
         value:draw()
     end
+   -- love.graphics.arc( "fill", 400, 300, 100, 0, math.rad(G_player.skillAngleCd))
     love.graphics.setColor(1,1,1)
+end
+
+function Hud:updateCharacterSheet()
+    if self.characterSheet.elements["goldValue"] ~= tostring(G_player.gold) then
+        self.characterSheet.elements["goldValue"]:edit(tostring(G_player.gold))
+    end
+
+    if self.characterSheet.elements["dmgValue"] ~= tostring(G_player.damage) then
+        self.characterSheet.elements["dmgValue"]:edit(tostring(G_player.damage))
+    end
+
+    if self.characterSheet.elements["playerHealth"] ~= tostring(G_player.currentHealth).. " / " .. tostring(G_player.maxHealth) then
+        self.characterSheet.elements["playerHealth"]:edit(tostring(G_player.currentHealth).. " / " .. tostring(G_player.maxHealth))
+    end
 end
 
 function Hud:updatePotionStock()
