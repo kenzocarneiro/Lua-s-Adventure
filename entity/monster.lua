@@ -56,6 +56,7 @@ function Monster:update(dt, player)
     Entity.update(self, dt)
 end
 
+
 --- To kill the Monster.
 --- @return table --the table of Monsters with him deleted
 function Monster:die(monsterList)
