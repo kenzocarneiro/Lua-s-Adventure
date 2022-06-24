@@ -351,44 +351,46 @@ end
 
 --- Draw the game (called every frames)
 function love.draw()
-    if G_PONG then
-        love.graphics.scale(1, 1)
-        Pong.draw()
-        return
-    end
-    love.graphics.scale(4, 4)
-    G_room:draw()
-
-    G_player:draw()
-
-    -- drawing Monsters
-    for i = 1,#G_monsterList do
-        if G_monsterList[i] then
-            G_monsterList[i]:draw()
+    if not G_hud.mainMenu.visible then --menu de départ => jeu non affiché
+        if G_PONG then
+            love.graphics.scale(1, 1)
+            Pong.draw()
+            return
         end
-    end
+        love.graphics.scale(4, 4)
+        G_room:draw()
 
-    --drawing Items on the map
-    for i = 1,#G_itemList do
-        if G_itemList[i] then
-            G_itemList[i]:draw()
-        end
-    end
+        G_player:draw()
 
-    for i, v in ipairs(G_projectiles) do
-        v:draw()
-    end
-
-    if G_hitboxActivated then
-        for i, v in ipairs(G_hitboxes) do
-            v:draw({0, 255, 255})
+        -- drawing Monsters
+        for i = 1,#G_monsterList do
+            if G_monsterList[i] then
+                G_monsterList[i]:draw()
+            end
         end
 
-        for i, v in ipairs(G_hurtboxes) do
-            v:draw({255, 255, 0})
+        --drawing Items on the map
+        for i = 1,#G_itemList do
+            if G_itemList[i] then
+                G_itemList[i]:draw()
+            end
         end
-    end
 
-    love.graphics.scale(1/4, 1/4)
+        for i, v in ipairs(G_projectiles) do
+            v:draw()
+        end
+
+        if G_hitboxActivated then
+            for i, v in ipairs(G_hitboxes) do
+                v:draw({0, 255, 255})
+            end
+
+            for i, v in ipairs(G_hurtboxes) do
+                v:draw({255, 255, 0})
+            end
+        end
+
+        love.graphics.scale(1/4, 1/4)
+    end
     G_hud:draw()
 end
