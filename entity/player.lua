@@ -94,8 +94,16 @@ function Player:update(dt)
         end
     elseif self.state == "special" then
         G_blackoutCurrentFrame = 250 - (currentFrame - 1)*25
-        if currentFrame == 2 then -- Not 1 because when the animation is finished it is in frame 1
+        if animationFinished then
+            self.state = "idle"
+        elseif G_gandalf and currentFrame == 1 and not G_blackoutSFX then
+            local sound = love.audio.newSource("ysnp.mp3", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+            sound:setVolume(1)
+            sound:play()
+            G_blackoutSFX = true
+        elseif currentFrame == 2 then -- Not 1 because when the animation is finished it is in frame 1
             G_blackoutOnPlayer = true
+            G_blackoutSFX = false
         elseif currentFrame == 7 then
             self.hasShoot = true
             self:castSpell()
@@ -104,8 +112,6 @@ function Player:update(dt)
             G_blackoutCurrentFrame = 250 - (currentFrame - 3)*25
         elseif currentFrame == 9 then
             G_blackoutOnPlayer = false
-        elseif animationFinished then
-            self.state = "idle"
         end
     end
 

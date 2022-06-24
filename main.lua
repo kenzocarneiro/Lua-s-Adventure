@@ -35,6 +35,8 @@ function love.load()
     G_fireballHF = HitboxFactory:new({"hurtbox", {enemy=true}, 3, 3, Vector:new(-2, -2)})
     G_blackoutOnPlayer = false
     G_blackoutCurrentFrame = 250
+    G_blackoutSFX = false
+    G_gandalf = false
 
     --declaration des variables globales de controle
     --- @type Hitbox[]
