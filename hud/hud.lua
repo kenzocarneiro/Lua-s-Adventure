@@ -164,7 +164,7 @@ function Hud.setParameter()
     local offset = screenWidth / 2
     local distanceBetweenInvSlot = 65
 
-    local inventoryPanel = Panel:new(0, screenHeight/2 - 2*7*16) --16px * (zoom+espace) * decalage
+    local inventoryPanel = Panel:new(0, screenHeight/2 - 2*7*16)--, nil, nil, 1) --16px * (zoom+espace) * decalage
         inventoryPanel:setImage(love.graphics.newImage("sprites/hud/button_white_default.png"), 6)
         inventoryPanel.x = screenWidth/2 - 2*inventoryPanel.w --2*inventory.w pour que le bouton soit centré (*4 pour le zoom et /2 pour le décalage)
         local inventoryText = Text:new(inventoryPanel.x + inventoryPanel.w/2, inventoryPanel.y + inventoryPanel.h/2, 0, 0, "Inventory", mainFontMenu, "", "", {0, 0, 0})
@@ -212,15 +212,15 @@ function Hud:keypressed(k)
         G_player.currentHealth =G_player.currentHealth + 5
     elseif k == "l" then
         G_player.currentHealth =G_player.currentHealth - 5
-    elseif k == "p" then --button paramtre
-        if self.player.visible then
-            self.player:setVisible(false)
-            self.inventorySlots:setVisible(false)
-            self.parameter:setVisible(true)
-        else
+    elseif k == "p" then --button parameter
+        if self.parameter.visible then
             self.player:setVisible(true)
             self.inventorySlots:setVisible(true)
             self.parameter:setVisible(false)
+        else
+            self.player:setVisible(false)
+            self.inventorySlots:setVisible(false)
+            self.parameter:setVisible(true)
         end
     --potion de soin
     elseif k == "a" then
@@ -231,6 +231,11 @@ function Hud:keypressed(k)
         G_player:CastSpell()
 
     end
+
+    if self.parameter.visible then
+        -- self:updateParameter(k)
+    end
+
 end
 
 function Hud:update(dt)
@@ -257,11 +262,9 @@ function Hud:update(dt)
         self.player.elements["buff_2"]:setImage(love.graphics.newImage("sprites/hud/transparent.png"), 3)
     end
 
-    self.player:update(dt)
     self:updateHealthPlayer(G_player.currentHealth)
     self:updateInventory()
     self:updatePotionStock()
-
 
     for key, value in pairs(self) do
         value:update(dt)
@@ -297,7 +300,32 @@ function Hud:updateInventory()
     end
 end
 
-
+function Hud:updateParameter(k)
+    if k == "up" then
+        if self.parameter.currentSelection == 1 then
+            self.parameter.currentSelection = #self.parameter.elements
+        else
+            self.parameter.currentSelection = self.parameter.currentSelection - 1
+        end
+    elseif k == "down" then
+        if self.parameter.currentSelection == #self.parameter.elements then
+            self.parameter.currentSelection = 1
+        else
+            self.parameter.currentSelection = self.parameter.currentSelection + 1
+        end
+    elseif k == "return" then
+        if self.parameter.currentSelection == 1 then
+            G_player:CastSpell()
+        elseif self.parameter.currentSelection == 2 then
+            G_player:ApplyHealthPotionEffect(20)
+        elseif self.parameter.currentSelection == 3 then
+            G_player:ApplySpeedPotionEffect(20)
+        end
+    end
+    self.parameter.elements[self.parameter.currentSelection]:setColor({255,255,255})
+    self.parameter.elements[self.parameter.currentSelection]:setColor({255,255,255})
+    self.parameter.elements[self.parameter.currentSelection]:setColor({255,255,255})
+end
 
 -- function Hud:__tostring()
 --     for key, value in pairs(self) do
