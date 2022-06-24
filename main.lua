@@ -255,92 +255,94 @@ end
 --- @param dt number the time elapsed since the last frame
 function love.update(dt)
     G_hud:update(dt) -- HUD
+    if G_hud.player.visible then --jeu en cours
 
-    --INPUTS
-    --affichage des hitboxes
-    if love.keyboard.isDown("lshift") then
-        G_hitboxActivated = true
-    else
-        G_hitboxActivated = false
-    end
-
-    --affichage du radius de collect
-    if love.keyboard.isDown("lctrl") then
-        G_player.radiusDisplay = true
-    else
-        G_player.radiusDisplay = false
-    end
-
-    if love.keyboard.isDown("1") then
-        G_player.currentPotion = 1 --health
-    end
-    if love.keyboard.isDown("2") then
-        G_player.currentPotion = 2 --speed
-    end
-    if love.keyboard.isDown("3") then
-        G_player.currentPotion = 3 --damage
-    end
-
-
-    if G_PONG then
-        Pong.update(dt)
-        return
-    end
-
-    if love.keyboard.isDown("p") and love.keyboard.isDown("i") and love.keyboard.isDown("n") and love.keyboard.isDown("g") then
-        Pong = require("tests/pong/pong")
-        Pong.load()
-        G_PONG = true
-    end
-
-    -- player movements
-    G_player:update(dt)
-
-    for i, v in ipairs(G_projectiles) do
-        v:update(dt)
-    end
-
-    -- Monster updates
-    for i = 1,#G_monsterList do
-        if G_monsterList[i] then
-            G_monsterList[i].goal = G_player.pos
-            G_monsterList[i]:update(dt)
+        --INPUTS
+        --affichage des hitboxes
+        if love.keyboard.isDown("lshift") then
+            G_hitboxActivated = true
+        else
+            G_hitboxActivated = false
         end
-    end
 
-    --updating all the items of the game
-    for i = 1,#G_itemList do
-        if G_itemList[i] then
-            G_itemList[i]:update(dt)
+        --affichage du radius de collect
+        if love.keyboard.isDown("lctrl") then
+            G_player.radiusDisplay = true
+        else
+            G_player.radiusDisplay = false
         end
-    end
 
-    --trying to pick up item
-    for i = 1,#G_itemList do
-        if G_itemList[i] then
-            if G_player:pickup(G_itemList[i]) then
-                print("pickup")
-                print(G_player.inventory[#G_player.inventory])
-                if tostring(G_player.inventory[#G_player.inventory]) == "Coin" then
-                    G_player.gold = G_player.gold + G_itemList[i].value
-                    table.remove(G_player.inventory, #G_player.inventory)
-                end
+        if love.keyboard.isDown("1") then
+            G_player.currentPotion = 1 --health
+        end
+        if love.keyboard.isDown("2") then
+            G_player.currentPotion = 2 --speed
+        end
+        if love.keyboard.isDown("3") then
+            G_player.currentPotion = 3 --damage
+        end
 
-                for j = 1,#G_hitboxes do
-                    if G_hitboxes[j] == G_itemList[i].hitboxes["hitbox"] then
-                        table.remove(G_hitboxes, j)
-                        break
-                    end
-                end
-                table.remove(G_itemList, i)
-                break
+
+        if G_PONG then
+            Pong.update(dt)
+            return
+        end
+
+        if love.keyboard.isDown("p") and love.keyboard.isDown("i") and love.keyboard.isDown("n") and love.keyboard.isDown("g") then
+            Pong = require("tests/pong/pong")
+            Pong.load()
+            G_PONG = true
+        end
+
+        -- player movements
+        G_player:update(dt)
+
+        for i, v in ipairs(G_projectiles) do
+            v:update(dt)
+        end
+
+        -- Monster updates
+        for i = 1,#G_monsterList do
+            if G_monsterList[i] then
+                G_monsterList[i].goal = G_player.pos
+                G_monsterList[i]:update(dt)
             end
         end
+
+        --updating all the items of the game
+        for i = 1,#G_itemList do
+            if G_itemList[i] then
+                G_itemList[i]:update(dt)
+            end
+        end
+
+        --trying to pick up item
+        for i = 1,#G_itemList do
+            if G_itemList[i] then
+                if G_player:pickup(G_itemList[i]) then
+                    print("pickup")
+                    print(G_player.inventory[#G_player.inventory])
+                    if tostring(G_player.inventory[#G_player.inventory]) == "Coin" then
+                        G_player.gold = G_player.gold + G_itemList[i].value
+                        table.remove(G_player.inventory, #G_player.inventory)
+                    end
+
+                    for j = 1,#G_hitboxes do
+                        if G_hitboxes[j] == G_itemList[i].hitboxes["hitbox"] then
+                            table.remove(G_hitboxes, j)
+                            break
+                        end
+                    end
+                    table.remove(G_itemList, i)
+                    break
+                end
+            end
+        end
+
+        checkHurtHit()
+
+        killEntities()
     end
-
-    checkHurtHit()
-
-    killEntities()
 end
 
 --- Draw the game (called every frames)
