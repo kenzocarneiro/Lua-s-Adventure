@@ -39,10 +39,8 @@ function Monster:update(dt)
     else
         self:move(self.goal)
     end
-
-
-    Entity.update(self, dt)
 end
+
 
 --- To kill the Monster.
 --- @return table --the table of Monsters with him deleted

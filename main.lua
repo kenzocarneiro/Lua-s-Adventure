@@ -46,6 +46,10 @@ function love.load()
     --- @type Monster[]
     G_monsterList = {}
     G_hitboxActivated = true
+
+    G_soundOn = true
+    G_soundEffectsOn = true
+
     G_room = Room:new(1)
 
     --- @type Element[]
@@ -205,6 +209,11 @@ end
 function love.keypressed(k)
     G_hud:keypressed(k)
     if k == "space" then
+        if G_soundEffectsOn then
+            local sound = love.audio.newSource("sound/soundeffects/player_attack.ogg", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+            sound:setVolume(3)
+            sound:play()
+        end
         G_player:changeState("attack")
         --print("BOOM")
     elseif k == "i" then

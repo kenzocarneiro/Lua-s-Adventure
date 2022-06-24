@@ -33,6 +33,13 @@ function Room:new(roomNbr)
     r.tileRealSize = 32
     r.tileSize = 8
 
+    if G_soundOn then
+        print("Here")
+        r.music = love.audio.newSource("sound/bgmusic/room"..roomNbr..".mp3", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
+        r.music:setVolume(0.2)
+        r.music:play()    
+    end
+    
     local tiled_room = tiled_rooms[roomNbr]
     local tile_layer = tiled_room.layers[1]
     local map_width = tile_layer.width
