@@ -55,6 +55,8 @@ function love.load()
     --- @type Element[]
     G_deadElements = {}
 
+    G_nb_rooms = 2
+
     --initialize sprite collections for monster player and item
     local player_sc = SpriteCollection:new("player")
     player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
@@ -264,6 +266,7 @@ end
 --- Update the game (called every frames)
 --- @param dt number the time elapsed since the last frame
 function love.update(dt)
+
     G_hud:update(dt) -- HUD
     if G_hud.player.visible then --jeu en cours
 
@@ -375,17 +378,22 @@ function love.update(dt)
 
         --to change room if room is finished
         if G_room.isFinished then
-            local index = G_room.number
+            local index = G_room.number+1
 
-            --reset G_variables
-            G_hitboxes = {G_player.hitboxes["hitbox"]}
-            G_hurtboxes = {}
-            G_monsterList = {}
-            G_itemList = {}
-            G_projectiles = {}
-            G_room.music:pause()
-            G_room = nil
-            G_room = Room:new(index+1)
+            if index > G_nb_rooms then
+                print("Victory")
+            else
+
+                --reset G_variables
+                G_hitboxes = {G_player.hitboxes["hitbox"]}
+                G_hurtboxes = {}
+                G_monsterList = {}
+                G_itemList = {}
+                G_projectiles = {}
+                G_room.music:pause()
+                G_room = nil
+                G_room = Room:new(index)
+            end
         end
     end
 end
