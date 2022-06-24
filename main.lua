@@ -69,11 +69,9 @@ function love.load()
     troll_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6)),
         Sprite:new("img/troll_run-Sheet.png", true, "run", 16, 16, Vector:new(7, 6), false, {0.12, 0.12, 0.12, 0.12})})
 
-
     local rhino_sc = SpriteCollection:new("rhino")
-    rhino_sc:init({Sprite:new("img/rhino_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6)),
-        Sprite:new("img/rhino_run-Sheet.png", true, "run", 16, 16, Vector:new(7, 6))})
-
+    rhino_sc:init({Sprite:new("img/rhino_idle-Sheet.png", true, "idle", 16, 16, Vector:new(6, 13)),
+        Sprite:new("img/rhino_run-Sheet.png", true, "run", 16, 16, Vector:new(6, 13))})
 
     local trollHF = HitboxFactory:new(
         {name="hitbox", layers={enemy=true}, width=5, height=11, offset=Vector:new(-2, -2)},
@@ -81,8 +79,8 @@ function love.load()
     )
 
     local rhinoHF = HitboxFactory:new(
-        {name="hitbox", layers={enemy=true}, width=4, height=7, offset=Vector:new(-3, 1)},
-        {name="hurtbox", layers={player=true}, width=6, height=9, offset=Vector:new(-4, 0)}
+        {name="hitbox", layers={enemy=true}, width=4, height=7, offset=Vector:new(-2, -6)},
+        {name="hurtbox", layers={player=true}, width=6, height=9, offset=Vector:new(-3, -7)}
     )
 
     --STAFFS
@@ -207,8 +205,9 @@ local function checkHurtHit()
             if v:collide(v2) then
                 if v2.associatedElement ~= -1 and haveCommonElement(v.layers, v2.layers) then
                     v2.associatedElement:hurt(v.associatedElement.damage)
+                    if tostring(v.associatedElement) == "Projectile" then v.associatedElement:hurt(1)
                 end
-                if tostring(v.associatedElement) == "Projectile" and v2.layers["tile"] then
+                elseif tostring(v.associatedElement) == "Projectile" and v2.layers["tile"] then
                     v.associatedElement:hurt(1)
                 end
             end
@@ -271,90 +270,92 @@ end
 --- @param dt number the time elapsed since the last frame
 function love.update(dt)
     G_hud:update(dt) -- HUD
+    if G_hud.player.visible then --jeu en cours
 
-    --INPUTS
-    --affichage des hitboxes
-    if love.keyboard.isDown("lshift") then
-        G_hitboxActivated = true
-    else
-        G_hitboxActivated = false
-    end
-
-    --affichage du radius de collect
-    if love.keyboard.isDown("lctrl") then
-        G_player.radiusDisplay = true
-    else
-        G_player.radiusDisplay = false
-    end
-
-    if love.keyboard.isDown("1") then
-        G_player.currentPotion = 1 --health
-    end
-    if love.keyboard.isDown("2") then
-        G_player.currentPotion = 2 --speed
-    end
-    if love.keyboard.isDown("3") then
-        G_player.currentPotion = 3 --damage
-    end
-
-
-    if G_PONG then
-        Pong.update(dt)
-        return
-    end
-
-    if love.keyboard.isDown("p") and love.keyboard.isDown("i") and love.keyboard.isDown("n") and love.keyboard.isDown("g") then
-        Pong = require("tests/pong/pong")
-        Pong.load()
-        G_PONG = true
-    end
-
-    -- player movements
-    G_player:update(dt)
-
-    for i, v in ipairs(G_projectiles) do
-        v:update(dt)
-    end
-
-    -- Monster updates
-    for i = 1,#G_monsterList do
-        if G_monsterList[i] then
-            G_monsterList[i].goal = G_player.pos
-            G_monsterList[i]:update(dt)
+        --INPUTS
+        --affichage des hitboxes
+        if love.keyboard.isDown("lshift") then
+            G_hitboxActivated = true
+        else
+            G_hitboxActivated = false
         end
-    end
 
-    --updating all the items of the game
-    for i = 1,#G_itemList do
-        if G_itemList[i] then
-            G_itemList[i]:update(dt)
+        --affichage du radius de collect
+        if love.keyboard.isDown("lctrl") then
+            G_player.radiusDisplay = true
+        else
+            G_player.radiusDisplay = false
         end
-    end
 
-    --trying to pick up item
-    for i = 1,#G_itemList do
-        if G_itemList[i] then
-            if G_player:pickup(G_itemList[i]) then
-                if tostring(G_player.inventory[#G_player.inventory]) == "Coin" then
-                    G_player.gold = G_player.gold + G_itemList[i].value
-                    table.remove(G_player.inventory, #G_player.inventory)
-                end
+        if love.keyboard.isDown("1") then
+            G_player.currentPotion = 1 --health
+        end
+        if love.keyboard.isDown("2") then
+            G_player.currentPotion = 2 --speed
+        end
+        if love.keyboard.isDown("3") then
+            G_player.currentPotion = 3 --damage
+        end
 
-                for j = 1,#G_hitboxes do
-                    if G_hitboxes[j] == G_itemList[i].hitboxes["hitbox"] then
-                        table.remove(G_hitboxes, j)
-                        break
-                    end
-                end
-                table.remove(G_itemList, i)
-                break
+
+        if G_PONG then
+            Pong.update(dt)
+            return
+        end
+
+        if love.keyboard.isDown("p") and love.keyboard.isDown("i") and love.keyboard.isDown("n") and love.keyboard.isDown("g") then
+            Pong = require("tests/pong/pong")
+            Pong.load()
+            G_PONG = true
+        end
+
+        -- player movements
+        G_player:update(dt)
+
+        for i, v in ipairs(G_projectiles) do
+            v:update(dt)
+        end
+
+        -- Monster updates
+        for i = 1,#G_monsterList do
+            if G_monsterList[i] then
+                G_monsterList[i].goal = G_player.pos
+                G_monsterList[i]:update(dt)
             end
         end
+
+        --updating all the items of the game
+        for i = 1,#G_itemList do
+            if G_itemList[i] then
+                G_itemList[i]:update(dt)
+            end
+        end
+
+        --trying to pick up item
+        for i = 1,#G_itemList do
+            if G_itemList[i] then
+                if G_player:pickup(G_itemList[i]) then
+                    if tostring(G_player.inventory[#G_player.inventory]) == "Coin" then
+                        G_player.gold = G_player.gold + G_itemList[i].value
+                        table.remove(G_player.inventory, #G_player.inventory)
+                    end
+
+                    for j = 1,#G_hitboxes do
+                        if G_hitboxes[j] == G_itemList[i].hitboxes["hitbox"] then
+                            table.remove(G_hitboxes, j)
+                            break
+                        end
+                    end
+                    table.remove(G_itemList, i)
+                    break
+                end
+            end
+        end
+
+        checkHurtHit()
+
+        killEntities()
     end
-
-    checkHurtHit()
-
-    killEntities()
 end
 
 --- Draw the game (called every frames)

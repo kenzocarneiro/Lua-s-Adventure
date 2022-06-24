@@ -24,6 +24,7 @@ function Text:new(pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pColor)
 end
 
 function Text:draw()
+    if not self.visible then return end
     if self.visible == false then return end
     love.graphics.setFont(self.font)
     if self.color ~= nil then
@@ -46,4 +47,7 @@ function Text:draw()
     self.text =pString
   end
   
+  function Text:setColor(pColor)
+    self.color = pColor
+  end
 return Text
