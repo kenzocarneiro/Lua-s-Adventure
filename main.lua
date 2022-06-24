@@ -101,6 +101,13 @@ function love.load()
         {"hitbox", {item=true}, 3, 14, Vector:new(-5, -5)}
     )
 
+    local power_staff_sc = SpriteCollection:new("item")
+    power_staff_sc:init({Sprite:new("img/power_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+    local power_staffHF = HitboxFactory:new(
+        {"hitbox", {item=true}, 3, 13, Vector:new(-5, -4)}
+    )
+
     --POTIONS
     local bluePotionSc = SpriteCollection:new("consumable")
     bluePotionSc:init({Sprite:new("img/potion_blue.png", false, "idle", 16, 16, Vector:new(7, 6))})
@@ -151,7 +158,7 @@ function love.load()
 
 
     local speedPotion = Consumable:new()
-    speedPotion:init("speed", 1, "potion of speed", Vector:new(250, 150), bluePotionSc, bluePotionHF)
+    speedPotion:init("speed", 0.5, "potion of speed", Vector:new(250, 150), bluePotionSc, bluePotionHF)
     G_hitboxes[#G_hitboxes+1] = speedPotion.hitboxes["hitbox"]
     G_itemList[#G_itemList+1] = speedPotion
 
@@ -171,19 +178,25 @@ function love.load()
     G_itemList[#G_itemList+1] = goldCoin
 
     local simple_staff = Weapon:new()
-    simple_staff:init(5, "AXE !", Vector:new(90, 70), simple_staff_sc, simple_staffHF)
+    simple_staff:init(1, "AXE !", Vector:new(90, 70), simple_staff_sc, simple_staffHF)
     G_hitboxes[#G_hitboxes+1] = simple_staff.hitboxes["hitbox"]
     G_itemList[#G_itemList+1] = simple_staff
 
     local cool_staff = Weapon:new()
-    cool_staff:init(5, "AXE !", Vector:new(200, 90), cool_staff_sc, cool_staffHF)
+    cool_staff:init(2, "AXE !", Vector:new(200, 90), cool_staff_sc, cool_staffHF)
     G_hitboxes[#G_hitboxes+1] = cool_staff.hitboxes["hitbox"]
     G_itemList[#G_itemList+1] = cool_staff
 
+    local power_staff = Weapon:new()
+    power_staff:init(5, "AXE !", Vector:new(80, 40), power_staff_sc, power_staffHF)
+    G_hitboxes[#G_hitboxes+1] = power_staff.hitboxes["hitbox"]
+    G_itemList[#G_itemList+1] = power_staff
+
     local gold_staff = Weapon:new()
-    gold_staff:init(5, "AXE !", Vector:new(250, 40), gold_staff_sc, gold_staffHF)
+    gold_staff:init(10, "AXE !", Vector:new(250, 40), gold_staff_sc, gold_staffHF)
     G_hitboxes[#G_hitboxes+1] = gold_staff.hitboxes["hitbox"]
     G_itemList[#G_itemList+1] = gold_staff
+
 
     G_hud = Hud:new()
     -- print(G_hud.player[14]) debug A ne pas supprimer
@@ -193,10 +206,10 @@ function love.keypressed(k)
     G_hud:keypressed(k)
     if k == "space" then
         G_player:changeState("attack")
-        print("BOOM")
+        --print("BOOM")
     elseif k == "i" then
         for i, v in ipairs(G_player.inventory) do
-            print(i, v)
+            --print(i, v)
         end
     elseif k == "escape" then
         love.event.quit()
@@ -349,8 +362,6 @@ function love.update(dt)
     for i = 1,#G_itemList do
         if G_itemList[i] then
             if G_player:pickup(G_itemList[i]) then
-                print("pickup")
-                print(G_player.inventory[#G_player.inventory])
                 if tostring(G_player.inventory[#G_player.inventory]) == "Coin" then
                     G_player.gold = G_player.gold + G_itemList[i].value
                     table.remove(G_player.inventory, #G_player.inventory)
