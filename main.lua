@@ -45,7 +45,7 @@ function love.load()
     G_itemList = {}
     --- @type Monster[]
     G_monsterList = {}
-    G_hitboxActivated = true
+    G_hitboxActivated = false
     G_room = Room:new(1)
 
     --- @type Element[]
@@ -53,8 +53,8 @@ function love.load()
 
     --initialize sprite collections for monster player and item
     local player_sc = SpriteCollection:new("player")
-    player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9)),
-        Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9)),
+    player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
+        Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9), false),
         Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9))})
 
     local playerHF = HitboxFactory:new(
@@ -64,19 +64,23 @@ function love.load()
 
     --MONSTERS
     local troll_sc = SpriteCollection:new("troll")
-    troll_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6))})
+    troll_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6)),
+        Sprite:new("img/troll_run-Sheet.png", true, "run", 16, 16, Vector:new(7, 6), false, {0.12, 0.12, 0.12, 0.12})})
 
 
     local rhino_sc = SpriteCollection:new("rhino")
-    rhino_sc:init({Sprite:new("img/rhino_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6))})
+    rhino_sc:init({Sprite:new("img/rhino_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6)),
+        Sprite:new("img/rhino_run-Sheet.png", true, "run", 16, 16, Vector:new(7, 6))})
 
 
     local trollHF = HitboxFactory:new(
-        {name="hitbox", layers={enemy=true}, width=5, height=11, offset=Vector:new(-2, -2)}
+        {name="hitbox", layers={enemy=true}, width=5, height=11, offset=Vector:new(-2, -2)},
+        {name="hurtbox", layers={player=true}, width=7, height=13, offset=Vector:new(-3, -3)}
     )
 
     local rhinoHF = HitboxFactory:new(
-        {name="hitbox", layers={enemy=true}, width=4, height=7, offset=Vector:new(-3, 1)}
+        {name="hitbox", layers={enemy=true}, width=4, height=7, offset=Vector:new(-3, 1)},
+        {name="hurtbox", layers={player=true}, width=6, height=9, offset=Vector:new(-4, 0)}
     )
 
     --STAFFS
@@ -118,85 +122,44 @@ function love.load()
     local yellowPotionSc = SpriteCollection:new("consumable")
     yellowPotionSc:init({Sprite:new("img/potion_yellow.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
-    local bluePotionHF = HitboxFactory:new(
-        {"hitbox", {item=true}, 5, 6, Vector:new(-6, -5)}
-    )
-
-    local redPotionHF = HitboxFactory:new(
-        {"hitbox", {item=true}, 5, 6, Vector:new(-6, -5)}
-    )
-
-    local yellowPotionHF = HitboxFactory:new(
-        {"hitbox", {item=true}, 5, 6, Vector:new(-6, -5)}
-    )
-
-    --COIN
     local coinSc = SpriteCollection:new("coin")
     coinSc:init({Sprite:new("img/coin.png", false, "idle", 16, 16, Vector:new(7, 6))})
-
-    local coinHF = HitboxFactory:new(
-        {"hitbox", {item=true}, 6, 8, Vector:new(-6, -6)}
-    )
-
 
     -- G_player because player is a global variable
     G_player = Player:new()
     -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
     -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
     G_player:init({}, 15, 1, "epee", Vector:new(100, 100), player_sc, playerHF)
-    G_hitboxes[#G_hitboxes+1] = G_player.hitboxes["hitbox"]
 
     local troll = Monster:new()
-    troll:init("advanced", 0.5, 0.5, "epee", Vector:new(70, 80), troll_sc, trollHF)
-    G_hitboxes[#G_hitboxes+1] = troll.hitboxes["hitbox"]
-    G_monsterList[#G_monsterList+1] = troll
+    troll:init("advanced", 0.5, 0.3, "epee", Vector:new(70, 80), troll_sc, trollHF)
 
     local rhino = Monster:new()
-    rhino:init("simple", 0.5, 0.7, "epee", Vector:new(150, 150), rhino_sc, rhinoHF)
-    G_hitboxes[#G_hitboxes+1] = rhino.hitboxes["hitbox"]
-    G_monsterList[#G_monsterList+1] = rhino
+    rhino:init("simple", 0.5, 0.5, "epee", Vector:new(150, 150), rhino_sc, rhinoHF)
 
 
     local speedPotion = Consumable:new()
-    speedPotion:init("speed", 0.5, "potion of speed", Vector:new(250, 150), bluePotionSc, bluePotionHF)
-    G_hitboxes[#G_hitboxes+1] = speedPotion.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = speedPotion
-
+    speedPotion:init("speed", 0.5, "potion of speed", Vector:new(250, 150), bluePotionSc)
     local healthPotion = Consumable:new()
-    healthPotion:init("health", 1, "potion of heatlh", Vector:new(30, 150), redPotionSc, redPotionHF)
-    G_hitboxes[#G_hitboxes+1] = healthPotion.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = healthPotion
+    healthPotion:init("health", 1, "potion of heatlh", Vector:new(30, 150), redPotionSc)
 
     local damagePotion = Consumable:new()
-    damagePotion:init("damage", 1, "potion of health", Vector:new(30, 50), yellowPotionSc, yellowPotionHF)
-    G_hitboxes[#G_hitboxes+1] = damagePotion.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = damagePotion
+    damagePotion:init("damage", 1, "potion of health", Vector:new(30, 50), yellowPotionSc)
 
     local goldCoin = Coin:new()
-    goldCoin:init(3, "coin of gold", Vector:new(200, 20), coinSc, coinHF)
-    G_hitboxes[#G_hitboxes+1] = goldCoin.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = goldCoin
+    goldCoin:init(3, "coin of gold", Vector:new(200, 20), coinSc)
 
     local simple_staff = Weapon:new()
-    simple_staff:init(1, "AXE !", Vector:new(90, 70), simple_staff_sc, simple_staffHF)
-    G_hitboxes[#G_hitboxes+1] = simple_staff.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = simple_staff
+    simple_staff:init(1, "The simple staff", Vector:new(90, 70), simple_staff_sc, simple_staffHF)
 
     local cool_staff = Weapon:new()
-    cool_staff:init(2, "AXE !", Vector:new(200, 90), cool_staff_sc, cool_staffHF)
-    G_hitboxes[#G_hitboxes+1] = cool_staff.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = cool_staff
+    cool_staff:init(2, "The cooler staff", Vector:new(200, 90), cool_staff_sc, cool_staffHF)
 
     local power_staff = Weapon:new()
-    power_staff:init(5, "AXE !", Vector:new(80, 40), power_staff_sc, power_staffHF)
-    G_hitboxes[#G_hitboxes+1] = power_staff.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = power_staff
+    power_staff:init(5, "The powerful staff", Vector:new(80, 40), power_staff_sc, power_staffHF)
 
     local gold_staff = Weapon:new()
-    gold_staff:init(10, "AXE !", Vector:new(250, 40), gold_staff_sc, gold_staffHF)
-    G_hitboxes[#G_hitboxes+1] = gold_staff.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = gold_staff
-
+    gold_staff:init(10, "You achieved capitalism", Vector:new(250, 40), gold_staff_sc, gold_staffHF)
 
     G_hud = Hud:new()
     -- print(G_hud.player[14]) debug A ne pas supprimer
@@ -260,7 +223,7 @@ local function deleteFromList(list, element)
     for i, v in ipairs(list) do
         if v == element then
             table.remove(list, i)
-            return
+            break
         end
     end
 
@@ -392,29 +355,38 @@ function love.draw()
         return
     end
     love.graphics.scale(4, 4)
-    G_room:draw(G_hitboxActivated)
+    G_room:draw()
 
-    G_player:draw(G_hitboxActivated)
+    G_player:draw()
 
     -- drawing Monsters
     for i = 1,#G_monsterList do
         if G_monsterList[i] then
-            G_monsterList[i]:draw(G_hitboxActivated)
+            G_monsterList[i]:draw()
         end
     end
 
     --drawing Items on the map
     for i = 1,#G_itemList do
         if G_itemList[i] then
-            G_itemList[i]:draw(G_hitboxActivated)
+            G_itemList[i]:draw()
         end
     end
 
     for i, v in ipairs(G_projectiles) do
-        v:draw(G_hitboxActivated)
+        v:draw()
+    end
+
+    if G_hitboxActivated then
+        for i, v in ipairs(G_hitboxes) do
+            v:draw({0, 255, 255})
+        end
+
+        for i, v in ipairs(G_hurtboxes) do
+            v:draw({255, 255, 0})
+        end
     end
 
     love.graphics.scale(1/4, 1/4)
     G_hud:draw()
-
 end
