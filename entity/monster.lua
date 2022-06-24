@@ -52,6 +52,7 @@ function Monster:die(monsterList)
             table.remove(monsterList, i)
         end
     end
+
     return monsterList
 end
 
