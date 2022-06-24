@@ -11,7 +11,6 @@ Entity = Element:new()
 --- @return Entity
 function Entity:new() return Element.new(self) end
 
-
 --- Initializes the entity.
 --- @param speed number
 --- @param weapon string
@@ -103,7 +102,7 @@ end
 --- @param pos Vector|nil
 function Entity:hurt(damage, pos)
     if not self.invulnerable then
-        print("PAF")
+        -- print("PAF")
         self.currentHealth = self.currentHealth - damage
         if self.currentHealth <= 0 then
             G_deadElements[#G_deadElements + 1] = self
@@ -121,7 +120,7 @@ function Entity:hurt(damage, pos)
 
             self.pos = self.pos + newPos
         end
-        
+
         self.invulnerable = true
     end
 end
