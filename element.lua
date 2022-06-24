@@ -1,6 +1,7 @@
 Vector = require("vector")
 Hitbox = require("hitbox")
 SpriteTimer = require("sprite/spriteTimer")
+Timer = require("timer")
 
 --- Class representing elements in the game: anything that is displayed.
 --- @class Element
@@ -14,7 +15,7 @@ SpriteTimer = require("sprite/spriteTimer")
 --- @field flipH number
 --- @field flipV number
 --- @field angle number
-Element = {health = 1, damage = 1, state = "idle"}
+Element = {currentHealth = 1, damage = 1, state = "idle", invulnTimer=0.5}
 
 --- Constructor of Element.
 --- @return Element
@@ -49,35 +50,34 @@ function Element:init(pos, spriteCollection, hitboxFactory, flipH, flipV, angle)
     self.flipH = flipH or 1
     self.flipV = flipV or 1
     self.angle = angle or 0
+    self.invulnTimer = Timer:new(self.invulnTimer)
+    self.invulnAnimTimer = Timer:new()
+    self.invulnerable = false
+
+    if self.hitboxes["hitbox"] then G_hitboxes[#G_hitboxes+1] = self.hitboxes["hitbox"] end
+    if self.hitboxes["hurtbox"] then G_hurtboxes[#G_hurtboxes+1] = self.hitboxes["hurtbox"] end
 end
 
 --- Update the element (called every frames).
 --- @param dt number
-function Element:update(dt)
-    if self.spriteCollection:isSpriteSheet(self.state) then
+--- @param scAlreadyUpdated boolean|nil Tells if the spriteCollection of the element was already updated.
+function Element:update(dt, scAlreadyUpdated)
+    if self.spriteCollection:isSpriteSheet(self.state) and not scAlreadyUpdated then
         self.spriteTimer:update(dt, self.spriteCollection:getSpriteFramesDuration(self.state), self.spriteCollection:getNumberOfSprites(self.state))
     end
     if self.hitboxes["hitbox"] then self.hitboxes["hitbox"]:move(self.pos) end
     if self.hitboxes["hurtbox"] then self.hitboxes["hurtbox"]:move(self.pos) end
+    if self.invulnerable then
+        self.invulnerable = not self.invulnTimer:update(dt)
+        if not self.invulnerable then
+            self.invulnAnimTimer:reset()
+        end
+    end
 end
 
 --- Draw the element.
---- @param draw_hitbox boolean
-function Element:draw(draw_hitbox)
+function Element:draw()
     self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), self.flipH, self.flipV, self.angle)
-    if draw_hitbox then
-        local i = 1
-        for k, v in pairs(self.hitboxes) do
-            if v.name == "hitbox" then
-                v:draw({0, 255, 255})
-            elseif v.name == "hurtbox" then
-                v:draw({255, 255, 0})
-            else
-                v:draw({255, 0, 255})
-            end
-            i = i + 1
-        end
-    end
 end
 
 --- Change the Element state and its corresponding sprite
@@ -92,9 +92,13 @@ end
 --- Hurt the Element and check if the Element is dead.
 --- @param damage number
 function Element:hurt(damage)
-    self.health = self.health - damage
-    if self.health <= 0 then
-        G_deadElements[#G_deadElements + 1] = self
+    if not self.invulnerable then
+        print("PAF")
+        self.currentHealth = self.currentHealth - damage
+        if self.currentHealth <= 0 then
+            G_deadElements[#G_deadElements + 1] = self
+        end
+        self.invulnerable = true
     end
 end
 

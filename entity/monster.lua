@@ -25,6 +25,7 @@ function Monster:init(chanceOfDrop, speed, weapon, pos, spriteCollection, hitbox
     self.direction = nil
 
     Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)
+    G_monsterList[#G_monsterList+1] = self
 end
 
 

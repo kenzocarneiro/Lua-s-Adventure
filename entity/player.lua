@@ -15,7 +15,7 @@ function Player:new() return Entity.new(self) end
 --- @param collectRadius number
 function Player:init(inventory, collectRadius, ...)
     self.inventory = inventory or {}
-    self.maxHealth = 100
+    self.maxHealth = 10
     self.currentHealth = self.maxHealth
     self.collectRadius = collectRadius or 10
     self.radiusDisplay = false
@@ -66,8 +66,6 @@ function Player:update(dt)
 
     local currentFrame, animationFinished = self.spriteTimer:update(dt, self.spriteCollection:getSpriteFramesDuration(self.state), self.spriteCollection:getNumberOfSprites(self.state))
 
-    self.hitboxes["hitbox"]:move(self.pos) -- TODO: move hitbox with element
-
     -- TODO: Using the sprite frame to define the attack fireRate isn't a good idea.
     if self.state == "attack" then
         if currentFrame == 4 and not self.hasShoot then
@@ -80,28 +78,27 @@ function Player:update(dt)
             elseif self.flipH == -1 then
                 p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
             end
-            G_hurtboxes[#G_hurtboxes + 1] = p.hitboxes["hurtbox"]
 
             G_projectiles[#G_projectiles+1] = p
-            G_hitboxes[#G_hitboxes+1] = p.hitboxes["hitbox"]
             -- self.state = "idle"
         elseif animationFinished then
             self.state = "idle"
             self.hasShoot = false
         end
     end
+
+    Entity.update(self, dt, true)
 end
 
 --- Draw the Player.
---- @param draw_hitbox boolean
-function Player:draw(draw_hitbox)
+function Player:draw()
 
     if self.radiusDisplay then
         love.graphics.setLineWidth(0.3)
         love.graphics.circle("line", self.pos.x, self.pos.y, self.collectRadius)
     end
 
-    Entity.draw(self, draw_hitbox)
+    Entity.draw(self)
 end
 
 

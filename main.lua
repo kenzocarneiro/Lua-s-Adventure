@@ -67,7 +67,8 @@ function love.load()
     Sprite:new("img/troll_run-Sheet.png", true, "run", 16, 16, Vector:new(7, 6), false, {0.12, 0.12, 0.12, 0.12})})
 
     local monsterHF = HitboxFactory:new(
-        {name="hitbox", layers={enemy=true}, width=5, height=11, offset=Vector:new(-2, -2)}
+        {name="hitbox", layers={enemy=true}, width=5, height=11, offset=Vector:new(-2, -2)},
+        {name="hurtbox", layers={player=true}, width=7, height=13, offset=Vector:new(-3, -3)}
     )
 
     local item_sc = SpriteCollection:new("item")
@@ -75,9 +76,6 @@ function love.load()
     -- local itemHF = HitboxFactory:new(
     --     {"hitbox", {item=true}, 4, 7, Vector:new(-5, -5)}
     -- )
-    local itemHF = HitboxFactory:new(
-        {"hitbox", {item=true}, 4, 7, Vector:new(-5, -5)}
-    )
 
     local bluePotionSc = SpriteCollection:new("consumable")
     bluePotionSc:init({Sprite:new("img/potion_blue.png", false, "idle", 16, 16, Vector:new(7, 6))})
@@ -88,73 +86,39 @@ function love.load()
     local yellowPotionSc = SpriteCollection:new("consumable")
     yellowPotionSc:init({Sprite:new("img/potion_yellow.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
-    local bluePotionHF = HitboxFactory:new(
-        {"hitbox", {item=true}, 5, 6, Vector:new(-6, -5)}
-    )
-
-    local redPotionHF = HitboxFactory:new(
-        {"hitbox", {item=true}, 5, 6, Vector:new(-6, -5)}
-    )
-
-    local yellowPotionHF = HitboxFactory:new(
-        {"hitbox", {item=true}, 5, 6, Vector:new(-6, -5)}
-    )
-
     local coinSc = SpriteCollection:new("coin")
     coinSc:init({Sprite:new("img/coin.png", false, "idle", 16, 16, Vector:new(7, 6))})
-
-    local coinHF = HitboxFactory:new(
-        {"hitbox", {item=true}, 6, 8, Vector:new(-6, -6)}
-    )
-
 
     -- G_player because player is a global variable
     G_player = Player:new()
     -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
     -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
     G_player:init({}, 15, 1, "epee", Vector:new(100, 100), player_sc, playerHF)
-    G_hitboxes[#G_hitboxes+1] = G_player.hitboxes["hitbox"]
 
     local m = Monster:new()
     m:init(0.5, 0.5, "epee", Vector:new(70, 80), monster_sc, monsterHF)
-    G_hitboxes[#G_hitboxes+1] = m.hitboxes["hitbox"]
-    G_monsterList[#G_monsterList+1] = m
 
     local m2 = Monster:new()
     m2:init(0.5, 0.5, "epee", Vector:new(150, 150), monster_sc, monsterHF)
-    G_hitboxes[#G_hitboxes+1] = m2.hitboxes["hitbox"]
-    G_monsterList[#G_monsterList+1] = m2
 
 
     local speedPotion = Consumable:new()
-    speedPotion:init("speed", 1, "potion of speed", Vector:new(250, 150), bluePotionSc, bluePotionHF)
-    G_hitboxes[#G_hitboxes+1] = speedPotion.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = speedPotion
+    speedPotion:init("speed", 1, "potion of speed", Vector:new(250, 150), bluePotionSc)
 
     local healthPotion = Consumable:new()
-    healthPotion:init("health", 1, "potion of heatlh", Vector:new(30, 150), redPotionSc, redPotionHF)
-    G_hitboxes[#G_hitboxes+1] = healthPotion.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = healthPotion
+    healthPotion:init("health", 1, "potion of heatlh", Vector:new(30, 150), redPotionSc)
 
     local damagePotion = Consumable:new()
-    damagePotion:init("damage", 1, "potion of health", Vector:new(30, 50), yellowPotionSc, yellowPotionHF)
-    G_hitboxes[#G_hitboxes+1] = damagePotion.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = damagePotion
+    damagePotion:init("damage", 1, "potion of health", Vector:new(30, 50), yellowPotionSc)
 
     local goldCoin = Coin:new()
-    goldCoin:init(3, "coin of gold", Vector:new(200, 20), coinSc, coinHF)
-    G_hitboxes[#G_hitboxes+1] = goldCoin.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = goldCoin
+    goldCoin:init(3, "coin of gold", Vector:new(200, 20), coinSc)
 
     G_axe = Weapon:new()
-    G_axe:init(5, "AXE !", Vector:new(90, 70), item_sc, itemHF)
-    G_hitboxes[#G_hitboxes+1] = G_axe.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = G_axe
+    G_axe:init(5, "AXE !", Vector:new(90, 70), item_sc)
 
     G_axe2 = Weapon:new()
-    G_axe2:init(5, "AXE !", Vector:new(200, 90), item_sc, itemHF)
-    G_hitboxes[#G_hitboxes+1] = G_axe2.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = G_axe2
+    G_axe2:init(5, "AXE !", Vector:new(200, 90), item_sc)
 
     G_hud = Hud:new()
     -- print(G_hud.player[14]) debug A ne pas supprimer
@@ -218,7 +182,7 @@ local function deleteFromList(list, element)
     for i, v in ipairs(list) do
         if v == element then
             table.remove(list, i)
-            return
+            break
         end
     end
 
@@ -352,29 +316,37 @@ function love.draw()
         return
     end
     love.graphics.scale(4, 4)
-    G_room:draw(G_hitboxActivated)
+    G_room:draw()
 
-    G_player:draw(G_hitboxActivated)
+    G_player:draw()
 
     -- drawing Monsters
     for i = 1,#G_monsterList do
         if G_monsterList[i] then
-            G_monsterList[i]:draw(G_hitboxActivated)
+            G_monsterList[i]:draw()
         end
     end
 
     --drawing Items on the map
     for i = 1,#G_itemList do
         if G_itemList[i] then
-            G_itemList[i]:draw(G_hitboxActivated)
+            G_itemList[i]:draw()
         end
     end
 
     for i, v in ipairs(G_projectiles) do
-        v:draw(G_hitboxActivated)
+        v:draw()
+    end
+
+    love.graphics.setColor(1, 1, 1, 1)
+    for i, v in ipairs(G_hitboxes) do
+        v:draw({0, 255, 255})
+    end
+
+    for i, v in ipairs(G_hurtboxes) do
+        v:draw({255, 255, 0})
     end
 
     love.graphics.scale(1/4, 1/4)
     G_hud:draw()
-
 end
