@@ -41,6 +41,8 @@ function Player:update(dt)
 
     --update buffs
     self:buffsUpdate(dt)
+
+    --update energy
     self:energyUpdate(dt)
 
     --moving

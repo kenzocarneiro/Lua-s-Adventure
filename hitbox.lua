@@ -8,7 +8,7 @@ Vector = require("vector")
 --- @field width number
 --- @field height number
 --- @field offset Vector
---- @field associatedElement Element TODO: should be replace with a global ID system
+--- @field associatedElement Element|Entity TODO: should be replace with a global ID system
 Hitbox = {width=0, height=0}
 
 --- Constructor of Hitbox
