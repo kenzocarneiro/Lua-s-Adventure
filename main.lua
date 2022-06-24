@@ -147,7 +147,7 @@ function love.load()
     G_player = Player:new()
     -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
     -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
-    G_player:init({}, 15, 1, "epee", Vector:new(100, 100), player_sc, playerHF)
+    G_player:init({}, 15, 1, "epee", Vector:new((G_room.entrance["col"]+0.5)*G_room.tileSize, (G_room.entrance["row"]-0.5)*G_room.tileSize), player_sc, playerHF)
     G_hitboxes[#G_hitboxes+1] = G_player.hitboxes["hitbox"]
 
     local troll = Monster:new()
@@ -209,11 +209,6 @@ end
 function love.keypressed(k)
     G_hud:keypressed(k)
     if k == "space" then
-        if G_soundEffectsOn then
-            local sound = love.audio.newSource("sound/soundeffects/player_attack.ogg", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
-            sound:setVolume(3)
-            sound:play()
-        end
         G_player:changeState("attack")
         --print("BOOM")
     elseif k == "i" then
@@ -386,6 +381,26 @@ function love.update(dt)
                 break
             end
         end
+    end
+
+    -- make the exit of the room appear
+    if #G_monsterList == 0 then
+        G_room.objectsGrid[G_room.exit["row"]][G_room.exit["col"]].data=7
+    end
+
+    -- if the player is on the exit, 
+    if G_player.pos.x > G_room.exit["col"]*G_room.tileSize and G_player.pos.x < (G_room.exit["col"]+1)*G_room.tileSize then
+        if G_player.pos.y > G_room.exit["row"]*G_room.tileSize and G_player.pos.y < (G_room.exit["row"]+1)*G_room.tileSize then
+            G_room.isFinished = true
+        end
+    end
+
+    --to change room if room is finished
+    if G_room.isFinished then
+        local index = G_room.number
+        G_room.music:pause()
+        G_room = nil
+        G_room = Room:new(index+1)
     end
 
     checkHurtHit()

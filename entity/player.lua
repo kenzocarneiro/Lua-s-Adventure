@@ -69,21 +69,29 @@ function Player:update(dt)
     self.hitboxes["hitbox"]:move(self.pos) -- TODO: move hitbox with element
 
     -- TODO: Using the sprite frame to define the attack fireRate isn't a good idea.
-    if self.state == "attack" and currentFrame == self.spriteCollection:getNumberOfSprites(self.state) - 1 then
-        self.hasShoot = true
-        local p = Projectile:new()
-        local direction = Vector:new(self.spriteCollection.flipH, 0)
+    if self.state == "attack" then 
+        if currentFrame == self.spriteCollection:getNumberOfSprites(self.state) - 2 then
+            if G_soundEffectsOn then
+                local sound = love.audio.newSource("sound/soundeffects/player_attack.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+                sound:setVolume(0.5)
+                sound:play()
+            end
+        elseif currentFrame == self.spriteCollection:getNumberOfSprites(self.state) - 1 then
+            self.hasShoot = true
+            local p = Projectile:new()
+            local direction = Vector:new(self.spriteCollection.flipH, 0)
 
-        if self.spriteCollection.flipH == 1 then
-            p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-        elseif self.spriteCollection.flipH == -1 then
-            p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
+            if self.spriteCollection.flipH == 1 then
+                p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+            elseif self.spriteCollection.flipH == -1 then
+                p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
+            end
+            G_hurtboxes[#G_hurtboxes + 1] = p.hitboxes["hurtbox"]
+
+            G_projectiles[#G_projectiles+1] = p
+            G_hitboxes[#G_hitboxes+1] = p.hitboxes["hitbox"]
+            self.state = "idle"
         end
-        G_hurtboxes[#G_hurtboxes + 1] = p.hitboxes["hurtbox"]
-
-        G_projectiles[#G_projectiles+1] = p
-        G_hitboxes[#G_hitboxes+1] = p.hitboxes["hitbox"]
-        self.state = "idle"
     end
 end
 
