@@ -4,6 +4,7 @@ local Checkbox = require("hud/checkbox")
 local Group = require("hud/group")
 local Panel = require("hud/panel")
 local Text = require("hud/text")
+local KbButton = require("hud/kbbutton")
 local myGUI = require("GCGUI")
 
 local Hud = {}
@@ -178,7 +179,7 @@ function Hud.setParameter()
     local offset = screenWidth / 2
     local distanceBetweenInvSlot = 65
 
-    local inventoryPanel = Bar:new(0, screenHeight/2 - 2*7*16, nil, nil, 1) --16px * (zoom+espace) * decalage
+    local inventoryPanel = KbButton:new(0, screenHeight/2 - 2*7*16) --16px * (zoom+espace) * decalage
         inventoryPanel:setImages(love.graphics.newImage("sprites/hud/button_white_default.png"), love.graphics.newImage("sprites/hud/button_white_pressed.png"), 6)
         inventoryPanel.x = screenWidth/2 - 2*inventoryPanel.w --2*inventory.w pour que le bouton soit centré (*4 pour le zoom et /2 pour le décalage)
         local inventoryText = Text:new(inventoryPanel.x + inventoryPanel.w/2, inventoryPanel.y + inventoryPanel.h/2, 0, 0, "Inventory", mainFontMenu, "", "", {0, 0, 0})
@@ -316,20 +317,11 @@ end
 
 function Hud:updateParameter(k)
     if k == "up" and false then
-        if self.parameter.currentSelection == 1 then
-            self.parameter.currentSelection = #self.parameter.elements
-        else
-            self.parameter.currentSelection = self.parameter.currentSelection - 1
-        end
+        
     elseif k == "down" and false then
-        if self.parameter.currentSelection == #self.parameter.elements then
-            self.parameter.currentSelection = 1
-        else
-            self.parameter.currentSelection = self.parameter.currentSelection + 1
-        end
+        
     elseif k == "return" then
-        local val = 1 - self.parameter.elements["inventoryPanel"].value
-        self.parameter.elements["inventoryPanel"]:setValue(val)
+        self.parameter.elements["inventoryPanel"]:modifySelected()
         
     end
 end
