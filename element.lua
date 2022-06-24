@@ -68,11 +68,11 @@ function Element:draw(draw_hitbox)
     if draw_hitbox then
         local i = 1
         for k, v in pairs(self.hitboxes) do
-            if i == 1 then
+            if v.name == "hitbox" then
                 v:draw({0, 255, 255})
-            elseif i == 2 then
+            elseif v.name == "hurtbox" then
                 v:draw({255, 255, 0})
-            elseif i >= 3 then
+            else
                 v:draw({255, 0, 255})
             end
             i = i + 1
