@@ -74,7 +74,13 @@ function Player:update(dt)
 
     -- TODO: Using the sprite frame to define the attack fireRate isn't a good idea.
     if self.state == "attack" then
+
         if currentFrame == 4 and not self.hasShoot then
+            if G_soundEffectsOn then
+                local sound = love.audio.newSource("sound/soundeffects/player_attack.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+                sound:setVolume(0.5)
+                sound:play()
+            end
             self.hasShoot = true
             local p = Projectile:new()
             local direction = Vector:new(self.flipH, 0)
