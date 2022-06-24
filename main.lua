@@ -34,6 +34,7 @@ function love.load()
 
     G_fireballHF = HitboxFactory:new({"hurtbox", {enemy=true}, 3, 3, Vector:new(-2, -2)})
     G_blackoutOnPlayer = false
+    G_blackoutCurrentFrame = 250
 
     --declaration des variables globales de controle
     --- @type Hitbox[]
@@ -179,7 +180,7 @@ function love.keypressed(k)
         G_player:applyPotionEffect(3) -- TODO: This value should be linked to the potion .value attribute
 
     -- Compétence
-    elseif k == "e" then
+    elseif k == "e" and G_player.currentEnergy > 9.9 then
         G_player:changeState("special")
 
     elseif k == "escape" then
@@ -197,7 +198,6 @@ function G_cartToCyl(x, y) return Vector:new(math.sqrt(x*x + y+y),  math.atan(y 
 --- @param r number|nil longueur : math.sqrt(x*x + y+y)
 function G_cylToCart(theta, r)
     r = r or 1
-    print(math.deg(theta))
     return Vector:new(r * math.cos(theta),  r * math.sin(theta))
 end
 
@@ -374,16 +374,26 @@ end
 
 --- Draw the game (called every frames)
 function love.draw()
+    love.graphics.setColor(255/255, 255/255, 255/255)
     if G_PONG then
         love.graphics.scale(1, 1)
         Pong.draw()
         return
     end
+    if G_blackoutOnPlayer then
+        love.graphics.setColor(G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255)
+    end
     love.graphics.scale(4, 4)
     G_room:draw()
 
+    if G_blackoutOnPlayer then
+        love.graphics.setColor(255/255, 255/255, 255/255)
+    end
     G_player:draw()
 
+    if G_blackoutOnPlayer then
+        love.graphics.setColor(G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255)
+    end
     -- drawing Monsters
     for i = 1,#G_monsterList do
         if G_monsterList[i] then

@@ -91,10 +91,17 @@ function Player:update(dt)
             self.hasShoot = false
         end
     elseif self.state == "special" then
-        if currentFrame == 7 then
+        G_blackoutCurrentFrame = 250 - (currentFrame - 1)*25
+        if currentFrame == 2 then -- Not 1 because when the animation is finished it is in frame 1
+            G_blackoutOnPlayer = true
+        elseif currentFrame == 7 then
             self.hasShoot = true
             self:castSpell()
-
+            G_blackoutCurrentFrame = 250 - (currentFrame - 2)*25
+        elseif currentFrame == 8 then
+            G_blackoutCurrentFrame = 250 - (currentFrame - 3)*25
+        elseif currentFrame == 9 then
+            G_blackoutOnPlayer = false
         elseif animationFinished then
             self.state = "idle"
         end
@@ -226,6 +233,7 @@ function Player:energyUpdate(dt)
     if self.energyTimer and self.energyTimer:update(dt) then
         self.energyTimer = nil
         if self.currentEnergy < 9.9 then
+            -- self.currentEnergy = self.currentEnergy + 0.01
             self.currentEnergy = self.currentEnergy + 0.1
             self.energyTimer = Timer:new(0.01)
         end
