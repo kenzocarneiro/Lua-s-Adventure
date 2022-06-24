@@ -159,15 +159,6 @@ function Hud:keypressed(k)
         G_player.currentHealth =G_player.currentHealth + 5
     elseif k == "l" then
         G_player.currentHealth =G_player.currentHealth - 5
-
-    --potion
-    elseif k == "a" then
-        G_player:applyPotionEffect(3) -- TODO: This value should be linked to the potion .value attribute
-
-    --compétence
-    elseif k == "e" then
-        G_player:changeState("special")
-
     end
 end
 

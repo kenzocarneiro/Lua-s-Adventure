@@ -166,14 +166,21 @@ function love.load()
 end
 
 function love.keypressed(k)
+    if G_PONG then if k == "escape" then love.event.quit() else return end end
+
     G_hud:keypressed(k)
-    if k == "space" then
+    -- Attaque
+    if k == "space" and G_player.state == "move" then
         G_player:changeState("attack")
-        --print("BOOM")
-    elseif k == "i" then
-        for i, v in ipairs(G_player.inventory) do
-            --print(i, v)
-        end
+
+    -- Potion
+    elseif k == "a" then
+        G_player:applyPotionEffect(3) -- TODO: This value should be linked to the potion .value attribute
+
+    -- Compétence
+    elseif k == "e" then
+        G_player:changeState("special")
+
     elseif k == "escape" then
         love.event.quit()
     end

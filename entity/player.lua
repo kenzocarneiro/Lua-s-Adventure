@@ -66,6 +66,7 @@ function Player:update(dt)
 
     local currentFrame, animationFinished = self.spriteTimer:update(dt, self.spriteCollection:getSpriteFramesDuration(self.state), self.spriteCollection:getNumberOfSprites(self.state))
 
+    -- attack handling
     -- TODO: Using the sprite frame to define the attack fireRate isn't a good idea.
     if self.state == "attack" then
         if currentFrame == 4 and not self.hasShoot then
@@ -85,6 +86,8 @@ function Player:update(dt)
             self.state = "idle"
             self.hasShoot = false
         end
+    elseif self.state == "special" then
+
     end
 
     Entity.update(self, dt, true)
