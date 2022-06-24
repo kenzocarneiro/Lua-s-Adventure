@@ -11,9 +11,9 @@ local Sprite = require("sprite/sprite")
 --- @field isFinished boolean
 --- @field tileSize number
 --- @field tileRealSize number
---- @field tiles any
---- @field walls any
---- @field objectsGrid string[][]
+--- @field tiles table<string, any>
+--- @field walls table<string, any>
+--- @field objectsGrid table<string, any>
 --- @field spawnCharacters boolean
 Room = {defaultLength = 40, defaultHeight = 30}
 
@@ -41,9 +41,9 @@ function Room:new(roomNbr)
     if G_soundOn then
         r.music = love.audio.newSource("sound/bgmusic/room"..roomNbr..".mp3", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
         r.music:setVolume(0.5)
-        r.music:play()    
+        r.music:play()
     end
-    
+
     local tiled_room = tiled_rooms[1]
     local tile_layer = tiled_room.layers[1]
     local map_width = tile_layer.width
@@ -174,41 +174,45 @@ function Room:draw()
     end
 end
 
--- Returns the tile where the indicated position is
---- @param pos Vector The position to use
-function Room:findTileWithPos(pos)
-    local index = {row=0,col=0}
-    -- i doit être le x du coin supérieur gauche de la carte
-    local i = 0
-    repeat
-        if i*self.tileRealSize <= pos.x <= (i+1)*self.tileRealSize then
-            index.row = i + 1
-        end
-        i = i + 1
-    until (index.row ~= 0) or (i == self.length)
+-- ----- Ci-gît un début d'algorithme de pathfinding... -----
+-- - RIP in peace (= RIP in peace in peace (= RIP in peace in peace in peace (= ...)))
 
-    -- j doit être le y du coin inférieur gauche de la carte
-    local j = 0
-    repeat
-        if j*self.tileRealSize <= pos.x <= (j+1)*self.tileRealSize then
-            index.col = j + 1
-        end
-        j = j + 1
-    until (index.col ~= 0) or (i == self.height)
+-- -- Returns the tile where the indicated position is
+-- --- @param pos Vector The position to use
+-- function Room:findTileWithPos(pos)
+--     local index = {row=0,col=0}
+--     -- i doit être le x du coin supérieur gauche de la carte
+--     local i = 0
+--     repeat
+--         if i*self.tileRealSize <= pos.x <= (i+1)*self.tileRealSize then
+--             index.row = i + 1
+--         end
+--         i = i + 1
+--     until (index.row ~= 0) or (i == self.length)
 
-    return index
-end
+--     -- j doit être le y du coin inférieur gauche de la carte
+--     local j = 0
+--     repeat
+--         if j*self.tileRealSize <= pos.x <= (j+1)*self.tileRealSize then
+--             index.col = j + 1
+--         end
+--         j = j + 1
+--     until (index.col ~= 0) or (i == self.height)
 
-function Room:getIndexes(tile)
-    return self.findTileWithPos(tile.pixelPos)
-end
+--     return index
+-- end
 
--- Returns the tile where the indicated position is
---- @param pos Vector The position with which we want to know if it's in the same tile as tile
---- @param tile table A tile
-function Room:isOnTheSameTile(pos,tile)
-    local posTileIndexes = self.findTileWithPos(pos)
-    return self.tiles[posTileIndexes[1]][posTileIndexes[2]] == tile
-end
+-- function Room:getIndexes(tile)
+--     return self.findTileWithPos(tile.pixelPos)
+-- end
+
+-- -- Returns the tile where the indicated position is
+-- --- @param pos Vector The position with which we want to know if it's in the same tile as tile
+-- --- @param tile table A tile
+-- function Room:isOnTheSameTile(pos,tile)
+--     local posTileIndexes = self.findTileWithPos(pos)
+--     return self.tiles[posTileIndexes[1]][posTileIndexes[2]] == tile
+-- end
+-- ------------------------------------------------------
 
 return Room
