@@ -134,10 +134,10 @@ function love.load()
     G_player:init({}, 15, 1, "epee", Vector:new(100, 100), player_sc, playerHF)
 
     local troll = Monster:new()
-    troll:init("advanced", 0.5, 0.3, "epee", Vector:new(70, 80), troll_sc, trollHF)
+    troll:init(80, "advanced", 0.5, 0.3, "epee", Vector:new(70, 80), troll_sc, trollHF)
 
     local rhino = Monster:new()
-    rhino:init("simple", 0.5, 0.5, "epee", Vector:new(150, 150), rhino_sc, rhinoHF)
+    rhino:init(50, "simple", 0.5, 0.5, "epee", Vector:new(150, 150), rhino_sc, rhinoHF)
 
 
     local speedPotion = Consumable:new()
@@ -218,7 +218,7 @@ local function checkHurtHit()
         for i2, v2 in ipairs(G_hitboxes) do
             if v:collide(v2) then
                 if v2.associatedElement ~= -1 and haveCommonElement(v.layers, v2.layers) then
-                    v2.associatedElement:hurt(v.associatedElement.damage)
+                    v2.associatedElement:hurt(v.associatedElement.damage, v.associatedElement.pos)
                     if tostring(v.associatedElement) == "Projectile" then v.associatedElement:hurt(1)
                 end
                 elseif tostring(v.associatedElement) == "Projectile" and v2.layers["tile"] then
@@ -301,6 +301,16 @@ function love.update(dt)
             G_player.radiusDisplay = false
         end
 
+        if love.keyboard.isDown("lalt") then
+            for i, v in pairs(G_monsterList) do
+                G_monsterList[i].radiusDisplay = true
+            end
+        else
+            for i, v in pairs(G_monsterList) do
+                G_monsterList[i].radiusDisplay = false
+            end
+        end
+
         if love.keyboard.isDown("1") then
             G_player.currentPotion = 1 --health
         end
@@ -334,7 +344,7 @@ function love.update(dt)
         for i = 1,#G_monsterList do
             if G_monsterList[i] then
                 G_monsterList[i].goal = G_player.pos
-                G_monsterList[i]:update(dt)
+                G_monsterList[i]:update(dt, G_player)
             end
         end
 
