@@ -102,6 +102,7 @@ function Player:update(dt)
         G_blackoutCurrentFrame = 250 - (currentFrame - 1)*25
         if animationFinished then
             self.state = "idle"
+            self.hasShoot = false
         elseif G_gandalf and currentFrame == 1 and not G_blackoutSFX then
             local sound = love.audio.newSource("ysnp.mp3", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
             sound:setVolume(1)
