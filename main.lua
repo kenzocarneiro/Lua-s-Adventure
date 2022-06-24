@@ -33,6 +33,10 @@ function love.load()
     G_fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
 
     G_fireballHF = HitboxFactory:new({"hurtbox", {enemy=true}, 3, 3, Vector:new(-2, -2)})
+    G_blackoutOnPlayer = false
+    G_blackoutCurrentFrame = 250
+    G_blackoutSFX = false
+    G_gandalf = false
 
     --declaration des variables globales de controle
     --- @type Hitbox[]
@@ -55,11 +59,15 @@ function love.load()
     --- @type Element[]
     G_deadElements = {}
 
+    G_nb_rooms = 2
+
     --initialize sprite collections for monster player and item
     local player_sc = SpriteCollection:new("player")
     player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
         Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9), false),
-        Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9))})
+        Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9)),
+        Sprite:new("img/wizard_special-Sheet.png", true, "special", 18, 18, Vector:new(7, 9), false, {0.5, 0.05, 0.25, 0.25, 0.25, 0.25, 0.06, 0.1, 0.1, 0.1})
+    })
 
     local playerHF = HitboxFactory:new(
         -- {"hurtbox", {enemy=true}, 5, 5, Vector:new(-5, -5)},
@@ -71,11 +79,9 @@ function love.load()
     troll_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6)),
         Sprite:new("img/troll_run-Sheet.png", true, "run", 16, 16, Vector:new(7, 6), false, {0.12, 0.12, 0.12, 0.12})})
 
-
     local rhino_sc = SpriteCollection:new("rhino")
-    rhino_sc:init({Sprite:new("img/rhino_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6)),
-        Sprite:new("img/rhino_run-Sheet.png", true, "run", 16, 16, Vector:new(7, 6))})
-
+    rhino_sc:init({Sprite:new("img/rhino_idle-Sheet.png", true, "idle", 16, 16, Vector:new(6, 13)),
+        Sprite:new("img/rhino_run-Sheet.png", true, "run", 16, 16, Vector:new(6, 13))})
 
     local trollHF = HitboxFactory:new(
         {name="hitbox", layers={enemy=true}, width=5, height=11, offset=Vector:new(-2, -2)},
@@ -83,8 +89,8 @@ function love.load()
     )
 
     local rhinoHF = HitboxFactory:new(
-        {name="hitbox", layers={enemy=true}, width=4, height=7, offset=Vector:new(-3, 1)},
-        {name="hurtbox", layers={player=true}, width=6, height=9, offset=Vector:new(-4, 0)}
+        {name="hitbox", layers={enemy=true}, width=4, height=7, offset=Vector:new(-2, -6)},
+        {name="hurtbox", layers={player=true}, width=6, height=9, offset=Vector:new(-3, -7)}
     )
 
     --STAFFS
@@ -170,17 +176,37 @@ function love.load()
 end
 
 function love.keypressed(k)
+    if G_PONG then if k == "escape" then love.event.quit() else return end end
+
     G_hud:keypressed(k)
-    if k == "space" then
+    -- Attaque
+    if k == "space" and G_player.state ~= "special" then
         G_player:changeState("attack")
-        --print("BOOM")
-    elseif k == "i" then
-        for i, v in ipairs(G_player.inventory) do
-            --print(i, v)
-        end
+
+    -- Potion
+    elseif k == "a" then
+        G_player:applyPotionEffect(3) -- TODO: This value should be linked to the potion .value attribute
+
+    -- Compétence
+    elseif k == "e" and G_player.currentEnergy > 9.9 then
+        G_player:changeState("special")
+
     elseif k == "escape" then
         love.event.quit()
     end
+end
+
+--- Converts a polar coordinate to a cartesian coordinate.
+--- @param x number
+--- @param y number
+function G_cartToCyl(x, y) return Vector:new(math.sqrt(x*x + y+y),  math.atan(y / x)) end
+
+--- Converts a cartesian coordinate to a polar coordinate.
+--- @param theta number theta en radian :  math.atan(y / x)
+--- @param r number|nil longueur : math.sqrt(x*x + y+y)
+function G_cylToCart(theta, r)
+    r = r or 1
+    return Vector:new(r * math.cos(theta),  r * math.sin(theta))
 end
 
 -- Check if a layers1 and layers2 have a common element
@@ -200,9 +226,10 @@ local function checkHurtHit()
         for i2, v2 in ipairs(G_hitboxes) do
             if v:collide(v2) then
                 if v2.associatedElement ~= -1 and haveCommonElement(v.layers, v2.layers) then
-                    v2.associatedElement:hurt(v.associatedElement.damage)
+                    v2.associatedElement:hurt(v.associatedElement.damage, v.associatedElement.pos)
+                    if tostring(v.associatedElement) == "Projectile" then v.associatedElement:hurt(1)
                 end
-                if tostring(v.associatedElement) == "Projectile" and not v2.layers["item"] then
+                elseif tostring(v.associatedElement) == "Projectile" and v2.layers["tile"] then
                     v.associatedElement:hurt(1)
                 end
             end
@@ -264,6 +291,7 @@ end
 --- Update the game (called every frames)
 --- @param dt number the time elapsed since the last frame
 function love.update(dt)
+
     G_hud:update(dt) -- HUD
     if G_hud.player.visible then --jeu en cours
 
@@ -373,32 +401,54 @@ function love.update(dt)
             end
         end
 
-        --to change room if room is finished
-        if G_room.isFinished then
-            local index = G_room.number
-            G_room.music:pause()
-            G_room = nil
-            G_room = Room:new(index+1)
-        end
-
         checkHurtHit()
 
         killEntities()
+
+        --to change room if room is finished
+        if G_room.isFinished then
+            local index = G_room.number+1
+
+            if index > G_nb_rooms then
+                print("Victory")
+            else
+
+                --reset G_variables
+                G_hitboxes = {G_player.hitboxes["hitbox"]}
+                G_hurtboxes = {}
+                G_monsterList = {}
+                G_itemList = {}
+                G_projectiles = {}
+                G_room.music:pause()
+                G_room = nil
+                G_room = Room:new(index)
+            end
+        end
     end
 end
 
 --- Draw the game (called every frames)
 function love.draw()
+    love.graphics.setColor(255/255, 255/255, 255/255)
     if G_PONG then
         love.graphics.scale(1, 1)
         Pong.draw()
         return
     end
+    if G_blackoutOnPlayer then
+        love.graphics.setColor(G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255)
+    end
     love.graphics.scale(4, 4)
     G_room:draw()
 
+    if G_blackoutOnPlayer then
+        love.graphics.setColor(255/255, 255/255, 255/255)
+    end
     G_player:draw()
 
+    if G_blackoutOnPlayer then
+        love.graphics.setColor(G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255)
+    end
     -- drawing Monsters
     for i = 1,#G_monsterList do
         if G_monsterList[i] then

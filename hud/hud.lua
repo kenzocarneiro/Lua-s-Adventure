@@ -17,7 +17,7 @@ function Hud:new()
 
     myHud.player = self.setPlayer()
     myHud.inventorySlots = self:setInventory()
-    
+
     myHud.parameter = self.setParameter()
         myHud.parameter:setVisible(false)
 
@@ -88,13 +88,13 @@ function Hud.setPlayer()
 
     local inventory_slot_2 = Panel:new(offset - distanceBetweenInvSlot, hauteur - 64, 40, 40)
         inventory_slot_2:setImage(love.graphics.newImage("sprites/hud/blank_slot.png"))
-    
+
     local inventory_slot_3 = Panel:new(offset, hauteur - 64, 40, 40)
         inventory_slot_3:setImage(love.graphics.newImage("sprites/hud/blank_slot.png"))
-    
+
     local inventory_slot_4 = Panel:new(offset +distanceBetweenInvSlot, hauteur - 64, 40, 40)
         inventory_slot_4:setImage(love.graphics.newImage("sprites/hud/blank_slot.png"))
-    
+
     local inventory_slot_5 = Panel:new(offset +distanceBetweenInvSlot *2, hauteur - 64, 40, 40)
         inventory_slot_5:setImage(love.graphics.newImage("sprites/hud/blank_slot.png"))
 
@@ -118,7 +118,7 @@ function Hud.setPlayer()
     group:addElement(skillHotkey1, "skillHotkey1")
     group:addElement(skillHotkey2, "skillHotkey2")
     group:addElement(skillHotKey3, "skillHotkey3")
-    
+
     group:addElement(inventory_slot_1, "inventory_slot_1")
     group:addElement(inventory_slot_2, "inventory_slot_2")
     group:addElement(inventory_slot_3, "inventory_slot_3")
@@ -188,7 +188,7 @@ function Hud.setParameter()
     local screenHeight = love.graphics.getHeight()
 
     local group = Group:new()
-  
+
     --inventaire du joueur (icone du milieu pour l'instant)
     local offset = screenWidth / 2
     local distanceBetweenInvSlot = 65
@@ -253,16 +253,8 @@ function Hud:keypressed(k)
             self.parameter:setVisible(true)
         end
 
-    --potion
-    elseif k == "a" then
-        G_player:applyPotionEffect(3) -- TODO: This value should be linked to the potion .value attribute
-
-    --compétence
-    elseif k == "e" then
-        G_player:changeState("special")
-
     elseif k == "t" then
-    G_player.currentEnergy = G_player.currentEnergy + 1
+        G_player.currentEnergy = G_player.currentEnergy + 1
     end
 
     if self.parameter.visible then
@@ -357,7 +349,7 @@ function Hud:updateParameter(k)
         elseif self.parameter.elements["optionsKbButton"]:getSelected() then
             self.parameter.elements["optionsKbButton"]:modifySelected()
             self.parameter.elements["inventoryKbButton"]:modifySelected()
-        
+
         elseif self.parameter.elements["saveKbButton"]:getSelected() then
             self.parameter.elements["saveKbButton"]:modifySelected()
             self.parameter.elements["optionsKbButton"]:modifySelected()
@@ -375,7 +367,7 @@ function Hud:updateParameter(k)
         elseif self.parameter.elements["optionsKbButton"]:getSelected() then
             self.parameter.elements["optionsKbButton"]:modifySelected()
             self.parameter.elements["saveKbButton"]:modifySelected()
-        
+
         elseif self.parameter.elements["saveKbButton"]:getSelected() then
             self.parameter.elements["saveKbButton"]:modifySelected()
             self.parameter.elements["exitKbButton"]:modifySelected()
@@ -386,7 +378,7 @@ function Hud:updateParameter(k)
         end
 
     elseif k == "return" then
-        
+
     end
 end
 

@@ -11,7 +11,6 @@ Entity = Element:new()
 --- @return Entity
 function Entity:new() return Element.new(self) end
 
-
 --- Initializes the entity.
 --- @param speed number
 --- @param weapon string
@@ -96,6 +95,34 @@ function Entity:move(move)
     --     end
     -- end
 
+end
+
+--- Hurt the Entity and check if the Element is dead.
+--- @param damage number
+--- @param pos Vector|nil
+function Entity:hurt(damage, pos)
+    if not self.invulnerable then
+        -- print("PAF")
+        self.currentHealth = self.currentHealth - damage
+        if self.currentHealth <= 0 then
+            G_deadElements[#G_deadElements + 1] = self
+        end
+
+        if pos then
+            local knockback = 5
+            local newPos = self.pos - pos
+            newPos = newPos:normalized()*knockback
+
+            local collisionH, collisionV = self:willCollide(newPos)
+
+            if collisionH then newPos.x = 0 end
+            if collisionV then newPos.y = 0 end
+
+            self.pos = self.pos + newPos
+        end
+
+        self.invulnerable = true
+    end
 end
 
 --- Update the entity (called every frames).
