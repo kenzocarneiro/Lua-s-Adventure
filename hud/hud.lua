@@ -200,7 +200,7 @@ function Hud.setParameter()
         local inventoryText = Text:new(inventoryKbButton.x + inventoryKbButton.w/2, inventoryKbButton.y + inventoryKbButton.h/2, 0, 0, "Inventory", mainFontMenu, "", "", {0, 0, 0})
 
     local optionsKbButton = KbButton:new(inventoryKbButton.x, screenHeight/2 - 1*7*16)
-        optionsKbButton:setImages(love.graphics.newImage("sprites/hud/button_lightblue_default.png"), love.graphics.newImage("sprites/hud/button_lightblue_pressed.png"),6)
+        optionsKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
         local optionsText = Text:new(optionsKbButton.x + optionsKbButton.w/2, optionsKbButton.y + optionsKbButton.h/2, 0, 0, "Options", mainFontMenu, "", "", {0, 0, 0})
 
     local saveKbButton = KbButton:new(inventoryKbButton.x, screenHeight/2 + 0*7*16)
@@ -208,7 +208,7 @@ function Hud.setParameter()
         local saveText = Text:new(saveKbButton.x + saveKbButton.w/2, saveKbButton.y + saveKbButton.h/2, 0, 0, "Save", mainFontMenu, "", "", {0, 0, 0})
 
     local exitKbButton = KbButton:new(inventoryKbButton.x, screenHeight/2 + 1*7*16)
-        exitKbButton:setImages(love.graphics.newImage("sprites/hud/button_darkblue_default.png"), love.graphics.newImage("sprites/hud/button_darkblue_pressed.png"),6)
+        exitKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
         local exitText = Text:new(exitKbButton.x + exitKbButton.w/2, exitKbButton.y + exitKbButton.h/2, 0, 0, "Exit", mainFontMenu, "", "", {0, 0, 0})
 
     --parameters du joueur (en bas à droite)
