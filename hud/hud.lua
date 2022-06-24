@@ -14,14 +14,64 @@ function Hud:new()
     local myHud = {}
     setmetatable(myHud, self)
 
+    --main menu
+    myHud.mainMenu = self.setMainMenu()
 
+    --game hud
     myHud.player = self.setPlayer()
+        myHud.player:setVisible(false)
     myHud.inventorySlots = self:setInventory()
     myHud.characterSheet = self:setCharacterSheet()
     
+        myHud.inventorySlots:setVisible(false)
+
+    -- parameter menu
     myHud.parameter = self.setParameter()
         myHud.parameter:setVisible(false)
     return myHud
+end
+
+function Hud.setMainMenu()
+    local mainFontMenu = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 40)
+    love.graphics.setFont(mainFontMenu)
+
+    local screenWidth = love.graphics.getWidth()
+    local screenHeight = love.graphics.getHeight()
+
+    local group = Group:new()
+
+    local playKbButton = KbButton:new(0, screenHeight/2 - 2*8*16) --16px * (zoom+espace) * decalage
+        playKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"), 7)
+        playKbButton.x = screenWidth/2 - 4*playKbButton.w --2*inventory.w pour que le bouton soit centré (*4 pour le zoom et /2 pour le décalage)
+        print(playKbButton.w)
+        playKbButton:modifySelected()
+        local playText = Text:new(playKbButton.x + playKbButton.w/2, playKbButton.y + playKbButton.h/2, 0, 0, "Play", mainFontMenu, "", "", {0, 0, 0})
+
+    local optionsKbButton = KbButton:new(playKbButton.x, screenHeight/2 - 1*8*16)
+        optionsKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),7)
+        local optionsText = Text:new(optionsKbButton.x + optionsKbButton.w/2, optionsKbButton.y + optionsKbButton.h/2, 0, 0, "Options", mainFontMenu, "", "", {0, 0, 0})
+
+    local exitKbButton = KbButton:new(playKbButton.x, screenHeight/2 + 1*8*16)
+        exitKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),7)
+        local exitText = Text:new(exitKbButton.x + exitKbButton.w/2, exitKbButton.y + exitKbButton.h/2, 0, 0, "Exit", mainFontMenu, "", "", {0, 0, 0})
+
+    --parameters du joueur (en bas à droite)
+    local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
+    love.graphics.setFont(mainFont)
+    local buttonParam = Panel:new(screenWidth - 60 , screenHeight - 70, 40, 40)
+        buttonParam:setImage(love.graphics.newImage("sprites/hud/gear.png"))
+    local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , screenHeight - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {255, 255, 255})
+
+    group:addElement(playKbButton, "playKbButton")
+    group:addElement(playText, "playText")
+
+    group:addElement(optionsKbButton, "optionsKbButton")
+    group:addElement(optionsText, "optionsText")
+
+    group:addElement(exitKbButton, "exitKbButton")
+    group:addElement(exitText, "exitText")
+
+    return group
 end
 
 function Hud.setPlayer()
@@ -139,7 +189,7 @@ function Hud.setPlayer()
     group:addElement(energyBarImg, "energyBarImg")
     group:addElement(manaCost, "zManaCost")
     group:addElement(manaCostText, "zManaCostText")
-   group:addElement(HealthValueText, "zHealthValueText")
+    group:addElement(HealthValueText, "zHealthValueText")
     group:addElement(ManaValueText, "zEnergyValueText")
 
     return group
@@ -189,10 +239,6 @@ function Hud.setParameter()
     local screenHeight = love.graphics.getHeight()
 
     local group = Group:new()
-  
-    --inventaire du joueur (icone du milieu pour l'instant)
-    local offset = screenWidth / 2
-    local distanceBetweenInvSlot = 65
 
     local inventoryKbButton = KbButton:new(0, screenHeight/2 - 2*7*16) --16px * (zoom+espace) * decalage
         inventoryKbButton:setImages(love.graphics.newImage("sprites/hud/button_white_default.png"), love.graphics.newImage("sprites/hud/button_white_pressed.png"), 6)
@@ -334,7 +380,9 @@ function Hud:keypressed(k)
     end
     
     if self.parameter.visible then
-        self:updateParameter(k)
+        self:keypressedParameter(k)
+    elseif self.mainMenu.visible then
+        self:keypressedMainMenu(k)
     end
 
 end
@@ -351,6 +399,104 @@ function Hud:displayCharacterSheet()
     end
 end
 
+function Hud:keypressedMainMenu(k)
+    if k == "up" then
+        if self.mainMenu.elements["playKbButton"]:getSelected() then
+            self.mainMenu.elements["playKbButton"]:modifySelected()
+            self.mainMenu.elements["exitKbButton"]:modifySelected()
+
+        elseif self.mainMenu.elements["optionsKbButton"]:getSelected() then
+            self.mainMenu.elements["optionsKbButton"]:modifySelected()
+            self.mainMenu.elements["playKbButton"]:modifySelected()
+
+        elseif self.mainMenu.elements["exitKbButton"]:getSelected() then
+            self.mainMenu.elements["exitKbButton"]:modifySelected()
+            self.mainMenu.elements["optionsKbButton"]:modifySelected()
+        end
+
+    elseif k == "down" then
+        if self.mainMenu.elements["playKbButton"]:getSelected() then
+            self.mainMenu.elements["playKbButton"]:modifySelected()
+            self.mainMenu.elements["optionsKbButton"]:modifySelected()
+
+        elseif self.mainMenu.elements["optionsKbButton"]:getSelected() then
+            self.mainMenu.elements["optionsKbButton"]:modifySelected()
+            self.mainMenu.elements["exitKbButton"]:modifySelected()
+
+        elseif self.mainMenu.elements["exitKbButton"]:getSelected() then
+            self.mainMenu.elements["exitKbButton"]:modifySelected()
+            self.mainMenu.elements["playKbButton"]:modifySelected()
+        end
+
+    elseif k == "return" then
+        if self.mainMenu.elements["playKbButton"]:getSelected() then
+            self.mainMenu:setVisible(false)
+            self.player:setVisible(true)
+            self.inventorySlots:setVisible(true)
+
+        elseif self.mainMenu.elements["optionsKbButton"]:getSelected() then
+
+        elseif self.mainMenu.elements["exitKbButton"]:getSelected() then
+            love.event.quit()
+        end
+    end
+end
+
+function Hud:keypressedParameter(k)
+    if k == "up" then
+        if self.parameter.elements["inventoryKbButton"]:getSelected() then
+            self.parameter.elements["inventoryKbButton"]:modifySelected()
+            self.parameter.elements["exitKbButton"]:modifySelected()
+
+        elseif self.parameter.elements["optionsKbButton"]:getSelected() then
+            self.parameter.elements["optionsKbButton"]:modifySelected()
+            self.parameter.elements["inventoryKbButton"]:modifySelected()
+        
+        elseif self.parameter.elements["saveKbButton"]:getSelected() then
+            self.parameter.elements["saveKbButton"]:modifySelected()
+            self.parameter.elements["optionsKbButton"]:modifySelected()
+
+        elseif self.parameter.elements["exitKbButton"]:getSelected() then
+            self.parameter.elements["exitKbButton"]:modifySelected()
+            self.parameter.elements["saveKbButton"]:modifySelected()
+        end
+
+    elseif k == "down" then
+        if self.parameter.elements["inventoryKbButton"]:getSelected() then
+            self.parameter.elements["inventoryKbButton"]:modifySelected()
+            self.parameter.elements["optionsKbButton"]:modifySelected()
+
+        elseif self.parameter.elements["optionsKbButton"]:getSelected() then
+            self.parameter.elements["optionsKbButton"]:modifySelected()
+            self.parameter.elements["saveKbButton"]:modifySelected()
+        
+        elseif self.parameter.elements["saveKbButton"]:getSelected() then
+            self.parameter.elements["saveKbButton"]:modifySelected()
+            self.parameter.elements["exitKbButton"]:modifySelected()
+
+        elseif self.parameter.elements["exitKbButton"]:getSelected() then
+            self.parameter.elements["exitKbButton"]:modifySelected()
+            self.parameter.elements["inventoryKbButton"]:modifySelected()
+        end
+
+    elseif k == "return" then
+        if self.parameter.elements["inventoryKbButton"]:getSelected() then
+            self.parameter.elements["inventoryKbButton"]:modifySelected()
+            self.parameter.elements["optionsKbButton"]:modifySelected()
+
+        elseif self.parameter.elements["optionsKbButton"]:getSelected() then
+            self.parameter.elements["optionsKbButton"]:modifySelected()
+            self.parameter.elements["saveKbButton"]:modifySelected()
+        
+        elseif self.parameter.elements["saveKbButton"]:getSelected() then
+            self.parameter.elements["saveKbButton"]:modifySelected()
+            self.parameter.elements["exitKbButton"]:modifySelected()
+
+        elseif self.parameter.elements["exitKbButton"]:getSelected() then
+            love.event.quit()
+        end
+    end
+end
 
 function Hud:update(dt)
     love.graphics.setColor(1,1,1) --reset color
@@ -447,47 +593,6 @@ function Hud:updateManaCosts()
     end
 end
 
-function Hud:updateParameter(k)
-    if k == "up" then
-        if self.parameter.elements["inventoryKbButton"]:getSelected() then
-            self.parameter.elements["inventoryKbButton"]:modifySelected()
-            self.parameter.elements["exitKbButton"]:modifySelected()
-
-        elseif self.parameter.elements["optionsKbButton"]:getSelected() then
-            self.parameter.elements["optionsKbButton"]:modifySelected()
-            self.parameter.elements["inventoryKbButton"]:modifySelected()
-        
-        elseif self.parameter.elements["saveKbButton"]:getSelected() then
-            self.parameter.elements["saveKbButton"]:modifySelected()
-            self.parameter.elements["optionsKbButton"]:modifySelected()
-
-        elseif self.parameter.elements["exitKbButton"]:getSelected() then
-            self.parameter.elements["exitKbButton"]:modifySelected()
-            self.parameter.elements["saveKbButton"]:modifySelected()
-        end
-
-    elseif k == "down" then
-        if self.parameter.elements["inventoryKbButton"]:getSelected() then
-            self.parameter.elements["inventoryKbButton"]:modifySelected()
-            self.parameter.elements["optionsKbButton"]:modifySelected()
-
-        elseif self.parameter.elements["optionsKbButton"]:getSelected() then
-            self.parameter.elements["optionsKbButton"]:modifySelected()
-            self.parameter.elements["saveKbButton"]:modifySelected()
-        
-        elseif self.parameter.elements["saveKbButton"]:getSelected() then
-            self.parameter.elements["saveKbButton"]:modifySelected()
-            self.parameter.elements["exitKbButton"]:modifySelected()
-
-        elseif self.parameter.elements["exitKbButton"]:getSelected() then
-            self.parameter.elements["exitKbButton"]:modifySelected()
-            self.parameter.elements["inventoryKbButton"]:modifySelected()
-        end
-
-    elseif k == "return" then
-        
-    end
-end
 
 -- function Hud:__tostring()
 --     for key, value in pairs(self) do
