@@ -19,20 +19,27 @@ function Monster:new() return Entity.new(self) end
 --- @param pos Vector
 --- @param spriteCollection SpriteCollection
 --- @param hitboxFactory HitboxFactory
-function Monster:init(chanceOfDrop, speed, weapon, pos, spriteCollection, hitboxFactory)
+function Monster:init(typeOfMove, chanceOfDrop, speed, weapon, pos, spriteCollection, hitboxFactory)
     self.chanceOfDrop = chanceOfDrop or 0
     self.goal = nil
     self.direction = nil
+    self.typeOfMove = typeOfMove or "simple"
 
     Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)
+    G_monsterList[#G_monsterList+1] = self
 end
 
 
 --- Update the monster (called every frames).
 --- @param dt number
 function Monster:update(dt)
-    self:betterMove(self.goal)
-
+    if self.typeOfMove == "simple" then
+        self:move(self.goal)
+    elseif self.typeOfMove == "advanced" then
+        self:betterMove(self.goal)
+    else
+        self:move(self.goal)
+    end
 
     Entity.update(self, dt)
 end
@@ -45,6 +52,7 @@ function Monster:die(monsterList)
             table.remove(monsterList, i)
         end
     end
+
     return monsterList
 end
 
@@ -67,7 +75,6 @@ function Monster:drop()
     end
 end
 
-
 function Monster:move(vect)
     --initialization of the move we want to do
     local move = Vector:new(vect.x-self.pos.x,vect.y-self.pos.y)
@@ -76,11 +83,25 @@ function Monster:move(vect)
     if self.goal then
         Entity.move(self, move)
     end
+
+    if self.state == "idle" then
+        self:changeState("run")
+    end
+
+    if move.x < 0 then
+        self.flipH = -1
+    else
+        self.flipH = 1
+    end
 end
 
 function Monster:betterMove(vect)
     --initialization of the move we want to do
     local move = Vector:new(vect.x-self.pos.x,vect.y-self.pos.y)
+
+    if self.state == "idle" then
+        self:changeState("run")
+    end
 
     --if we have a goal
     if self.goal then
@@ -106,6 +127,11 @@ function Monster:betterMove(vect)
         end
     end
 
+    if move.x < 0 then
+        self.flipH = -1
+    else
+        self.flipH = 1
+    end
 end
 
 -- function Monster:advancedMove(vect, time)
