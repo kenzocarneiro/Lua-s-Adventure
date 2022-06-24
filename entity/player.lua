@@ -15,6 +15,8 @@ function Player:new() return Entity.new(self) end
 --- @param collectRadius number
 function Player:init(inventory, collectRadius, ...)
     self.inventory = inventory or {}
+    self.maxEnergy = 1
+    self.currentEnergy = 10
     self.maxHealth = 100
     self.currentHealth = self.maxHealth
     self.collectRadius = collectRadius or 10
@@ -79,6 +81,7 @@ function Player:update(dt)
         elseif self.spriteCollection.flipH == -1 then
             p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
         end
+        G_hurtboxes[#G_hurtboxes + 1] = p.hitboxes["hurtbox"]
 
         G_projectiles[#G_projectiles+1] = p
         G_hitboxes[#G_hitboxes+1] = p.hitboxes["hitbox"]
@@ -152,12 +155,12 @@ function Player:ApplyHealthPotionEffect(pAmount)
             self.currentHealth =self.currentHealth + pAmount
         end
         G_hud.player.elements["healthBar"]:modifyValue(pAmount)
-    elseif self.currentPotion == 2 then
+    elseif self.currentPotion == 2 and not self.timer1 then
         self:consume()
-    elseif self.currentPotion == 3 then
+    elseif self.currentPotion == 3 and not self.timer2 then
         self:consume()
     end
-    
+
 end
 
 
@@ -172,7 +175,7 @@ function Player:consume()
         self.speed = self.speed + self.buffs[2]
         self.timer2 = Timer:new(10)
     end
-    
+
 end
 
 function Player:CastSpell()
@@ -201,7 +204,7 @@ local p = {}
     p2:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
     G_projectiles[#G_projectiles+1] = p2
     G_hitboxes[#G_hitboxes+1] = p2.hitboxes["hitbox"]
-           
+
      -- top
      local p3 =  {}
      p3 = Projectile:new()
@@ -209,7 +212,7 @@ local p = {}
      p3:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
      G_projectiles[#G_projectiles+1] = p3
      G_hitboxes[#G_hitboxes+1] = p3.hitboxes["hitbox"]
-          
+
     -- bottom
     local p4 =  {}
     p4 = Projectile:new()
@@ -217,7 +220,7 @@ local p = {}
     p4:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
     G_projectiles[#G_projectiles+1] = p4
     G_hitboxes[#G_hitboxes+1] = p4.hitboxes["hitbox"]
-         
+
 
     -- bottom
     local p5 =  {}
@@ -226,7 +229,7 @@ local p = {}
     p5:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
     G_projectiles[#G_projectiles+1] = p5
     G_hitboxes[#G_hitboxes+1] = p5.hitboxes["hitbox"]
-         
+
     -- bottom
     local p6 =  {}
     p6 = Projectile:new()
@@ -234,7 +237,7 @@ local p = {}
     p6:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
     G_projectiles[#G_projectiles+1] = p6
     G_hitboxes[#G_hitboxes+1] = p6.hitboxes["hitbox"]
-         
+
    -- bottom
    local p8 =  {}
    p8 = Projectile:new()
@@ -242,7 +245,7 @@ local p = {}
    p8:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
    G_projectiles[#G_projectiles+1] = p8
    G_hitboxes[#G_hitboxes+1] = p8.hitboxes["hitbox"]
-        
+
    -- bottom
    local p7 =  {}
    p7 = Projectile:new()
@@ -250,9 +253,9 @@ local p = {}
    p7:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
    G_projectiles[#G_projectiles+1] = p7
    G_hitboxes[#G_hitboxes+1] = p7.hitboxes["hitbox"]
-        
-  
-   
+
+
+
 end
 -- r : longueur : math.sqrt(x*x + y+y)
 -- theta en radian :  math.atan(y / x)

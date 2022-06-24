@@ -17,23 +17,35 @@ end
 --- @param dt number
 function Projectile:update(dt)
     -- convert angle to vector
-    local move = Vector:new(0, 0)
-    move = move + self.direction
-    move = move * self.speed
-    self.pos = self.pos + move
+    local move
+    if type(self.direction) == "number" then
+        -- TODO: INSERT CONVERSION FUNCTION
+        -- move = ...
+    else
+        move = self.direction:cpy()
+    end
+
+    self:move(move)
 
     Entity.update(self, dt)
 end
 
 function Projectile:draw(draw_hitbox)
-    local flipH = 1
-    if self.direction.x < 0 then
-        flipH = -1
+    if type(self.direction) ~= "number" then
+        local flip_H = 1
+        if self.direction.x < 0 then flip_H = -1 end
+        self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), flip_H)
+    else
+        self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), 1, 1, self.direction)
     end
-    self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), flipH)
+
     if draw_hitbox then
-        self.hitboxes["hitbox"]:draw()
+        self.hitboxes["hurtbox"]:draw()
     end
+end
+
+function Projectile:__tostring()
+    return "Projectile"
 end
 
 return Projectile

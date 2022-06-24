@@ -5,7 +5,7 @@ if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
 
 -- Pour notre magnifique HUD
 local Hud = require("hud/hud")
-
+G_eltCounter = 0
 
 
 local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
@@ -32,11 +32,13 @@ function love.load()
     G_fireballSC = SpriteCollection:new("fireball")
     G_fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
 
-    G_fireballHF = HitboxFactory:new({"hitbox", {"projectiles"}, 3, 3, Vector:new(-2, -2)})
+    G_fireballHF = HitboxFactory:new({"hurtbox", {enemy=true}, 3, 3, Vector:new(-2, -2)})
 
     --declaration des variables globales de controle
     --- @type Hitbox[]
     G_hitboxes = {}
+    --- @type Hitbox[]
+    G_hurtboxes = {}
     --- @type Projectile[]
     G_projectiles = {}
     --- @type Item[]|Coin[]|Weapon[]|Consumable[]
@@ -46,6 +48,9 @@ function love.load()
     G_hitboxActivated = true
     G_room = Room:new(1)
 
+    --- @type Element[]
+    G_deadElements = {}
+
     --initialize sprite collections for monster player and item
     local player_sc = SpriteCollection:new("player")
     player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9)),
@@ -53,21 +58,24 @@ function love.load()
         Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9))})
 
     local playerHF = HitboxFactory:new(
-        -- {"hurtbox", {"enemy"}, 5, 5, Vector:new(-5, -5)},
-        {"hitbox", {"player"}, 4, 10, Vector:new(-2, -2)}
+        -- {"hurtbox", {enemy=true}, 5, 5, Vector:new(-5, -5)},
+        {"hitbox", {player=true}, 4, 10, Vector:new(-2, -2)}
     )
 
     local monster_sc = SpriteCollection:new("monster")
     monster_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6))})
 
     local monsterHF = HitboxFactory:new(
-        {name="hitbox", layers={"enemy"}, width=5, height=11, offset=Vector:new(-2, -2)}
+        {name="hitbox", layers={enemy=true}, width=5, height=11, offset=Vector:new(-2, -2)}
     )
 
     local item_sc = SpriteCollection:new("item")
     item_sc:init({Sprite:new("img/axe.png", false, "idle", 16, 16, Vector:new(7, 6))})
+    -- local itemHF = HitboxFactory:new(
+    --     {"hitbox", {item=true}, 4, 7, Vector:new(-5, -5)}
+    -- )
     local itemHF = HitboxFactory:new(
-        {"hitbox", {"item"}, 4, 7, Vector:new(-5, -5)}
+        {"hitbox", {item=true}, 4, 7, Vector:new(-5, -5)}
     )
 
     local bluePotionSc = SpriteCollection:new("consumable")
@@ -80,22 +88,22 @@ function love.load()
     yellowPotionSc:init({Sprite:new("img/potion_yellow.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
     local bluePotionHF = HitboxFactory:new(
-        {"hitbox", {"potion"}, 5, 6, Vector:new(-6, -5)}
+        {"hitbox", {item=true}, 5, 6, Vector:new(-6, -5)}
     )
 
     local redPotionHF = HitboxFactory:new(
-        {"hitbox", {"potion"}, 5, 6, Vector:new(-6, -5)}
+        {"hitbox", {item=true}, 5, 6, Vector:new(-6, -5)}
     )
 
     local yellowPotionHF = HitboxFactory:new(
-        {"hitbox", {"potion"}, 5, 6, Vector:new(-6, -5)}
+        {"hitbox", {item=true}, 5, 6, Vector:new(-6, -5)}
     )
 
     local coinSc = SpriteCollection:new("coin")
     coinSc:init({Sprite:new("img/coin.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
     local coinHF = HitboxFactory:new(
-        {"hitbox", {"coin"}, 6, 8, Vector:new(-6, -6)}
+        {"hitbox", {item=true}, 6, 8, Vector:new(-6, -6)}
     )
 
 
@@ -163,7 +171,84 @@ function love.keypressed(k)
     elseif k == "escape" then
         love.event.quit()
     end
+end
 
+-- Check if a layers1 and layers2 have a common element
+--- @param layers1 table<string, boolean|nil>
+--- @param layers2 table<string, boolean|nil>
+local function haveCommonElement(layers1, layers2)
+    for k, v in pairs(layers1) do
+        if layers2[k] then
+            return true
+        end
+    end
+    return false
+end
+
+local function checkHurtHit()
+    for i, v in ipairs(G_hurtboxes) do
+        for i2, v2 in ipairs(G_hitboxes) do
+            if v:collide(v2) then
+                if v2.associatedElement ~= -1 and haveCommonElement(v.layers, v2.layers) then
+                    v2.associatedElement:hurt(v.associatedElement.damage)
+                end
+                if tostring(v.associatedElement) == "Projectile" and not v2.layers["item"] then
+                    v.associatedElement:hurt(1)
+                end
+            end
+        end
+    end
+end
+
+local function delete(element)
+    for i, v in ipairs(G_hitboxes) do
+        if v.associatedElement == element then
+            table.remove(G_hitboxes, i)
+        end
+    end
+    for i, v in ipairs(G_hurtboxes) do
+        if v.associatedElement == element then
+            table.remove(G_hurtboxes, i)
+        end
+    end
+end
+
+local function deleteFromList(list, element)
+    for i, v in ipairs(list) do
+        if v == element then
+            table.remove(list, i)
+            return
+        end
+    end
+
+    for i, v in pairs(G_hitboxes) do
+        if v == element.hitboxes["hitbox"] then
+            table.remove(G_hitboxes, i)
+            break
+        end
+    end
+
+    for i, v in pairs(G_hurtboxes) do
+        if v == element.hitboxes["hurtbox"] then
+            table.remove(G_hurtboxes, i)
+            break
+        end
+    end
+end
+
+local function killEntities()
+    -- TODO: This is not optimized, should be replaced with a globalID system.
+    for k, v in pairs(G_deadElements) do
+        if tostring(v) == "Projectile" then deleteFromList(G_projectiles, v)
+        elseif tostring(v) == "Monster" then deleteFromList(G_monsterList, v)
+        elseif tostring(v) == "Consumable" then deleteFromList(G_itemList, v)
+        elseif tostring(v) == "Coin" then deleteFromList(G_itemList, v)
+        elseif tostring(v) == "Weapon" then deleteFromList(G_itemList, v)
+        elseif tostring(v) == "Item" then deleteFromList(G_itemList, v)
+        elseif tostring(v) == "Player" then delete(v)
+        else print("Unknown Element: " .. tostring(v)) end
+    end
+    G_deadElements = {}
 end
 
 --- Update the game (called every frames)
@@ -252,6 +337,10 @@ function love.update(dt)
             end
         end
     end
+
+    checkHurtHit()
+
+    killEntities()
 end
 
 --- Draw the game (called every frames)
@@ -281,7 +370,7 @@ function love.draw()
     end
 
     for i, v in ipairs(G_projectiles) do
-        v:draw(true)
+        v:draw(G_hitboxActivated)
     end
 
     love.graphics.scale(1/4, 1/4)

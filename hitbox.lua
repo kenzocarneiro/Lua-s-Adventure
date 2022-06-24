@@ -4,21 +4,23 @@ Vector = require("vector")
 --- @class Hitbox
 --- @field pos Vector
 --- @field name string
---- @field layers string[]
+--- @field layers table<string, boolean|nil>
 --- @field width number
 --- @field height number
 --- @field offset Vector
+--- @field associatedElement Element TODO: should be replace with a global ID system
 Hitbox = {width=0, height=0}
 
 --- Constructor of Hitbox
 --- @param pos Vector
 --- @param name string
---- @param layers string[]
+--- @param layers table<string, boolean|nil>
 --- @param width number
 --- @param height number
 --- @param offset Vector
+--- @param associatedE Element
 --- @return Hitbox
-function Hitbox:new(pos, name, layers, width, height, offset)
+function Hitbox:new(pos, name, layers, width, height, offset, associatedE)
     -- offset n'est utile que si on change height et width pour avoir une hitbox personnalisée
     -- (sinon mettre la taille de l'image et pas d'offset)
     local h = {}
@@ -37,6 +39,8 @@ function Hitbox:new(pos, name, layers, width, height, offset)
 
     h.width=width - 1 or self.width
     h.height=height - 1 or self.height
+
+    h.associatedElement = associatedE
 
     return h
 end
@@ -71,12 +75,15 @@ end
 -- ------------------------------------------------------
 
 
---- Tests if the Hitbox is overlapping with another Hitbox h after a move m
---- @param m Vector
+--- Tests if the Hitbox is overlapping with another Hitbox h right now, or after a move m if m is given.
 --- @param h Hitbox
+--- @param m Vector|nil
 --- @return boolean
-function Hitbox:collide(m, h)
-    local temp_pos = self.pos + m
+function Hitbox:collide(h, m)
+    local temp_pos = self.pos
+    if m then
+        temp_pos = self.pos + m
+    end
     -- Top left : (pos.x, pos.y)
     -- Bottom Right : (pos.x+width, pos.y+height)
     if temp_pos.x > (h.pos.x + h.width) or (temp_pos.x + self.width) < h.pos.x then
@@ -99,11 +106,13 @@ function Hitbox:move(pos)
 end
 
 --- Draws the hitbox (used for debugging).
-function Hitbox:draw()
+--- @param color number[]|nil (optional) 3 numbers must be given: RGB
+function Hitbox:draw(color)
 
     -- Hitbox rectangles
     love.graphics.setLineWidth(1)
-    love.graphics.setColor(0/255, 255/255, 255/255, 100/255)
+    if color == nil then love.graphics.setColor(0/255, 255/255, 255/255, 100/255)
+    else love.graphics.setColor(color[1], color[2], color[3], 100/255) end
     love.graphics.rectangle("line", self.pos.x + 0.5, self.pos.y + 0.5, self.width, self.height)
 
     -- -- Hitbox corners
