@@ -57,19 +57,6 @@ function Monster:update(dt, player)
 end
 
 
---- To kill the Monster.
---- @return table --the table of Monsters with him deleted
-function Monster:die(monsterList)
-    for i = 1,#monsterList do
-        if monsterList[i] == self then
-            table.remove(monsterList, i)
-        end
-    end
-
-    return monsterList
-end
-
-
 --- The monster drops an item
 --- @return Item -- ir nil if doesnt drop
 function Monster:drop()
