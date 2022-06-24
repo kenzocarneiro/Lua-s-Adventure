@@ -17,13 +17,16 @@ function Player:init(inventory, collectRadius, ...)
     self.inventory = inventory or {}
     self.maxEnergy = 10
     self.currentEnergy = 0
+   -- self.skillAngleCd = 0 or 0
     self.energyTimer = Timer:new(0.1)
+    self.damage = 4
     self.maxHealth = 10
     self.currentHealth = self.maxHealth
     self.collectRadius = collectRadius or 10
     self.radiusDisplay = false
     self.gold = 0
     self.nextFreeInventorySlotNum = 1
+    self.selectedWeapon = nil
 
     --for potion consumming
     self.potion_stock = {3, 1, 1} -- {health, damage, speed}
@@ -294,6 +297,7 @@ function Player:energyUpdate(dt)
         self.energyTimer = nil
         if self.currentEnergy < 9.9 then
             self.currentEnergy = self.currentEnergy + 0.1
+           -- self.skillAngleCd  = self.skillAngleCd + 360/100
             self.energyTimer = Timer:new(0.2)     
         end
     end
