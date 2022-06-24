@@ -3,7 +3,7 @@
 --- @field currentFrame number
 --- @field frameTimer number
 --- @field interval number
-SpriteTimer = {currentFrame=1, frameTimer=0, interval=0.1}
+SpriteTimer = {currentFrame=1, frameTimer=0, frameInterval=0.1}
 
 --- Constructor of SpriteTimer
 --- @return SpriteTimer
@@ -16,17 +16,25 @@ end
 
 --- Update function of the SpriteTimer (called every frames).
 --- @param dt number
+--- @param framesInterval number[]|nil
 --- @param maxFrames number
 --- @return number currentFrame, boolean animationFinished
-function SpriteTimer:update(dt, maxFrames)
+function SpriteTimer:update(dt, framesInterval, maxFrames)
+    local currentFrameInterval
+    if framesInterval then
+        currentFrameInterval = framesInterval[self.currentFrame]
+    else
+        currentFrameInterval = self.frameInterval
+    end
     self.frameTimer = self.frameTimer + dt
-    if self.frameTimer > self.interval then
+    if self.frameTimer > currentFrameInterval then
         self.frameTimer = 0
         self.currentFrame = self.currentFrame + 1
         if self.currentFrame > maxFrames then
             self.currentFrame = 1
+            return self.currentFrame, true
         end
-        return self.currentFrame, true
+        return self.currentFrame, false
     end
     return self.currentFrame, false
 end

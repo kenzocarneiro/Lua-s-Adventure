@@ -16,6 +16,7 @@ function Item:init(description, ...)
     self.description = description or "item"
 
     Element.init(self, ...)
+    G_itemList[#G_itemList+1] = self
 end
 
 --- Update the item (called every frames).

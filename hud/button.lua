@@ -53,6 +53,7 @@ function Button:update(dt)
 end
 
 function Button:draw()
+    if not self.visible then return end
     love.graphics.setColor(1,1,1)
     if self.isPressed then
         if self.imgPressed == nil then
