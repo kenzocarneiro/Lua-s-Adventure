@@ -26,7 +26,11 @@ function Projectile:update(dt)
 end
 
 function Projectile:draw(draw_hitbox)
-    self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), self.direction.x)
+    local flipH = 1
+    if self.direction.x < 0 then
+        flipH = -1
+    end
+    self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), flipH)
     if draw_hitbox then
         self.hitboxes["hitbox"]:draw()
     end

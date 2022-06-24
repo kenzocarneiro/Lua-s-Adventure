@@ -15,6 +15,8 @@ function Hud:new()
 
 
     myHud.player = self.setPlayer()
+    myHud.inventorySlots = self:setInventory()
+    
     myHud.parameter = self.setParameter()
         myHud.parameter:setVisible(false)
 
@@ -34,12 +36,11 @@ function Hud.setPlayer()
     local healthHeart = Panel:new(0, 0)
         healthHeart:setImage(love.graphics.newImage("sprites/hud/health.png"), 0.1)
 
-    local healthBar = Bar:new(35,10, 164, 22, 10, nil,{0,255,0})
+    local healthBar = Bar:new(35,10, 164, 22, G_player.maxHealth, nil,{0,255,0})
   
     -- compétences du joueur (icones en bas à gauche)
     local skill_1 = Panel:new(0, hauteur - 64, 40, 40)
         skill_1:setImage(love.graphics.newImage("sprites/hud/health_potion.png"))
-    
     local skill_2 = Panel:new(65, hauteur - 64, 40, 40)
         skill_2:setImage(love.graphics.newImage("sprites/hud/skilll_1.png"))
     local skill_3 = Panel:new(130, hauteur - 65, 40, 40)
@@ -48,8 +49,7 @@ function Hud.setPlayer()
     --raccourci en vert
     local skillHotkey1 = Text:new(skill_1.w/2 , hauteur - skill_1.h -20, 0, 0,"A", mainFont, "", "", {10, 150, 10})
     -- nombre en doré
-    --local skilChargesNum1 = Text:new(skill_1.w -15 , hauteur -23, 0, 0,G_player.potion_stock, mainFont, "", "", {100, 84, 0})
-    local skilChargesNum1 = Text:new(skill_1.w -15 , hauteur -23, 0, 0,G_player.potion_stock, mainFont, "", "", {238, 226, 123})
+    local skilChargesNum1 = Text:new(skill_1.w -15 , hauteur -23, 0, 0,G_player.potion_stock[G_player.currentPotion], mainFont, "", "", {238, 226, 123})
 
     local skillHotkey2 = Text:new(skill_1.w/2 + skill_2.w , hauteur - skill_1.h -20, 0, 0,"E", mainFont, "", "", {10, 150, 10})
 
@@ -80,6 +80,10 @@ function Hud.setPlayer()
     local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , hauteur - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {10, 150, 10})
 
 
+    local buff_1 = Panel:new(210,0)
+        buff_1:setImage(love.graphics.newImage("sprites/hud/damage_buff.png"), 3)
+    local buff_2 = Panel:new(260,0)
+        buff_2:setImage(love.graphics.newImage("sprites/hud/speed_buff.png"), 3)
 
     group:addElement(skill_3, "skill_3")
     group:addElement(skill_2, "skill_2")
@@ -91,21 +95,60 @@ function Hud.setPlayer()
     group:addElement(skillHotkey2, "skillHotkey2")
     group:addElement(skillHotKey3, "skillHotkey3")
     
-
     group:addElement(inventory_slot_1, "inventory_slot_1")
     group:addElement(inventory_slot_2, "inventory_slot_2")
     group:addElement(inventory_slot_3, "inventory_slot_3")
     group:addElement(inventory_slot_4, "inventory_slot_4")
     group:addElement(inventory_slot_5, "inventory_slot_5")
 
+
+
     group:addElement(buttonParam, "buttonParam")
     group:addElement(paramHotKey, "paramHotKey")
 
-    
     group:addElement(healthBar, "healthBar")
     group:addElement(healthHeart, "healthHeart")
 
+    group:addElement(buff_1, "buff_1")
+    group:addElement(buff_2, "buff_2")
+
     return group
+end
+
+function Hud:setInventory()
+
+    local inv_group = Group:new()
+    local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
+
+    local largeur = love.graphics.getWidth()
+    local hauteur = love.graphics.getHeight()
+  
+    --inventaire du joueur (icone du milieu pour l'instant)
+    local offset = largeur / 2 + 10
+    local distanceBetweenInvSlot = 65
+
+    local img_inventory_slot_1 = Panel:new(offset - distanceBetweenInvSlot * 2, hauteur - 55, 60, 60)
+        img_inventory_slot_1:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
+
+    local img_inventory_slot_2 = Panel:new(offset - distanceBetweenInvSlot, hauteur - 55, 60, 60)
+        img_inventory_slot_2:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
+
+    local img_inventory_slot_3 = Panel:new(offset, hauteur - 55, 60, 60)
+        img_inventory_slot_3:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
+
+    local img_inventory_slot_4 = Panel:new(offset +distanceBetweenInvSlot, hauteur - 55, 60, 60)
+        img_inventory_slot_4:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
+
+    local img_inventory_slot_5 = Panel:new(offset +distanceBetweenInvSlot *2, hauteur - 55, 60, 60)
+        img_inventory_slot_5:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
+
+    inv_group:addElement(img_inventory_slot_1, "1")
+    inv_group:addElement(img_inventory_slot_2, "2")
+    inv_group:addElement(img_inventory_slot_3, "3")
+    inv_group:addElement(img_inventory_slot_4, "4")
+    inv_group:addElement(img_inventory_slot_5, "5")
+
+    return inv_group
 end
 
 function Hud.setParameter()
@@ -166,31 +209,60 @@ end
 
 function Hud:keypressed(k)
     if k == "m" then
-        self.player.elements["healthBar"]:modifyValue(2)
-        G_player.currentHealth =G_player.currentHealth + 2
+        G_player.currentHealth =G_player.currentHealth + 5
     elseif k == "l" then
-        self.player.elements["healthBar"]:modifyValue(-2)
-        G_player.currentHealth =G_player.currentHealth - 2
+        G_player.currentHealth =G_player.currentHealth - 5
     elseif k == "p" then --button paramtre
         if self.player.visible then
-            -- print("\nparam1\n")
             self.player:setVisible(false)
-            -- print("\nparam2\n")
+            self.inventorySlots:setVisible(false)
             self.parameter:setVisible(true)
         else
-            -- print("\nparam2\n")
             self.player:setVisible(true)
+            self.inventorySlots:setVisible(true)
             self.parameter:setVisible(false)
         end
     --potion de soin
     elseif k == "a" then
-        G_player:ApplyHealthPotionEffect(3)
-    elseif k == "m" then
-        G_player.currentHealth =G_player.currentHealth - 2
+        G_player:ApplyHealthPotionEffect(20)
+
+    --compétence
+    elseif k == "e" then
+        G_player:CastSpell()
+
     end
 end
 
 function Hud:update(dt)
+    love.graphics.setColor(1,1,1) --reset color
+    if G_player.currentPotion == 1 then
+        self.player.elements["skill_1"]:setImage(love.graphics.newImage("sprites/hud/health_potion.png"))
+    elseif G_player.currentPotion == 2 then
+        self.player.elements["skill_1"]:setImage(love.graphics.newImage("sprites/hud/damage_potion.png"))
+    elseif G_player.currentPotion == 3 then
+        self.player.elements["skill_1"]:setImage(love.graphics.newImage("sprites/hud/speed_potion.png"))
+    end
+
+
+    --update buffs display
+    if G_player.buffs[1] ~= 0 then
+        self.player.elements["buff_1"]:setImage(love.graphics.newImage("sprites/hud/damage_buff.png"), 3)
+    else
+        self.player.elements["buff_1"]:setImage(love.graphics.newImage("sprites/hud/transparent.png"), 3)
+    end
+        
+    if G_player.buffs[2] ~= 0 then
+        self.player.elements["buff_2"]:setImage(love.graphics.newImage("sprites/hud/speed_buff.png"), 3)
+    else
+        self.player.elements["buff_2"]:setImage(love.graphics.newImage("sprites/hud/transparent.png"), 3)
+    end
+
+    self.player:update(dt)
+    self:updateHealthPlayer(G_player.currentHealth)
+    self:updateInventory()
+    self:updatePotionStock()
+
+
     for key, value in pairs(self) do
         value:update(dt)
     end
@@ -199,18 +271,32 @@ end
 function Hud:draw()
     for key, value in pairs(self) do
         value:draw()
-    end    
-    love.graphics.setColor(1,1,1) --reset color
+    end
+    love.graphics.setColor(1,1,1)
 end
 
 function Hud:updatePotionStock()
-    self.player.elements["t_skillCharges1"]:edit(G_player.potion_stock)
-    --self.player.elements["healthBar"]:modifyValue(pHealth)
+    self.player.elements["t_skillCharges1"]:edit(G_player.potion_stock[G_player.currentPotion])
 end
 
 function Hud:updateHealthPlayer(pAmount)
-    self.player.elements["healthBar"]:modifyValue(pAmount)
+    self.player.elements["healthBar"]:setValue(pAmount)
 end
+
+function Hud:updateInvSlot(pNumberSlot, pImage)
+    self.inventorySlots.elements[tostring(pNumberSlot)]:setImage(pImage)
+end
+
+function Hud:updateInventory()
+    print(G_player.nextFreeInventorySlotNum)
+    if G_player.nextFreeInventorySlotNum > 1 and G_player.nextFreeInventorySlotNum < 5 then
+        for i = 1, G_player.nextFreeInventorySlotNum - 1 do
+            print(i, "inventaire")
+            self.inventorySlots.elements[tostring(i)]:setImage(G_player.inventory[i].spriteCollection.sprites["idle"].loveImg,5)
+        end
+    end
+end
+
 
 
 -- function Hud:__tostring()
