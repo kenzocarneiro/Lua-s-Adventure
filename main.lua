@@ -62,22 +62,46 @@ function love.load()
         {"hitbox", {player=true}, 4, 10, Vector:new(-2, -2)}
     )
 
-    local monster_sc = SpriteCollection:new("monster")
-    monster_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6))})
+    --MONSTERS
+    local troll_sc = SpriteCollection:new("troll")
+    troll_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6))})
 
-    local monsterHF = HitboxFactory:new(
+
+    local rhino_sc = SpriteCollection:new("rhino")
+    rhino_sc:init({Sprite:new("img/rhino_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6))})
+
+
+    local trollHF = HitboxFactory:new(
         {name="hitbox", layers={enemy=true}, width=5, height=11, offset=Vector:new(-2, -2)}
     )
 
-    local item_sc = SpriteCollection:new("item")
-    item_sc:init({Sprite:new("img/axe.png", false, "idle", 16, 16, Vector:new(7, 6))})
-    -- local itemHF = HitboxFactory:new(
-    --     {"hitbox", {item=true}, 4, 7, Vector:new(-5, -5)}
-    -- )
-    local itemHF = HitboxFactory:new(
-        {"hitbox", {item=true}, 4, 7, Vector:new(-5, -5)}
+    local rhinoHF = HitboxFactory:new(
+        {name="hitbox", layers={enemy=true}, width=4, height=7, offset=Vector:new(-3, 1)}
     )
 
+    --STAFFS
+    local cool_staff_sc = SpriteCollection:new("item")
+    cool_staff_sc:init({Sprite:new("img/magic_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+    local cool_staffHF = HitboxFactory:new(
+        {"hitbox", {item=true}, 3, 14, Vector:new(-5, -5)}
+    )
+
+    local simple_staff_sc = SpriteCollection:new("item")
+    simple_staff_sc:init({Sprite:new("img/simple_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+    local simple_staffHF = HitboxFactory:new(
+        {"hitbox", {item=true}, 3, 10, Vector:new(-6, -5)}
+    )
+
+    local gold_staff_sc = SpriteCollection:new("item")
+    gold_staff_sc:init({Sprite:new("img/gold_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+    local gold_staffHF = HitboxFactory:new(
+        {"hitbox", {item=true}, 3, 14, Vector:new(-5, -5)}
+    )
+
+    --POTIONS
     local bluePotionSc = SpriteCollection:new("consumable")
     bluePotionSc:init({Sprite:new("img/potion_blue.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
@@ -99,6 +123,7 @@ function love.load()
         {"hitbox", {item=true}, 5, 6, Vector:new(-6, -5)}
     )
 
+    --COIN
     local coinSc = SpriteCollection:new("coin")
     coinSc:init({Sprite:new("img/coin.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
@@ -114,15 +139,15 @@ function love.load()
     G_player:init({}, 15, 1, "epee", Vector:new(100, 100), player_sc, playerHF)
     G_hitboxes[#G_hitboxes+1] = G_player.hitboxes["hitbox"]
 
-    local m = Monster:new()
-    m:init(0.5, 0.5, "epee", Vector:new(70, 80), monster_sc, monsterHF)
-    G_hitboxes[#G_hitboxes+1] = m.hitboxes["hitbox"]
-    G_monsterList[#G_monsterList+1] = m
+    local troll = Monster:new()
+    troll:init("advanced", 0.5, 0.5, "epee", Vector:new(70, 80), troll_sc, trollHF)
+    G_hitboxes[#G_hitboxes+1] = troll.hitboxes["hitbox"]
+    G_monsterList[#G_monsterList+1] = troll
 
-    local m2 = Monster:new()
-    m2:init(0.5, 0.5, "epee", Vector:new(150, 150), monster_sc, monsterHF)
-    G_hitboxes[#G_hitboxes+1] = m2.hitboxes["hitbox"]
-    G_monsterList[#G_monsterList+1] = m2
+    local rhino = Monster:new()
+    rhino:init("simple", 0.5, 0.7, "epee", Vector:new(150, 150), rhino_sc, rhinoHF)
+    G_hitboxes[#G_hitboxes+1] = rhino.hitboxes["hitbox"]
+    G_monsterList[#G_monsterList+1] = rhino
 
 
     local speedPotion = Consumable:new()
@@ -145,15 +170,20 @@ function love.load()
     G_hitboxes[#G_hitboxes+1] = goldCoin.hitboxes["hitbox"]
     G_itemList[#G_itemList+1] = goldCoin
 
-    G_axe = Weapon:new()
-    G_axe:init(5, "AXE !", Vector:new(90, 70), item_sc, itemHF)
-    G_hitboxes[#G_hitboxes+1] = G_axe.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = G_axe
+    local simple_staff = Weapon:new()
+    simple_staff:init(5, "AXE !", Vector:new(90, 70), simple_staff_sc, simple_staffHF)
+    G_hitboxes[#G_hitboxes+1] = simple_staff.hitboxes["hitbox"]
+    G_itemList[#G_itemList+1] = simple_staff
 
-    G_axe2 = Weapon:new()
-    G_axe2:init(5, "AXE !", Vector:new(200, 90), item_sc, itemHF)
-    G_hitboxes[#G_hitboxes+1] = G_axe2.hitboxes["hitbox"]
-    G_itemList[#G_itemList+1] = G_axe2
+    local cool_staff = Weapon:new()
+    cool_staff:init(5, "AXE !", Vector:new(200, 90), cool_staff_sc, cool_staffHF)
+    G_hitboxes[#G_hitboxes+1] = cool_staff.hitboxes["hitbox"]
+    G_itemList[#G_itemList+1] = cool_staff
+
+    local gold_staff = Weapon:new()
+    gold_staff:init(5, "AXE !", Vector:new(250, 40), gold_staff_sc, gold_staffHF)
+    G_hitboxes[#G_hitboxes+1] = gold_staff.hitboxes["hitbox"]
+    G_itemList[#G_itemList+1] = gold_staff
 
     G_hud = Hud:new()
     -- print(G_hud.player[14]) debug A ne pas supprimer
