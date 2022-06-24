@@ -58,10 +58,10 @@ function Player:update(dt)
 
     --moving and verifying collision
     if move ~= Vector:new(0, 0) then
-        if self.state ~= "attack" then self:changeState("run") end
+        if self.state == "idle" then self:changeState("run") end
         self:move(move)
     else
-        if self.state ~= "attack" then self:changeState("idle") end
+        if self.state == "run" then self:changeState("idle") end
     end
 
     local currentFrame, animationFinished = self.spriteTimer:update(dt, self.spriteCollection:getSpriteFramesDuration(self.state), self.spriteCollection:getNumberOfSprites(self.state))
@@ -80,14 +80,25 @@ function Player:update(dt)
                 p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
             end
 
-            G_projectiles[#G_projectiles+1] = p
-            -- self.state = "idle"
         elseif animationFinished then
             self.state = "idle"
             self.hasShoot = false
         end
     elseif self.state == "special" then
+        if currentFrame == 7 then
+            self.hasShoot = true
+            local p = Projectile:new()
+            local direction = Vector:new(self.flipH, 0)
 
+            if self.flipH == 1 then
+                p:init(direction, 5, "bullet", self.pos + Vector:new(4, -2), G_fireballSC, G_fireballHF)
+            elseif self.flipH == -1 then
+                p:init(direction, 5, "bullet", self.pos + Vector:new(-4, -2), G_fireballSC, G_fireballHF)
+            end
+
+        elseif animationFinished then
+            self.state = "idle"
+        end
     end
 
     Entity.update(self, dt, true)
@@ -183,46 +194,30 @@ end
 
 function Player:castSpell()
     local p = {}
-    -- local direction = {}
---     for i=1, 6 do
---         p[i] = Projectile:new()
---         direction[i]= self:cylToCart(1, math.rad(i*45))
---         p[i]:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
---         G_projectiles[#G_projectiles+1] = p[i]
---         G_hitboxes[#G_hitboxes+1] = p[i].hitboxes["hitbox"]
---     end
 
     -- right
     local p1 =  {}
     p1 = Projectile:new()
     local direction = self:cylToCart(1, 0)
     p1:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-    G_projectiles[#G_projectiles+1] = p1
-    G_hitboxes[#G_hitboxes+1] = p1.hitboxes["hitbox"]
 
     -- left
     local p2 =  {}
     p2 = Projectile:new()
     direction = self:cylToCart(1, math.rad(180))
     p2:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
-    G_projectiles[#G_projectiles+1] = p2
-    G_hitboxes[#G_hitboxes+1] = p2.hitboxes["hitbox"]
 
      -- top
      local p3 =  {}
      p3 = Projectile:new()
     direction = Vector:new(0,1)
      p3:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-     G_projectiles[#G_projectiles+1] = p3
-     G_hitboxes[#G_hitboxes+1] = p3.hitboxes["hitbox"]
 
     -- bottom
     local p4 =  {}
     p4 = Projectile:new()
    direction = Vector:new(0,-1)
     p4:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-    G_projectiles[#G_projectiles+1] = p4
-    G_hitboxes[#G_hitboxes+1] = p4.hitboxes["hitbox"]
 
 
     -- bottom
@@ -230,32 +225,24 @@ function Player:castSpell()
     p5 = Projectile:new()
    direction = Vector:new(-1,-1)
     p5:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-    G_projectiles[#G_projectiles+1] = p5
-    G_hitboxes[#G_hitboxes+1] = p5.hitboxes["hitbox"]
 
     -- bottom
     local p6 =  {}
     p6 = Projectile:new()
    direction = Vector:new(1,-1)
     p6:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-    G_projectiles[#G_projectiles+1] = p6
-    G_hitboxes[#G_hitboxes+1] = p6.hitboxes["hitbox"]
 
    -- bottom
    local p8 =  {}
    p8 = Projectile:new()
   direction = Vector:new(-1,1)
    p8:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-   G_projectiles[#G_projectiles+1] = p8
-   G_hitboxes[#G_hitboxes+1] = p8.hitboxes["hitbox"]
 
    -- bottom
    local p7 =  {}
    p7 = Projectile:new()
   direction = Vector:new(1,1)
    p7:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-   G_projectiles[#G_projectiles+1] = p7
-   G_hitboxes[#G_hitboxes+1] = p7.hitboxes["hitbox"]
 
 
 

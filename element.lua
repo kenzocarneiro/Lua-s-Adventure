@@ -77,6 +77,7 @@ end
 
 --- Draw the element.
 function Element:draw()
+    if self.state == "special" then print(self.state) end
     self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), self.flipH, self.flipV, self.angle)
 end
 
@@ -86,6 +87,7 @@ function Element:changeState(state)
     if self.state ~= state then
         self.state = state
         self.spriteTimer:changeState()
+        print(self.state)
     end
 end
 
@@ -93,7 +95,7 @@ end
 --- @param damage number
 function Element:hurt(damage)
     if not self.invulnerable then
-        print("PAF")
+        print("PAF", self)
         self.currentHealth = self.currentHealth - damage
         if self.currentHealth <= 0 then
             G_deadElements[#G_deadElements + 1] = self

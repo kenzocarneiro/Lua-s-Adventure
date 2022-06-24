@@ -11,6 +11,7 @@ function Projectile:init(direction, speed, weapon, pos, spriteCollection, hitbox
     self.direction = direction
 
     Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)
+    G_projectiles[#G_projectiles+1] = self
 end
 
 --- Update the player (called every frames).

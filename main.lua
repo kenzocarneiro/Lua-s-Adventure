@@ -55,7 +55,9 @@ function love.load()
     local player_sc = SpriteCollection:new("player")
     player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
         Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9), false),
-        Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9))})
+        Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9)),
+        Sprite:new("img/wizard_special-Sheet.png", true, "special", 18, 18, Vector:new(7, 9), false, {0.5, 0.05, 0.25, 0.25, 0.25, 0.25, 0.06, 0.1, 0.1, 0.1})
+    })
 
     local playerHF = HitboxFactory:new(
         -- {"hurtbox", {enemy=true}, 5, 5, Vector:new(-5, -5)},
@@ -170,7 +172,7 @@ function love.keypressed(k)
 
     G_hud:keypressed(k)
     -- Attaque
-    if k == "space" and G_player.state == "move" then
+    if k == "space" and G_player.state ~= "special" then
         G_player:changeState("attack")
 
     -- Potion
@@ -180,6 +182,7 @@ function love.keypressed(k)
     -- Compétence
     elseif k == "e" then
         G_player:changeState("special")
+        -- G_player:castSpell()
 
     elseif k == "escape" then
         love.event.quit()
@@ -205,7 +208,7 @@ local function checkHurtHit()
                 if v2.associatedElement ~= -1 and haveCommonElement(v.layers, v2.layers) then
                     v2.associatedElement:hurt(v.associatedElement.damage)
                 end
-                if tostring(v.associatedElement) == "Projectile" and not v2.layers["item"] then
+                if tostring(v.associatedElement) == "Projectile" and v2.layers["tile"] then
                     v.associatedElement:hurt(1)
                 end
             end
