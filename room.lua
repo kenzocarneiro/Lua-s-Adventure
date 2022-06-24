@@ -118,7 +118,7 @@ function Room:new(roomNbr)
     return r
 end
 
-function Room:draw(draw_hitbox)
+function Room:draw()
     -- Draw the tiles
     for i = 1, #self.tiles do
         for j = 1, #self.tiles[i] do
@@ -139,10 +139,6 @@ function Room:draw(draw_hitbox)
                 local x = (j - 1) * self.tileSize
                 local y = (i - 1) * self.tileSize
                 love.graphics.draw(dungeon_tileset.loveImg, dungeon_tileset.frames[tile.data], x+self.tileSize, y+self.tileSize)
-
-                if draw_hitbox then
-                    tile.hitbox:draw()
-                end
             end
         end
     end

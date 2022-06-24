@@ -30,17 +30,13 @@ function Projectile:update(dt)
     Entity.update(self, dt)
 end
 
-function Projectile:draw(draw_hitbox)
+function Projectile:draw()
     if type(self.direction) ~= "number" then
         local flip_H = 1
         if self.direction.x < 0 then flip_H = -1 end
         self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), flip_H)
     else
         self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), 1, 1, self.direction)
-    end
-
-    if draw_hitbox then
-        self.hitboxes["hurtbox"]:draw()
     end
 end
 

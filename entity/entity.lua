@@ -17,7 +17,7 @@ function Entity:new() return Element.new(self) end
 --- @param weapon string
 --- @param pos Vector
 --- @param spriteCollection SpriteCollection
---- @param hitboxFactory HitboxFactory
+--- @param hitboxFactory HitboxFactory|nil
 function Entity:init(speed, weapon, pos, spriteCollection, hitboxFactory)
     self.speed = speed or 1
     self.weapon = weapon or "epee"
@@ -100,7 +100,8 @@ end
 
 --- Update the entity (called every frames).
 --- @param dt number
-function Entity:update(dt) Element.update(self, dt) end
+--- @param scAlreadyUpdated boolean|nil Tells if the spriteCollection of the element was already updated.
+function Entity:update(dt, scAlreadyUpdated) Element.update(self, dt, scAlreadyUpdated) end
 
 function Entity:__tostring()
     return "Entity"

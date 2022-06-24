@@ -30,4 +30,9 @@ function Timer:update(dt)
     return false
 end
 
+--- Reset timer time.
+function Timer:reset()
+    self.time = 0
+end
+
 return Timer
