@@ -49,8 +49,8 @@ function Hud.setPlayer()
     local manaCost = Panel:new(170,hauteur - 25)
         manaCost:setImage(love.graphics.newImage("sprites/hud/mana_ball.png"),2.4)
         local manaCostText = Text:new(176 , hauteur - 19, 0, 0,"10", mainFont, "", "", {200, 0, 0})
-        local HealthValueText = Text:new(176 , hauteur - 500, 0, 0, G_player.currentHealth .. "/" .. G_player.maxHealth, mainFont, "", "", {255, 255, 255})
-        local ManaValueText = Text:new(176 , hauteur - 400, 0, 0, G_player.currentEnergy .. "/" .. G_player.maxEnergy, mainFont, "", "", {255, 255, 255})
+        local HealthValueText = Text:new(85 , 11, 0, 0, G_player.currentHealth .. "/" .. G_player.maxHealth, mainFont, "", "", {255, 255, 255})
+        local ManaValueText = Text:new(90 , 51, 0, 0, G_player.currentEnergy .. "/" .. G_player.maxEnergy, mainFont, "", "", {255, 255, 255})
 
 
 
@@ -71,13 +71,13 @@ function Hud.setPlayer()
         skill_3:setImage(love.graphics.newImage("sprites/hud/boom.png"))
 
     --raccourci en vert
-    local skillHotkey1 = Text:new(skill_1.w/2 , hauteur - skill_1.h -20, 0, 0,"A", mainFont, "", "", {10, 150, 10})
+    local skillHotkey1 = Text:new(skill_1.w/2 , hauteur - skill_1.h -20, 0, 0,"A", mainFont, "", "", {255, 255, 255})
     -- nombre en doré
     local skilChargesNum1 = Text:new(skill_1.w -15 , hauteur -23, 0, 0,G_player.potion_stock[G_player.currentPotion], mainFont, "", "", {238, 226, 123})
 
-    local skillHotkey2 = Text:new(skill_1.w/2 + skill_2.w , hauteur - skill_1.h -20, 0, 0,"E", mainFont, "", "", {10, 150, 10})
+    local skillHotkey2 = Text:new(skill_1.w/2 + skill_2.w , hauteur - skill_1.h -20, 0, 0,"E", mainFont, "", "", {255, 255, 255})
 
-    local skillHotKey3 = Text:new(skill_1.w/2 + skill_2.w*2 , hauteur - skill_1.h -20, 0, 0,"T", mainFont, "", "", {10, 150, 10})
+    local skillHotKey3 = Text:new(skill_1.w/2 + skill_2.w*2 , hauteur - skill_1.h -20, 0, 0,"T", mainFont, "", "", {255, 255, 255})
 
     --inventaire du joueur (icone du milieu pour l'instant)
     local offset = largeur / 2
@@ -101,7 +101,7 @@ function Hud.setPlayer()
     --parameters du joueur (en bas à droite)
     local buttonParam = Panel:new(largeur - 60 , hauteur - 70, 40, 40)
         buttonParam:setImage(love.graphics.newImage("sprites/hud/gear.png"))
-    local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , hauteur - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {10, 150, 10})
+    local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , hauteur - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {255, 255, 255})
 
 
     local buff_1 = Panel:new(210,0)
@@ -138,8 +138,8 @@ function Hud.setPlayer()
     group:addElement(energyBarImg, "energyBarImg")
     group:addElement(manaCost, "zManaCost")
     group:addElement(manaCostText, "zManaCostText")
-  --  group:addElement(HealthValueText, "zHealthValueText")
-    --group:addElement(ManaValueText, "zEnergyValueText")
+   group:addElement(HealthValueText, "zHealthValueText")
+    group:addElement(ManaValueText, "zEnergyValueText")
 
     return group
 end
@@ -216,7 +216,7 @@ function Hud.setParameter()
     love.graphics.setFont(mainFont)
     local buttonParam = Panel:new(screenWidth - 60 , screenHeight - 70, 40, 40)
         buttonParam:setImage(love.graphics.newImage("sprites/hud/gear.png"))
-    local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , screenHeight - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {10, 150, 10})
+    local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , screenHeight - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {255, 255, 255})
 
     group:addElement(inventoryKbButton, "inventoryKbButton")
     group:addElement(inventoryText, "inventoryText")
@@ -318,10 +318,12 @@ end
 
 function Hud:updateHealthPlayer(pAmount)
     self.player.elements["healthBar"]:setValue(pAmount)
+    self.player.elements["zHealthValueText"]:edit(G_player.currentHealth .. "/" .. G_player.maxHealth)
 end
 
 function Hud:updateEnergyPlayer(pAmount)
     self.player.elements["energyBar"]:setValue(pAmount)
+    self.player.elements["zEnergyValueText"]:edit(G_player.currentEnergy .. "/" .. G_player.maxEnergy)
 end
 
 function Hud:updateInvSlot(pNumberSlot, pImage)

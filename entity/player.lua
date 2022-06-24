@@ -292,7 +292,7 @@ function Player:energyUpdate(dt)
         self.energyTimer = nil
         if self.currentEnergy < 9.9 then
             self.currentEnergy = self.currentEnergy + 0.1
-            self.energyTimer = Timer:new(0.01)     
+            self.energyTimer = Timer:new(0.2)     
         end
     end
 end
