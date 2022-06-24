@@ -15,6 +15,9 @@ function Player:new() return Entity.new(self) end
 --- @param collectRadius number
 function Player:init(inventory, collectRadius, ...)
     self.inventory = inventory or {}
+    self.maxEnergy = 10
+    self.currentEnergy = 0
+    self.energyTimer = Timer:new(0.1)
     self.maxHealth = 10
     self.currentHealth = self.maxHealth
     self.collectRadius = collectRadius or 10
@@ -38,6 +41,7 @@ function Player:update(dt)
 
     --update buffs
     self:buffsUpdate(dt)
+    self:energyUpdate(dt)
 
     --moving
     local move = Vector:new(0, 0)
@@ -179,82 +183,85 @@ function Player:consume()
 end
 
 function Player:castSpell()
-    local p = {}
-    -- local direction = {}
---     for i=1, 6 do
---         p[i] = Projectile:new()
---         direction[i]= self:cylToCart(1, math.rad(i*45))
---         p[i]:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
---         G_projectiles[#G_projectiles+1] = p[i]
---         G_hitboxes[#G_hitboxes+1] = p[i].hitboxes["hitbox"]
---     end
+    if self.currentEnergy > 9.9 then
+        self.currentEnergy = 0
+        self.energyTimer = Timer:new(0.1)
+        local p = {}
+        -- local direction = {}
+        --     for i=1, 6 do
+        --         p[i] = Projectile:new()
+        --         direction[i]= self:cylToCart(1, math.rad(i*45))
+        --         p[i]:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+        --         G_projectiles[#G_projectiles+1] = p[i]
+        --         G_hitboxes[#G_hitboxes+1] = p[i].hitboxes["hitbox"]
+    --     end
 
-    -- right
-    local p1 =  {}
-    p1 = Projectile:new()
-    local direction = self:cylToCart(1, 0)
-    p1:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-    G_projectiles[#G_projectiles+1] = p1
-    G_hitboxes[#G_hitboxes+1] = p1.hitboxes["hitbox"]
+        -- right
+        local p1 =  {}
+        p1 = Projectile:new()
+        local direction = self:cylToCart(1, 0)
+        p1:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+        G_projectiles[#G_projectiles+1] = p1
+        G_hitboxes[#G_hitboxes+1] = p1.hitboxes["hitbox"]
 
-    -- left
-    local p2 =  {}
-    p2 = Projectile:new()
-    direction = self:cylToCart(1, math.rad(180))
-    p2:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
-    G_projectiles[#G_projectiles+1] = p2
-    G_hitboxes[#G_hitboxes+1] = p2.hitboxes["hitbox"]
+        -- left
+        local p2 =  {}
+        p2 = Projectile:new()
+        direction = self:cylToCart(1, math.rad(180))
+        p2:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
+        G_projectiles[#G_projectiles+1] = p2
+        G_hitboxes[#G_hitboxes+1] = p2.hitboxes["hitbox"]
 
-     -- top
-     local p3 =  {}
-     p3 = Projectile:new()
-    direction = Vector:new(0,1)
-     p3:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-     G_projectiles[#G_projectiles+1] = p3
-     G_hitboxes[#G_hitboxes+1] = p3.hitboxes["hitbox"]
+        -- top
+        local p3 =  {}
+        p3 = Projectile:new()
+        direction = Vector:new(0,1)
+        p3:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+        G_projectiles[#G_projectiles+1] = p3
+        G_hitboxes[#G_hitboxes+1] = p3.hitboxes["hitbox"]
 
-    -- bottom
-    local p4 =  {}
-    p4 = Projectile:new()
-   direction = Vector:new(0,-1)
-    p4:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-    G_projectiles[#G_projectiles+1] = p4
-    G_hitboxes[#G_hitboxes+1] = p4.hitboxes["hitbox"]
-
-
-    -- bottom
-    local p5 =  {}
-    p5 = Projectile:new()
-   direction = Vector:new(-1,-1)
-    p5:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-    G_projectiles[#G_projectiles+1] = p5
-    G_hitboxes[#G_hitboxes+1] = p5.hitboxes["hitbox"]
-
-    -- bottom
-    local p6 =  {}
-    p6 = Projectile:new()
-   direction = Vector:new(1,-1)
-    p6:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-    G_projectiles[#G_projectiles+1] = p6
-    G_hitboxes[#G_hitboxes+1] = p6.hitboxes["hitbox"]
-
-   -- bottom
-   local p8 =  {}
-   p8 = Projectile:new()
-  direction = Vector:new(-1,1)
-   p8:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-   G_projectiles[#G_projectiles+1] = p8
-   G_hitboxes[#G_hitboxes+1] = p8.hitboxes["hitbox"]
-
-   -- bottom
-   local p7 =  {}
-   p7 = Projectile:new()
-  direction = Vector:new(1,1)
-   p7:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-   G_projectiles[#G_projectiles+1] = p7
-   G_hitboxes[#G_hitboxes+1] = p7.hitboxes["hitbox"]
+        -- bottom
+        local p4 =  {}
+        p4 = Projectile:new()
+         direction = Vector:new(0,-1)
+        p4:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+        G_projectiles[#G_projectiles+1] = p4
+        G_hitboxes[#G_hitboxes+1] = p4.hitboxes["hitbox"]
 
 
+        -- bottom
+        local p5 =  {}
+        p5 = Projectile:new()
+         direction = Vector:new(-1,-1)
+        p5:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+        G_projectiles[#G_projectiles+1] = p5
+        G_hitboxes[#G_hitboxes+1] = p5.hitboxes["hitbox"]
+
+        -- bottom
+        local p6 =  {}
+        p6 = Projectile:new()
+         direction = Vector:new(1,-1)
+        p6:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+        G_projectiles[#G_projectiles+1] = p6
+        G_hitboxes[#G_hitboxes+1] = p6.hitboxes["hitbox"]
+
+        -- bottom
+        local p8 =  {}
+        p8 = Projectile:new()
+        direction = Vector:new(-1,1)
+        p8:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+        G_projectiles[#G_projectiles+1] = p8
+        G_hitboxes[#G_hitboxes+1] = p8.hitboxes["hitbox"]
+
+        -- bottom
+        local p7 =  {}
+        p7 = Projectile:new()
+        direction = Vector:new(1,1)
+        p7:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+        G_projectiles[#G_projectiles+1] = p7
+        G_hitboxes[#G_hitboxes+1] = p7.hitboxes["hitbox"]
+
+    end
 
 end
 -- r : longueur : math.sqrt(x*x + y+y)
@@ -279,6 +286,16 @@ function Player:buffsUpdate(dt)
         self.speed = self.speed - self.buffs[2]
         self.buffs[2] = self.buffs[2] - 2
         self.timer2 = nil
+    end
+end
+
+function Player:energyUpdate(dt)
+    if self.energyTimer and self.energyTimer:update(dt) then
+        self.energyTimer = nil
+        if self.currentEnergy < 9.9 then
+            self.currentEnergy = self.currentEnergy + 0.1
+            self.energyTimer = Timer:new(0.01)     
+        end
     end
 end
 
