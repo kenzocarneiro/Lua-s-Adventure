@@ -277,9 +277,11 @@ function love.update(dt)
         for i = 1,#G_itemList do
             if G_itemList[i] then
                 if G_player:pickup(G_itemList[i]) then
-                    if tostring(G_player.inventory[#G_player.inventory]) == "Coin" then
+                    if tostring(G_itemList[i]) == "Coin" then
                         G_player.gold = G_player.gold + G_itemList[i].value
-                        table.remove(G_player.inventory, #G_player.inventory)
+                        local coin=love.audio.newSource("sound/soundeffects/coin.wav","static")
+                        coin:setVolume(0.2)
+                        coin:play()
                     else
                         local item=love.audio.newSource("sound/soundeffects/pickup.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
                         item:setVolume(0.2)
