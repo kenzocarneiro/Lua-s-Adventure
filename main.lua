@@ -196,7 +196,7 @@ local function checkHurtHit()
         for i2, v2 in ipairs(G_hitboxes) do
             if v:collide(v2) then
                 if v2.associatedElement ~= -1 and haveCommonElement(v.layers, v2.layers) then
-                    v2.associatedElement:hurt(v.associatedElement.damage)
+                    v2.associatedElement:hurt(v.associatedElement.damage, v.associatedElement.pos)
                 end
                 if tostring(v.associatedElement) == "Projectile" and not v2.layers["item"] then
                     v.associatedElement:hurt(1)
