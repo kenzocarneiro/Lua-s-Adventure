@@ -44,28 +44,30 @@ function Player:update(dt)
     self:energyUpdate(dt)
 
     --moving
-    local move = Vector:new(0, 0)
-    if love.keyboard.isDown("right", "d") then
-        move = move + Vector:new(1, 0)
-        self.flipH = 1
-    end
-    if love.keyboard.isDown("left", "q") then
-        move = move + Vector:new(-1, 0)
-        self.flipH = -1
-    end
-    if love.keyboard.isDown("up", "z") then
-        move = move + Vector:new(0, -1)
-    end
-    if love.keyboard.isDown("down", "s") then
-        move = move + Vector:new(0, 1)
-    end
+    if self.state ~= "special" then
+        local move = Vector:new(0, 0)
+        if love.keyboard.isDown("right", "d") then
+            move = move + Vector:new(1, 0)
+            self.flipH = 1
+        end
+        if love.keyboard.isDown("left", "q") then
+            move = move + Vector:new(-1, 0)
+            self.flipH = -1
+        end
+        if love.keyboard.isDown("up", "z") then
+            move = move + Vector:new(0, -1)
+        end
+        if love.keyboard.isDown("down", "s") then
+            move = move + Vector:new(0, 1)
+        end
 
-    --moving and verifying collision
-    if move ~= Vector:new(0, 0) then
-        if self.state == "idle" then self:changeState("run") end
-        self:move(move)
-    else
-        if self.state == "run" then self:changeState("idle") end
+        --moving and verifying collision
+        if move ~= Vector:new(0, 0) then
+            if self.state == "idle" then self:changeState("run") end
+            self:move(move)
+        else
+            if self.state == "run" then self:changeState("idle") end
+        end
     end
 
     local currentFrame, animationFinished = self.spriteTimer:update(dt, self.spriteCollection:getSpriteFramesDuration(self.state), self.spriteCollection:getNumberOfSprites(self.state))
@@ -91,14 +93,7 @@ function Player:update(dt)
     elseif self.state == "special" then
         if currentFrame == 7 then
             self.hasShoot = true
-            local p = Projectile:new()
-            local direction = Vector:new(self.flipH, 0)
-
-            if self.flipH == 1 then
-                p:init(direction, 5, "bullet", self.pos + Vector:new(4, -2), G_fireballSC, G_fireballHF)
-            elseif self.flipH == -1 then
-                p:init(direction, 5, "bullet", self.pos + Vector:new(-4, -2), G_fireballSC, G_fireballHF)
-            end
+            self:castSpell()
 
         elseif animationFinished then
             self.state = "idle"
@@ -201,93 +196,17 @@ function Player:castSpell()
         self.currentEnergy = 0
         self.energyTimer = Timer:new(0.1)
         local p = {}
-        -- local direction = {}
-        --     for i=1, 6 do
-        --         p[i] = Projectile:new()
-        --         direction[i]= self:cylToCart(1, math.rad(i*45))
-        --         p[i]:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-        --         G_projectiles[#G_projectiles+1] = p[i]
-        --         G_hitboxes[#G_hitboxes+1] = p[i].hitboxes["hitbox"]
-    --     end
+        local direction_step = 10
 
-        -- right
-        local p1 =  {}
-        p1 = Projectile:new()
-        local direction = self:cylToCart(1, 0)
-        p1:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-        G_projectiles[#G_projectiles+1] = p1
-        G_hitboxes[#G_hitboxes+1] = p1.hitboxes["hitbox"]
-
-        -- left
-        local p2 =  {}
-        p2 = Projectile:new()
-        direction = self:cylToCart(1, math.rad(180))
-        p2:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
-        G_projectiles[#G_projectiles+1] = p2
-        G_hitboxes[#G_hitboxes+1] = p2.hitboxes["hitbox"]
-
-        -- top
-        local p3 =  {}
-        p3 = Projectile:new()
-        direction = Vector:new(0,1)
-        p3:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-        G_projectiles[#G_projectiles+1] = p3
-        G_hitboxes[#G_hitboxes+1] = p3.hitboxes["hitbox"]
-
-        -- bottom
-        local p4 =  {}
-        p4 = Projectile:new()
-         direction = Vector:new(0,-1)
-        p4:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-        G_projectiles[#G_projectiles+1] = p4
-        G_hitboxes[#G_hitboxes+1] = p4.hitboxes["hitbox"]
-
-
-        -- bottom
-        local p5 =  {}
-        p5 = Projectile:new()
-         direction = Vector:new(-1,-1)
-        p5:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-        G_projectiles[#G_projectiles+1] = p5
-        G_hitboxes[#G_hitboxes+1] = p5.hitboxes["hitbox"]
-
-        -- bottom
-        local p6 =  {}
-        p6 = Projectile:new()
-         direction = Vector:new(1,-1)
-        p6:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-        G_projectiles[#G_projectiles+1] = p6
-        G_hitboxes[#G_hitboxes+1] = p6.hitboxes["hitbox"]
-
-        -- bottom
-        local p8 =  {}
-        p8 = Projectile:new()
-        direction = Vector:new(-1,1)
-        p8:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-        G_projectiles[#G_projectiles+1] = p8
-        G_hitboxes[#G_hitboxes+1] = p8.hitboxes["hitbox"]
-
-        -- bottom
-        local p7 =  {}
-        p7 = Projectile:new()
-        direction = Vector:new(1,1)
-        p7:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-        G_projectiles[#G_projectiles+1] = p7
-        G_hitboxes[#G_hitboxes+1] = p7.hitboxes["hitbox"]
-
+        for i=0, 360 - direction_step, direction_step do
+            p = Projectile:new()
+            if self.flipH == 1 then
+                p:init(i, 5, "bullet", self.pos + Vector:new(4, -2), G_fireballSC, G_fireballHF)
+            elseif self.flipH == -1 then
+                p:init(i, 5, "bullet", self.pos + Vector:new(-4, -2), G_fireballSC, G_fireballHF)
+            end
+        end
     end
-
-end
--- r : longueur : math.sqrt(x*x + y+y)
--- theta en radian :  math.atan(y / x)
-function Player:convCartToCyl(x, y)
-    local resultat = Vector:new(math.sqrt(x*x + y+y),  math.atan(y / x))
-    return resultat
-end
-
-function Player:cylToCart(r, theta)
-    local resultat = Vector:new(r * math.cos(theta),  r * math.sin(theta))
-    return resultat
 end
 
 function Player:buffsUpdate(dt)

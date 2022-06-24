@@ -7,6 +7,13 @@ Projectile = Entity:new()
 --- @return Projectile
 function Projectile:new() return Entity.new(self) end
 
+--- Initializes the Projectile.
+--- @param direction Vector|number
+---@param speed number
+---@param weapon string
+---@param pos Vector
+---@param spriteCollection SpriteCollection
+---@param hitboxFactory HitboxFactory
 function Projectile:init(direction, speed, weapon, pos, spriteCollection, hitboxFactory)
     self.direction = direction
 
@@ -20,8 +27,7 @@ function Projectile:update(dt)
     -- convert angle to vector
     local move
     if type(self.direction) == "number" then
-        -- TODO: INSERT CONVERSION FUNCTION
-        -- move = ...
+        move = G_cylToCart(math.rad(self.direction))
     else
         move = self.direction:cpy()
     end

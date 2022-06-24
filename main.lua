@@ -33,6 +33,7 @@ function love.load()
     G_fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
 
     G_fireballHF = HitboxFactory:new({"hurtbox", {enemy=true}, 3, 3, Vector:new(-2, -2)})
+    G_blackoutOnPlayer = false
 
     --declaration des variables globales de controle
     --- @type Hitbox[]
@@ -180,11 +181,24 @@ function love.keypressed(k)
     -- Compétence
     elseif k == "e" then
         G_player:changeState("special")
-        -- G_player:castSpell()
 
     elseif k == "escape" then
         love.event.quit()
     end
+end
+
+--- Converts a polar coordinate to a cartesian coordinate.
+--- @param x number
+--- @param y number
+function G_cartToCyl(x, y) return Vector:new(math.sqrt(x*x + y+y),  math.atan(y / x)) end
+
+--- Converts a cartesian coordinate to a polar coordinate.
+--- @param theta number theta en radian :  math.atan(y / x)
+--- @param r number|nil longueur : math.sqrt(x*x + y+y)
+function G_cylToCart(theta, r)
+    r = r or 1
+    print(math.deg(theta))
+    return Vector:new(r * math.cos(theta),  r * math.sin(theta))
 end
 
 -- Check if a layers1 and layers2 have a common element

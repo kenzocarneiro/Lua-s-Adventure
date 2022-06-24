@@ -11,7 +11,6 @@ Entity = Element:new()
 --- @return Entity
 function Entity:new() return Element.new(self) end
 
-
 --- Initializes the entity.
 --- @param speed number
 --- @param weapon string
