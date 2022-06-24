@@ -15,6 +15,8 @@ function Player:new() return Entity.new(self) end
 --- @param collectRadius number
 function Player:init(inventory, collectRadius, ...)
     self.inventory = inventory or {}
+    self.maxEnergy = 1
+    self.currentEnergy = 10
     self.maxHealth = 100
     self.currentHealth = self.maxHealth
     self.collectRadius = collectRadius or 10

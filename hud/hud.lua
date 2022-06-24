@@ -16,7 +16,6 @@ function Hud:new()
 
     myHud.player = self.setPlayer()
     myHud.inventorySlots = self:setInventory()
-
     return myHud
 end
 
@@ -27,10 +26,17 @@ function Hud.setPlayer()
     local group = Group:new()
 
     -- tests du HUD
+
+    --barre de vie
     local healthHeart = Panel:new(0, 0)
         healthHeart:setImage(love.graphics.newImage("sprites/hud/health.png"), 0.1)
-
     local healthBar = Bar:new(35,10, 164, 22, G_player.maxHealth, nil,{0,255,0})
+
+    -- barre d'energie
+    local energyBar = Bar:new(100, 100, 26, 100, G_player.maxEnergy, nil, {250, 129, 50})
+    energyBar:setImages(love.graphics.newImage("sprites/hud/empty_bar.png"),  love.graphics.newImage("sprites/hud/blue_bar.png"),12)
+
+
 
    -- G_button = Button:new(55, 100, 120, 80,"No images", mainFont, {250, 250, 250})
   --  print("g button h :" .. G_button.h)
@@ -103,8 +109,6 @@ function Hud.setPlayer()
     group:addElement(inventory_slot_4, "inventory_slot_4")
     group:addElement(inventory_slot_5, "inventory_slot_5")
 
-
-
     group:addElement(buttonParam, "buttonParam")
 
     group:addElement(healthBar, "healthBar")
@@ -113,9 +117,9 @@ function Hud.setPlayer()
     group:addElement(buff_1, "buff_1")
     group:addElement(buff_2, "buff_2")
 
+    group:addElement(energyBar, "energyBar")
     return group
 end
-
 
 function Hud:setInventory()
 
@@ -200,7 +204,6 @@ function Hud:update(dt)
     self:updateHealthPlayer(G_player.currentHealth)
     self:updateInventory()
     self:updatePotionStock()
-
 end
 
 function Hud:draw()

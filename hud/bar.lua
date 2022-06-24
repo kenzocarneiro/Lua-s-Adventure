@@ -22,12 +22,14 @@ function Bar:new(pX, pY, pW, pH, pMax, pColorOut, pColorIn)
     return myBar
 end
 
-function Bar:setImages(pImageBack, pImageBar)
+function Bar:setImages(pImageBack, pImageBar, pScale)
     self.imgBack = pImageBack
     self.imgBar = pImageBar
     self.w = pImageBack:getWidth()
     self.h = pImageBack:getHeight()
+    self.scale = pScale or 1
 end
+
 
 function Bar:setValue(pValue)
     if pValue >= 0 and pValue <= self.max then
@@ -64,9 +66,9 @@ function Bar:draw()
     local barSize = (self.w - 2) * (self.value / self.max)
     -- si on a une image pour la barre
     if self.imgBack ~= nil and self.imgBar ~= nil then
-        love.graphics.draw(self.imgBack, self.x, self. y)
+        love.graphics.draw(self.imgBack, self.x, self. y, 0, self.scale)
         local barQuad = love.graphics.newQuad(0, 0, barSize, self.h, self.w, self.h)
-        love.graphics.draw(self.imgBar, barQuad, self.x, self. y)
+        love.graphics.draw(self.imgBar, barQuad, self.x, self. y, 0,self.scale)
 
         -- autrement il faut la dessiner
     else
