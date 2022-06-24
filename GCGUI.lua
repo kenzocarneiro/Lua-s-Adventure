@@ -2,9 +2,9 @@ local GCGUI = {}
 
 local function newElement(pX, pY)
   local myElement = {}
-  myElement.X = pX
-  myElement.Y = pY
-  myElement.Visible = true
+  myElement.x = pX
+  myElement.y = pY
+  myElement.visible = true
   function myElement:draw()
     --print("newElement / draw / Not implemented")
   end
@@ -12,15 +12,15 @@ local function newElement(pX, pY)
     --print("newElement / update / Not implemented")
   end
   function myElement:setVisible(pVisible)
-    self.Visible = pVisible
+    self.visible = pVisible
   end
   return myElement
 end
 
 function GCGUI.newPanel(pX, pY, pW, pH, pColorOut)
   local myPanel = newElement(pX, pY)
-  myPanel.W = pW
-  myPanel.H = pH
+  myPanel.w = pW
+  myPanel.h = pH
   myPanel.ColorOut = pColorOut
   myPanel.Image = nil
   myPanel.isHover = false
@@ -28,8 +28,8 @@ function GCGUI.newPanel(pX, pY, pW, pH, pColorOut)
 
   function myPanel:setImage(pImage)
     self.Image = pImage
-    self.W = pImage:getWidth()
-    self.H = pImage:getHeight()
+    self.w = pImage:getWidth()
+    self.h = pImage:getHeight()
   end
 
   function myPanel:setEvent(pEventType, pFunction)
@@ -38,7 +38,7 @@ function GCGUI.newPanel(pX, pY, pW, pH, pColorOut)
 
   function myPanel:updatePanel(dt)
     local mx,my = love.mouse.getPosition()
-    if mx > self.X and mx < self.X + self.W and my > self.Y and my < self.Y + self.H then
+    if mx > self.x and mx < self.x + self.w and my > self.y and my < self.y + self.h then
       if self.isHover == false then
         self.isHover = true
         if self.lstEvents["hover"] ~= nil then
@@ -62,15 +62,15 @@ function GCGUI.newPanel(pX, pY, pW, pH, pColorOut)
       love.graphics.setColor(255/255,255/255,255/255)
     end
     if self.Image == nil then
-      love.graphics.rectangle("line", self.X, self.Y, self.W, self.H)
+      love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
     else
       love.graphics.setColor(255/255,255/255,255/255)
-      love.graphics.draw(self.Image, self.X, self.Y)
+      love.graphics.draw(self.Image, self.x, self.y)
     end
   end
 
   function myPanel:draw()
-    if self.Visible == false then return end
+    if self.visible == false then return end
     self:drawPanel()
   end
 
@@ -87,7 +87,7 @@ function GCGUI.newText(pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pColor)
   myText.Font = pFont
   myText.TextW = pFont:getWidth(pText)
   myText.TextH = pFont:getHeight(pText)
-  myText.HAlign = pHAlign
+  myText.hAlign = pHAlign
   myText.VAlign = pVAlign
   myText.Color = pColor
 
@@ -98,19 +98,19 @@ function GCGUI.newText(pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pColor)
     else
       love.graphics.setColor(1,1,1)
     end
-    local x = self.X
-    local y = self.Y
-    if self.HAlign == "center" then
-      x = x + ((self.W - self.TextW) / 2)
+    local x = self.x
+    local y = self.y
+    if self.hAlign == "center" then
+      x = x + ((self.w - self.TextW) / 2)
     end
     if self.VAlign == "center" then
-      y = y + ((self.H - self.TextH) / 2)
+      y = y + ((self.h - self.TextH) / 2)
     end
     love.graphics.print(self.Text, x, y)
   end
 
   function myText:draw()
-    if self.Visible == false then return end
+    if self.visible == false then return end
     self:drawText()
   end
 
@@ -132,8 +132,8 @@ function GCGUI.newButton(pX, pY, pW, pH, pText, pFont, pColor)
     self.imgDefault = pImageDefault
     self.imgHover = pImageHover
     self.imgPressed = pImagePressed
-    self.W = pImageDefault:getWidth()
-    self.H = pImageDefault:getHeight()
+    self.w = pImageDefault:getWidth()
+    self.h = pImageDefault:getHeight()
   end
 
   function myButton:update(dt)
@@ -162,23 +162,23 @@ function GCGUI.newButton(pX, pY, pW, pH, pText, pFont, pColor)
       if self.imgPressed == nil then
         self:drawPanel()
         love.graphics.setColor(1,1,1,.2)
-        love.graphics.rectangle("fill", self.X, self.Y, self.W, self.H)
+        love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
       else
-        love.graphics.draw(self.imgPressed, self.X, self.Y)
+        love.graphics.draw(self.imgPressed, self.x, self.y)
       end
     elseif self.isHover then
       if self.imgHover == nil then
         self:drawPanel()
         love.graphics.setColor(1,1,1)
-        love.graphics.rectangle("line", self.X+2, self.Y+2, self.W-4, self.H-4)
+        love.graphics.rectangle("line", self.x+2, self.y+2, self.w-4, self.h-4)
       else
-        love.graphics.draw(self.imgHover, self.X, self.Y)
+        love.graphics.draw(self.imgHover, self.x, self.y)
       end
     else
       if self.imgDefault == nil then
         self:drawPanel()
       else
-        love.graphics.draw(self.imgDefault, self.X, self.Y)
+        love.graphics.draw(self.imgDefault, self.x, self.y)
       end
     end
     self.Label:draw()
@@ -198,8 +198,8 @@ function GCGUI.newCheckbox(pX, pY, pW, pH)
   function myCheckbox:setImages(pImageDefault, pImagePressed)
     self.imgDefault = pImageDefault
     self.imgPressed = pImagePressed
-    self.W = pImageDefault:getWidth()
-    self.H = pImageDefault:getHeight()
+    self.w = pImageDefault:getWidth()
+    self.h = pImageDefault:getHeight()
   end
 
   function myCheckbox:setState(pbState)
@@ -232,15 +232,15 @@ function GCGUI.newCheckbox(pX, pY, pW, pH)
       if self.imgPressed == nil then
         self:drawPanel()
         love.graphics.setColor(1,1,1,.2)
-        love.graphics.rectangle("fill", self.X, self.Y, self.W, self.H)
+        love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
       else
-        love.graphics.draw(self.imgPressed, self.X, self.Y)
+        love.graphics.draw(self.imgPressed, self.x, self.y)
       end
     else
       if self.imgDefault == nil then
         self:drawPanel()
       else
-        love.graphics.draw(self.imgDefault, self.X, self.Y)
+        love.graphics.draw(self.imgDefault, self.x, self.y)
       end
     end
   end
@@ -260,8 +260,8 @@ function GCGUI.newProgressBar(pX, pY, pW, pH, pMax, pColorOut, pColorIn)
   function myProgressBar:setImages(pImageBack, pImageBar)
     self.imgBack = pImageBack
     self.imgBar = pImageBar
-    self.W = pImageBack:getWidth()
-    self.H = pImageBack:getHeight()
+    self.w = pImageBack:getWidth()
+    self.h = pImageBack:getHeight()
   end
 
   function myProgressBar:setValue(pValue)
@@ -274,11 +274,11 @@ function GCGUI.newProgressBar(pX, pY, pW, pH, pMax, pColorOut, pColorIn)
 
   function myProgressBar:draw()
     love.graphics.setColor(1,1,1)
-    local barSize = (self.W - 2) * (self.Value / self.Max)
+    local barSize = (self.w - 2) * (self.Value / self.Max)
     if self.imgBack ~= nil and self.imgBar ~= nil then
-      love.graphics.draw(self.imgBack, self.X, self. Y)
-      local barQuad = love.graphics.newQuad(0, 0, barSize, self.H, self.W, self.H)
-      love.graphics.draw(self.imgBar, barQuad, self.X, self. Y)
+      love.graphics.draw(self.imgBack, self.x, self. Y)
+      local barQuad = love.graphics.newQuad(0, 0, barSize, self.h, self.w, self.h)
+      love.graphics.draw(self.imgBar, barQuad, self.x, self. Y)
     else
       self:drawPanel()
       if self.ColorOut ~= nil then
@@ -286,7 +286,7 @@ function GCGUI.newProgressBar(pX, pY, pW, pH, pMax, pColorOut, pColorIn)
       else
         love.graphics.setColor(1,1,1)
       end
-      love.graphics.rectangle("fill", self.X + 1, self.Y + 1, barSize, self.H - 2)
+      love.graphics.rectangle("fill", self.x + 1, self.y + 1, barSize, self.h - 2)
     end
   end
 
