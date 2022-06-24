@@ -394,17 +394,24 @@ function love.update(dt)
             end
         end
 
+        checkHurtHit()
+
+        killEntities()
+
         --to change room if room is finished
         if G_room.isFinished then
             local index = G_room.number
+
+            --reset G_variables
+            G_hitboxes = {G_player.hitboxes["hitbox"]}
+            G_hurtboxes = {}
+            G_monsterList = {}
+            G_itemList = {}
+            G_projectiles = {}
             G_room.music:pause()
             G_room = nil
             G_room = Room:new(index+1)
         end
-
-        checkHurtHit()
-
-        killEntities()
     end
 end
 

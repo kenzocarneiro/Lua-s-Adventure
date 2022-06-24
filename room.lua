@@ -2,6 +2,10 @@ local Sprite = require("sprite/sprite")
 
 --- Class representing the Room.
 --- @class Room
+--- @field number number
+--- @field music love.audio
+--- @field exit table
+--- @field entrance table
 --- @field defaultLength number
 --- @field defaultHeight number
 --- @field isFinished boolean
