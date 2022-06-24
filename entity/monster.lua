@@ -19,10 +19,11 @@ function Monster:new() return Entity.new(self) end
 --- @param pos Vector
 --- @param spriteCollection SpriteCollection
 --- @param hitboxFactory HitboxFactory
-function Monster:init(chanceOfDrop, speed, weapon, pos, spriteCollection, hitboxFactory)
+function Monster:init(typeOfMove, chanceOfDrop, speed, weapon, pos, spriteCollection, hitboxFactory)
     self.chanceOfDrop = chanceOfDrop or 0
     self.goal = nil
     self.direction = nil
+    self.typeOfMove = typeOfMove or "simple"
 
     Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)
     G_monsterList[#G_monsterList+1] = self
@@ -32,7 +33,13 @@ end
 --- Update the monster (called every frames).
 --- @param dt number
 function Monster:update(dt)
-    self:betterMove(self.goal)
+    if self.typeOfMove == "simple" then
+        self:move(self.goal)
+    elseif self.typeOfMove == "advanced" then
+        self:betterMove(self.goal)
+    else
+        self:move(self.goal)
+    end
 
     Entity.update(self, dt)
 end
