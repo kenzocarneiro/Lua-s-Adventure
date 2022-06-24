@@ -178,8 +178,8 @@ function Hud.setParameter()
     local offset = screenWidth / 2
     local distanceBetweenInvSlot = 65
 
-    local inventoryPanel = Panel:new(0, screenHeight/2 - 2*7*16)--, nil, nil, 1) --16px * (zoom+espace) * decalage
-        inventoryPanel:setImage(love.graphics.newImage("sprites/hud/button_white_default.png"), 6)
+    local inventoryPanel = Bar:new(0, screenHeight/2 - 2*7*16, nil, nil, 1) --16px * (zoom+espace) * decalage
+        inventoryPanel:setImages(love.graphics.newImage("sprites/hud/button_white_default.png"), love.graphics.newImage("sprites/hud/button_white_pressed.png"), 6)
         inventoryPanel.x = screenWidth/2 - 2*inventoryPanel.w --2*inventory.w pour que le bouton soit centré (*4 pour le zoom et /2 pour le décalage)
         local inventoryText = Text:new(inventoryPanel.x + inventoryPanel.w/2, inventoryPanel.y + inventoryPanel.h/2, 0, 0, "Inventory", mainFontMenu, "", "", {0, 0, 0})
 
@@ -247,7 +247,7 @@ function Hud:keypressed(k)
     end
 
     if self.parameter.visible then
-        -- self:updateParameter(k)
+        self:updateParameter(k)
     end
 
 end
@@ -315,30 +315,23 @@ function Hud:updateInventory()
 end
 
 function Hud:updateParameter(k)
-    if k == "up" then
+    if k == "up" and false then
         if self.parameter.currentSelection == 1 then
             self.parameter.currentSelection = #self.parameter.elements
         else
             self.parameter.currentSelection = self.parameter.currentSelection - 1
         end
-    elseif k == "down" then
+    elseif k == "down" and false then
         if self.parameter.currentSelection == #self.parameter.elements then
             self.parameter.currentSelection = 1
         else
             self.parameter.currentSelection = self.parameter.currentSelection + 1
         end
     elseif k == "return" then
-        if self.parameter.currentSelection == 1 then
-            G_player:CastSpell()
-        elseif self.parameter.currentSelection == 2 then
-            G_player:ApplyHealthPotionEffect(20)
-        elseif self.parameter.currentSelection == 3 then
-            G_player:ApplySpeedPotionEffect(20)
-        end
+        local val = 1 - self.parameter.elements["inventoryPanel"].value
+        self.parameter.elements["inventoryPanel"]:setValue(val)
+        
     end
-    self.parameter.elements[self.parameter.currentSelection]:setColor({255,255,255})
-    self.parameter.elements[self.parameter.currentSelection]:setColor({255,255,255})
-    self.parameter.elements[self.parameter.currentSelection]:setColor({255,255,255})
 end
 
 -- function Hud:__tostring()
