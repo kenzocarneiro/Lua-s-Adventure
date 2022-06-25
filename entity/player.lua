@@ -17,14 +17,18 @@ function Player:init(inventory, collectRadius, ...)
     self.inventory = inventory or {}
     self.maxEnergy = 10
     self.currentEnergy = 0
+   -- self.skillAngleCd = 0 or 0
     self.energyTimer = Timer:new(0.1)
-    self.maxHealth = 10
+    self.damage = 4
+    self.maxHealth = 100
+    self.targetHealth = 100
     self.currentHealth = self.maxHealth
     self.collectRadius = collectRadius or 10
     self.radiusDisplay = false
     self.gold = 0
     self.nextFreeInventorySlotNum = 1
     self.score = 0
+    self.selectedWeapon = nil
 
     --for potion consumming
     self.potion_stock = {3, 1, 1} -- {health, damage, speed}
@@ -182,17 +186,17 @@ function Player:__tostring()
 end
 
 function Player:applyPotionEffect(pAmount)
+    pAmount = 45
     if (self.potion_stock[self.currentPotion] == 0) then
         print(" t'as plus de potions frérot !")
     elseif self.currentPotion == 1 then
         self.potion_stock[1] = self.potion_stock[1] - 1
         -- on s'assure qu'il ne peut pas regen plus que sa vie max
         if self.currentHealth +  pAmount > self.maxHealth then
-            self.currentHealth = self.maxHealth
+            self.targetHealth = self.maxHealth
         else
-            self.currentHealth =self.currentHealth + pAmount
+            self.targetHealth =self.targetHealth + pAmount
         end
-        G_hud.player.elements["healthBar"]:modifyValue(pAmount)
     elseif self.currentPotion == 2 and not self.timer1 then
         self:consume()
     elseif self.currentPotion == 3 and not self.timer2 then
@@ -253,7 +257,8 @@ function Player:energyUpdate(dt)
         if self.currentEnergy < 9.9 then
             -- self.currentEnergy = self.currentEnergy + 0.01
             self.currentEnergy = self.currentEnergy + 0.1
-            self.energyTimer = Timer:new(0.01)
+           -- self.skillAngleCd  = self.skillAngleCd + 360/100
+            self.energyTimer = Timer:new(0.01)     
         end
     end
 end

@@ -25,7 +25,7 @@ end
 
 function Text:draw()
     if not self.visible then return end
-    if self.visible == false then return end
+    Panel.draw(self)
     love.graphics.setFont(self.font)
     if self.color ~= nil then
         love.graphics.setColor(self.color[1]/255, self.color[2]/255, self.color[3]/255)
