@@ -97,7 +97,7 @@ function Entity:move(move)
 
 end
 
---- Hurt the Entity and check if the Element is dead.
+--- Hurt the Entity and check if it is dead.
 --- @param damage number
 --- @param pos Vector|nil
 --- @return boolean isDead tells if the entity is dead
@@ -105,10 +105,6 @@ function Entity:hurt(damage, pos)
     local isDead = false
     if not self.invulnerable then
         self.currentHealth = self.currentHealth - damage
-
-        if tostring(self) == "Player" then
-            self.score.addScore("wasHurt", damage)
-        end
 
         if self.currentHealth <= 0 then
             G_deadElements[#G_deadElements + 1] = self

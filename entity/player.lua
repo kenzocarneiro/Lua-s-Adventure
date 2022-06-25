@@ -37,6 +37,15 @@ function Player:init(inventory, collectRadius, ...)
     Entity.init(self, ...)
 end
 
+--- Hurt the Player and check if they are dead.
+--- @param damage number
+--- @param pos Vector|nil
+--- @return boolean isDead tells if the entity is dead
+function Player:hurt(damage, pos)
+    if not self.invulnerable then self.score.addScore("wasHurt", damage) end
+    return Entity.hurt(self, damage, pos)
+end
+
 --- Update the player (called every frames).
 --- @param dt number
 function Player:update(dt)
