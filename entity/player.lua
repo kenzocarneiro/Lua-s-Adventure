@@ -1,5 +1,6 @@
 Entity = require("entity/entity")
 Projectile = require("entity/projectile")
+Score = require("score")
 
 --- Class representing the Player.
 --- @class Player:Entity Player is a subclass of Entity.
@@ -24,7 +25,7 @@ function Player:init(inventory, collectRadius, ...)
     self.radiusDisplay = false
     self.gold = 0
     self.nextFreeInventorySlotNum = 1
-    self.score = 0
+    self.score = Score()
 
     --for potion consumming
     self.potion_stock = {3, 1, 1} -- {health, damage, speed}
@@ -153,7 +154,7 @@ local inventory_size = 5
         --coins
         if tostring(item) == "Coin" then
             self.gold = self.gold + item.value
-            self.score = self.score + 10*item.value
+            self.score.addScore("pickupCoin", item.value)
             coinSound:setVolume(0.2)
             coinSound:play()
         --potions
@@ -162,21 +163,21 @@ local inventory_size = 5
             itemSound:play()
             --potion de vie
             if item.target =="health" then
-                self.score = self.score + 5
+                self.score.addScore("pickupHealthPotion")
                 self.potion_stock[1] = self.potion_stock[1] + 1
             --potion buff de dommages
             elseif item.target =="damage" then
-                self.score = self.score + 10
+                self.score.addScore("pickupDamagePotion")
                 self.potion_stock[2] = self.potion_stock[2] + 1
             --potion de vitesse
             elseif item.target =="speed" then
-                self.score = self.score + 15
+                self.score.addScore("pickupSpeedPotion")
                 self.potion_stock[3] = self.potion_stock[3] + 1
             end
 
         -- objet permanent
         else
-            self.score = self.score + 50
+            self.score.addScore("pickupOther")
             itemSound:setVolume(0.2)
             itemSound:play()
             -- si on a de la place

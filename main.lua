@@ -101,7 +101,7 @@ function love.keypressed(k)
         G_player:changeState("special")
 
     elseif k == "v" then
-        print(G_player.score)
+        print(G_player.score.getScore())
 
     elseif k == "escape" then
         love.event.quit()
@@ -141,9 +141,9 @@ local function checkHurtHit()
                     local isDead = v2.associatedElement:hurt(v.associatedElement.damage, v.associatedElement.pos)
                     if isDead and v2.layers["enemy"] then
                         if v2.associatedElement.name == "troll" then
-                            G_player.score = G_player.score + 100
+                            G_player.score.addScore("killedTroll")
                         elseif v2.associatedElement.name == "rhino" then
-                            G_player.score = G_player.score + 75
+                            G_player.score.addScore("killedRhino")
                         end
                     end
                     if tostring(v.associatedElement) == "Projectile" then v.associatedElement:hurt(1)
@@ -318,7 +318,7 @@ function love.update(dt)
 
         --to change room if room is finished
         if G_room.isFinished then
-            G_player.score = G_player.score + G_room.number*100
+            G_player.score.addScore("roomFinished", G_room.number)
             local index = G_room.number+1
 
             if index > G_nb_rooms then

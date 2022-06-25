@@ -107,7 +107,7 @@ function Entity:hurt(damage, pos)
         self.currentHealth = self.currentHealth - damage
 
         if tostring(self) == "Player" then
-            self.score = self.score - damage*5
+            self.score.addScore("wasHurt", damage)
         end
 
         if self.currentHealth <= 0 then
