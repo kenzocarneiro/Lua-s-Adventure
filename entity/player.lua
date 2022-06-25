@@ -148,8 +148,18 @@ local inventory_size = 5
 
     if ((itemX-self.pos.x)^2 + (itemY - self.pos.y)^2) <= (self.collectRadius^2) then
 
+        local coinSound = love.audio.newSource("sound/soundeffects/coin.wav","static")
+        local itemSound = love.audio.newSource("sound/soundeffects/pickup.wav", "static") -- the "stream" argument instead of "static" tells LÖVE to stream the file from disk, good for longer music tracks
+        --coins
+        if tostring(item) == "Coin" then
+            self.gold = self.gold + item.value
+            self.score = self.score + 10*item.value
+            coinSound:setVolume(0.2)
+            coinSound:play()
         --potions
-        if tostring(item)=="Consumable" then
+        elseif tostring(item)=="Consumable" then
+            itemSound:setVolume(0.2)
+            itemSound:play()
             --potion de vie
             if item.target =="health" then
                 self.score = self.score + 5
@@ -166,6 +176,9 @@ local inventory_size = 5
 
         -- objet permanent
         else
+            self.score = self.score + 50
+            itemSound:setVolume(0.2)
+            itemSound:play()
             -- si on a de la place
             if self.nextFreeInventorySlotNum <= 5 and tostring(item) ~= "Coin" then
                 self.nextFreeInventorySlotNum = self.nextFreeInventorySlotNum + 1
@@ -256,11 +269,6 @@ function Player:energyUpdate(dt)
             self.energyTimer = Timer:new(0.01)
         end
     end
-end
-
-function Player:add_gold(amount)
-    self.gold = self.gold + amount
-    self.score = self.score + 10*amount
 end
 
 return Player

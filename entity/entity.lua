@@ -105,6 +105,11 @@ function Entity:hurt(damage, pos)
     local isDead = false
     if not self.invulnerable then
         self.currentHealth = self.currentHealth - damage
+
+        if tostring(self) == "Player" then
+            self.score = self.score - damage*5
+        end
+
         if self.currentHealth <= 0 then
             G_deadElements[#G_deadElements + 1] = self
             isDead = true
