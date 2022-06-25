@@ -91,49 +91,55 @@ function Player:update(dt)
     local currentFrame, animationFinished = self.spriteTimer:update(dt, self.spriteCollection:getSpriteFramesDuration(self.state), self.spriteCollection:getNumberOfSprites(self.state))
 
     -- attack handling
-    if self.state == "attack" then
+    if #self.inventory > 0 then
+        if self.state == "attack" then
 
-        if currentFrame == 4 and not self.hasShoot then
-            if G_soundEffectsOn then
-                local sound = love.audio.newSource("sound/soundeffects/player_attack.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
-                sound:setVolume(0.5)
-                sound:play()
+            if currentFrame == 4 and not self.hasShoot then
+                if G_soundEffectsOn then
+                    local sound = love.audio.newSource("sound/soundeffects/player_attack.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+                    if G_soundEffectsOn then
+                        sound:setVolume(0.5)
+                        sound:play()
+                    end
+                end
+                self.hasShoot = true
+                local p = Projectile:new()
+                local direction = Vector:new(self.flipH, 0)
+
+                if self.flipH == 1 then
+                    p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+                elseif self.flipH == -1 then
+                    p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
+                end
+
+            elseif animationFinished then
+                self.state = "idle"
+                self.hasShoot = false
             end
-            self.hasShoot = true
-            local p = Projectile:new()
-            local direction = Vector:new(self.flipH, 0)
-
-            if self.flipH == 1 then
-                p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
-            elseif self.flipH == -1 then
-                p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
+        elseif self.state == "special" then
+            G_blackoutCurrentFrame = 250 - (currentFrame - 1)*25
+            if animationFinished then
+                self.state = "idle"
+                self.hasShoot = false
+            elseif G_gandalf and currentFrame == 1 and not G_blackoutSFX then
+                if G_soundEffectsOn then
+                    local sound = love.audio.newSource("ysnp.mp3", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+                    sound:setVolume(1)
+                    sound:play()
+                end
+                G_blackoutSFX = true
+            elseif currentFrame == 2 then -- Not 1 because when the animation is finished it is in frame 1
+                G_blackoutOnPlayer = true
+                G_blackoutSFX = false
+            elseif currentFrame == 7 then
+                self.hasShoot = true
+                self:castSpell()
+                G_blackoutCurrentFrame = 250 - (currentFrame - 2)*25
+            elseif currentFrame == 8 then
+                G_blackoutCurrentFrame = 250 - (currentFrame - 3)*25
+            elseif currentFrame == 9 then
+                G_blackoutOnPlayer = false
             end
-
-        elseif animationFinished then
-            self.state = "idle"
-            self.hasShoot = false
-        end
-    elseif self.state == "special" then
-        G_blackoutCurrentFrame = 250 - (currentFrame - 1)*25
-        if animationFinished then
-            self.state = "idle"
-            self.hasShoot = false
-        elseif G_gandalf and currentFrame == 1 and not G_blackoutSFX then
-            local sound = love.audio.newSource("ysnp.mp3", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
-            sound:setVolume(1)
-            sound:play()
-            G_blackoutSFX = true
-        elseif currentFrame == 2 then -- Not 1 because when the animation is finished it is in frame 1
-            G_blackoutOnPlayer = true
-            G_blackoutSFX = false
-        elseif currentFrame == 7 then
-            self.hasShoot = true
-            self:castSpell()
-            G_blackoutCurrentFrame = 250 - (currentFrame - 2)*25
-        elseif currentFrame == 8 then
-            G_blackoutCurrentFrame = 250 - (currentFrame - 3)*25
-        elseif currentFrame == 9 then
-            G_blackoutOnPlayer = false
         end
     end
 
@@ -173,8 +179,10 @@ local inventory_size = 5
             coinSound:play()
         --potions
         elseif tostring(item)=="Consumable" then
-            itemSound:setVolume(0.2)
-            itemSound:play()
+            if G_soundEffectsOn then
+                itemSound:setVolume(0.2)
+                itemSound:play()
+            end
             --potion de vie
             if item.target =="health" then
                 self.score.addScore("pickupHealthPotion")
@@ -191,9 +199,20 @@ local inventory_size = 5
 
         -- objet permanent
         else
+            if #self.inventory == 0 then
+                local player_sc = SpriteCollection:new("player")
+                player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
+                Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9), false),
+                Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9)),
+                Sprite:new("img/wizard_special-Sheet.png", true, "special", 18, 18, Vector:new(7, 9), false, {0.5, 0.05, 0.25, 0.25, 0.25, 0.25, 0.06, 0.1, 0.1, 0.1})
+                })
+                self.spriteCollection = player_sc
+            end
             self.score.addScore("pickupOther")
-            itemSound:setVolume(0.2)
-            itemSound:play()
+            if G_soundEffectsOn then
+                itemSound:setVolume(0.2)
+                itemSound:play()
+            end
             -- si on a de la place
             if self.nextFreeInventorySlotNum <= 5 and tostring(item) ~= "Coin" then
                 self.nextFreeInventorySlotNum = self.nextFreeInventorySlotNum + 1
@@ -245,7 +264,7 @@ function Player:consume()
 end
 
 function Player:castSpell()
-    if self.currentEnergy > 9.9 then
+    if self.currentEnergy > 9.9 and #self.inventory > 0 then
         self.currentEnergy = 0
         self.energyTimer = Timer:new(0.1)
         local p = {}

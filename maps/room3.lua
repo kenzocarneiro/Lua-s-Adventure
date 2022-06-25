@@ -52,9 +52,6 @@ goldCoin2:init(3, "coin of gold", Vector:new(260, 140), coinSc)
 local goldCoin3 = Coin:new()
 goldCoin3:init(3, "coin of gold", Vector:new(280, 140), coinSc)
 
-local cool_staff = Weapon:new()
-cool_staff:init(2, "The cooler staff", Vector:new(176, 104), cool_staff_sc, cool_staffHF)
-
 
 local simple_staff_sc = SpriteCollection:new("item")
 simple_staff_sc:init({Sprite:new("img/simple_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
@@ -62,6 +59,9 @@ simple_staff_sc:init({Sprite:new("img/simple_staff.png", false, "idle", 16, 16, 
 local simple_staffHF = HitboxFactory:new(
     {"hitbox", {item=true}, 3, 10, Vector:new(-6, -5)}
 )
+
+local simple_staff = Weapon:new()
+simple_staff:init(1, "The simple staff", Vector:new(190, 120), simple_staff_sc, simple_staffHF)
 
 local gold_staff_sc = SpriteCollection:new("item")
 gold_staff_sc:init({Sprite:new("img/gold_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
