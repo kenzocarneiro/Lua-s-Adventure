@@ -21,7 +21,7 @@ function Entity:init(speed, weapon, pos, spriteCollection, hitboxFactory)
     self.speed = speed or 1
     self.weapon = weapon or "epee"
     self.hasShoot = false
-    self.damage = 5
+    self.damage = 10
 
     Element.init(self, pos, spriteCollection, hitboxFactory)
 end

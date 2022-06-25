@@ -36,6 +36,8 @@ function Player:init(inventory, collectRadius, ...)
     self.timer2 = nil
     self.buffs = {0, 0}  --damage and speed
 
+    self.score = 0
+
     Entity.init(self, ...)
 end
 

@@ -303,6 +303,9 @@ function love.update(dt)
         -- make the exit of the room appear
         if #G_monsterList == 0 then
             G_room.objectsGrid[G_room.exit["row"]][G_room.exit["col"]].data=7
+            if G_hud.questTexts.elements["level_end"].enabled then
+                G_hud.questTexts.elements["level_end"]:setLifeSpan(4)
+            end
         end
 
         -- if the player is on the exit, 

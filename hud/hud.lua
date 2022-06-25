@@ -47,10 +47,38 @@ function Hud:new()
     myHud.defeat = self.setDefeat()
         myHud.defeat:setVisible(false)
 
+    --quest texts
+    myHud.questTexts = self.setQuestTexts()
+        myHud.questTexts:setVisible(false)
     return myHud
 end
 
 -- Create HUD menus
+
+-- texts pour les quêtes, affichages de message d'help, etc.
+function Hud.setQuestTexts()
+    local mainFontMenu = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 20)
+    love.graphics.setFont(mainFontMenu)
+
+    local screenWidth = love.graphics.getWidth()
+    local screenHeight = love.graphics.getHeight()
+
+    local group = Group:new()
+
+    --parameters du joueur (en bas à droite)
+    local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
+    love.graphics.setFont(mainFont)
+
+    -- texte temporaire
+    local tempText = Text:new(275, 5, 0, 0, "Éliminez tous les monstres pour débloquer l'accès au niveau suivant", mainFontMenu, "", "", {255, 255, 0})
+    group:addElement(tempText, "tempText")
+
+    -- texte temporaire
+    local level_end = Text:new(275, 5, 0, 0, "Niveau terminé. RENDEZ-vous à l'échelle pour passer à la salle suivante", mainFontMenu, "", "", {0, 225, 0})
+    group:addElement(level_end, "level_end")
+
+    return group
+end
 
 function Hud.setMainMenu()
     local mainFontMenu = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 40)
@@ -91,6 +119,7 @@ function Hud.setMainMenu()
         buttonParam:setImage(love.graphics.newImage("sprites/hud/gear.png"))
     local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , screenHeight - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {255, 255, 255})
 
+
     group:addElement(playKbButton, "playKbButton")
     group:addElement(playText, "playText")
 
@@ -105,13 +134,12 @@ function Hud.setMainMenu()
 
     group:addElement(exitKbButton, "exitKbButton")
     group:addElement(exitText, "exitText")
-
     return group
 end
 
 function Hud.setPlayer()
 
-    local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
+    local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 17)
     love.graphics.setFont(mainFont)
 
     local largeur = love.graphics.getWidth()
@@ -140,15 +168,9 @@ function Hud.setPlayer()
         local HealthValueText = Text:new(85 , 11, 0, 0, G_player.currentHealth .. "/" .. G_player.maxHealth, mainFont, "", "", {255, 255, 255})
         local ManaValueText = Text:new(90 , 51, 0, 0, G_player.currentEnergy .. "/" .. G_player.maxEnergy, mainFont, "", "", {255, 255, 255})
 
-
-
-    -- G_button = Button:new(55, 100, 120, 80,"No images", mainFont, {250, 250, 250})
-    --  print("g button h :" .. G_button.h)
-
-    -- test bibliothèque
-
-    local largeur = love.graphics.getWidth()
-    local hauteur = love.graphics.getHeight()
+    local scoreImg =  Panel:new(largeur - 75, 5)
+    scoreImg:setImage(love.graphics.newImage("sprites/hud/Score.png"), 0.65)
+    local scoreText = Text:new(largeur - 35 , 8, 0, 0, G_player.score, mainFont, "", "", {255, 150, 0})
 
     -- compétences du joueur (icones en bas à gauche)
     local skill_1 = Panel:new(0, hauteur - 64, 40, 40)
@@ -255,6 +277,8 @@ function Hud.setPlayer()
     group:addElement(HealthValueText, "zHealthValueText")
     group:addElement(ManaValueText, "zEnergyValueText")
     group:addElement(transitionBar, "transitionBar")
+    group:addElement(scoreImg, "scoreImg")
+    group:addElement(scoreText, "scoreText")
 
     return group
 end
@@ -616,6 +640,8 @@ function Hud:keypressedMainMenu(k)
         if self.mainMenu.elements["playKbButton"]:getSelected() then
             self.mainMenu:setVisible(false)
             self.player:setVisible(true)
+            self.questTexts.elements["tempText"]:setLifeSpan(4)
+
 
         elseif self.mainMenu.elements["optionsKbButton"]:getSelected() then
             self.mainMenu:setVisible(false)
@@ -721,6 +747,8 @@ function Hud:update(dt)
     self:updateCharacterSheet()
     self:updateHealthPlayerBetter(1)
 
+
+
     for key, value in pairs(self) do
         value:update(dt)
     end
@@ -771,6 +799,9 @@ function Hud:updateInventory()
         for i = 1, G_player.nextFreeInventorySlotNum - 1 do
             self.player.elements["z"..tostring(i)]:setImage(G_player.inventory[i].spriteCollection.sprites["idle"].loveImg,5)
         end
+    end
+    if self.player.elements["scoreText"] ~= tostring(G_player.score) then
+        self.player.elements["scoreText"]:edit(tostring(G_player.score))
     end
 end
 
