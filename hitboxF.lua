@@ -7,6 +7,7 @@ Hitbox = require("hitbox")
 --- @field width number
 --- @field height number
 --- @field offset Vector
+--- @field shape string|nil
 
 --- Class representing the collection of Hitboxes
 --- @class HitboxFactory
@@ -25,7 +26,8 @@ function HitboxFactory:new(...)
 
     for i, v in ipairs{...} do
         if v[1] ~= nil then
-            sc.hitboxesPattern[v[1]] =  {name = v[1], layers = v[2], width = v[3], height = v[4], offset = v[5]}
+            local shape = v[6] or "rectangle"
+            sc.hitboxesPattern[v[1]] =  {name = v[1], layers = v[2], width = v[3], height = v[4], offset = v[5], shape = shape}
         else
             sc.hitboxesPattern[v.name] =  v
         end
@@ -37,7 +39,7 @@ end
 --- Produce an Hitbox from the pattern of the given name at the given position
 --- @return Hitbox
 function HitboxFactory:produce(pos, name, associatedE)
-    return Hitbox:new(pos, name, self.hitboxesPattern[name].layers, self.hitboxesPattern[name].width, self.hitboxesPattern[name].height, self.hitboxesPattern[name].offset, associatedE)
+    return Hitbox:new(pos, name, self.hitboxesPattern[name].layers, self.hitboxesPattern[name].width, self.hitboxesPattern[name].height, self.hitboxesPattern[name].offset, self.hitboxesPattern[name].shape, associatedE)
 end
 
 --- Produce an Hitbox from the pattern of the given name at the given position
@@ -45,7 +47,7 @@ end
 function HitboxFactory:produceAll(pos, associatedE)
     local hitboxes = {}
     for k, v in pairs(self.hitboxesPattern) do
-        hitboxes[k] = Hitbox:new(pos, v.name, v.layers, v.width, v.height, v.offset, associatedE)
+        hitboxes[k] = Hitbox:new(pos, v.name, v.layers, v.width, v.height, v.offset, v.shape, associatedE)
     end
     return hitboxes
 end

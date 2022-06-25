@@ -34,6 +34,10 @@ function Monster:init(lootTable, name, aggroRadius, typeOfMove, speed, weapon, p
     self.lootTable = LootTable:new()
     self.lootTable:init(lootTable)
 
+    if name == "lua" then
+        self.ia = require("stateMachineIA")
+    end
+
     Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)
     G_monsterList[#G_monsterList+1] = self
 end
@@ -53,6 +57,7 @@ function Monster:update(dt, player)
             self:move(self.goal)
         elseif self.typeOfMove == "advanced" then
             self:betterMove(self.goal)
+        elseif self.typeOfMove == "special" then
         else
             self:move(self.goal)
         end
