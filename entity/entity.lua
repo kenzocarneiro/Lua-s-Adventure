@@ -123,6 +123,11 @@ function Entity:hurt(damage, pos)
         end
 
         if pos then
+            if G_soundEffectsOn then
+                local hurt=love.audio.newSource("sound/soundeffects/fire_hit.wav","static")
+                hurt:setVolume(0.5)
+                hurt:play()
+            end
             local knockback = 5
             local newPos = self.pos - pos
             newPos = newPos:normalized()*knockback

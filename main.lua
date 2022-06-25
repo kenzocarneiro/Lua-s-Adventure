@@ -56,12 +56,14 @@ function love.load()
     G_soundOn = true
     G_soundEffectsOn = true
 
-    G_room = Room:new(1)
+    G_room = Room:new(0)
+    G_room.objectsGrid[G_room.entrance["row"]][G_room.entrance["col"]].data = 0
+    G_deltaT = 0
 
     --- @type Element[]
     G_deadElements = {}
 
-    G_nb_rooms = 2
+    G_nb_rooms = 3
 
     --initialize sprite collections for monster player and item
     local player_sc = SpriteCollection:new("player")
@@ -80,7 +82,7 @@ function love.load()
     G_player = Player:new()
     -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
     -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
-    G_player:init({}, 15, 1, "epee", Vector:new((G_room.entrance["col"]+0.5)*G_room.tileSize, (G_room.entrance["row"]-0.5)*G_room.tileSize), player_sc, playerHF)
+    G_player:init({}, 15, 1, "epee", Vector:new(152,80), player_sc, playerHF)
 
     G_hud = Hud:new()
     -- print(G_hud.player[14]) debug A ne pas supprimer
@@ -290,6 +292,19 @@ function love.update(dt)
         for i = 1,#G_itemList do
             if G_itemList[i] then
                 if G_player:pickup(G_itemList[i]) then
+                    if tostring(G_itemList[i]) == "Coin" then
+                        if G_soundEffectsOn then
+                            local coin=love.audio.newSource("sound/soundeffects/coin.wav","static")
+                            coin:setVolume(0.2)
+                            coin:play()
+                        end
+                    else
+                        if G_soundEffectsOn then
+                            local item=love.audio.newSource("sound/soundeffects/pickup.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
+                            item:setVolume(0.2)
+                            item:play()
+                        end
+                    end
 
                     for j = 1,#G_hitboxes do
                         if G_hitboxes[j] == G_itemList[i].hitboxes["hitbox"] then
@@ -306,15 +321,23 @@ function love.update(dt)
         -- make the exit of the room appear
         if #G_monsterList == 0 then
             G_room.objectsGrid[G_room.exit["row"]][G_room.exit["col"]].data=7
-            if G_hud.questTexts.elements["level_end"].enabled then
+            if G_room.number ~= 0 and G_hud.questTexts.elements["level_end"].enabled then
                 G_hud.questTexts.elements["level_end"]:setLifeSpan(4)
             end
-        end
-
-        -- if the player is on the exit,
-        if G_player.pos.x > G_room.exit["col"]*G_room.tileSize and G_player.pos.x < (G_room.exit["col"]+1)*G_room.tileSize then
-            if G_player.pos.y > G_room.exit["row"]*G_room.tileSize and G_player.pos.y < (G_room.exit["row"]+1)*G_room.tileSize then
-                G_room.isFinished = true
+            if G_player.pos.x > G_room.exit["col"]*G_room.tileSize and G_player.pos.x < (G_room.exit["col"]+1)*G_room.tileSize then
+                if G_player.pos.y > G_room.exit["row"]*G_room.tileSize and G_player.pos.y < (G_room.exit["row"]+1)*G_room.tileSize then
+                    G_room.isFinished = true
+                    if G_deltaT == 0 then
+                        G_deltaT = love.timer.getTime()
+                        -- G_hud.player:setVisible(false)
+                        G_room.music:pause()
+                        if G_soundOn then
+                            local won = love.audio.newSource("sound/soundeffects/change_room.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
+                            won:setVolume(0.5)
+                            won:play()
+                        end
+                    end
+                end
             end
         end
 
@@ -332,16 +355,18 @@ function love.update(dt)
                 G_hud.player:setVisible(false)
                 G_hud.victory:setVisible(true)
             else
-
-                --reset G_variables
-                G_hitboxes = {G_player.hitboxes["hitbox"]}
-                G_hurtboxes = {}
-                G_monsterList = {}
-                G_itemList = {}
-                G_projectiles = {}
-                G_room.music:pause()
-                G_room = nil
-                G_room = Room:new(index)
+                if love.timer.getTime() - G_deltaT > 1 then
+                    --reset G_variables
+                    G_hitboxes = {G_player.hitboxes["hitbox"]}
+                    G_hurtboxes = {}
+                    G_monsterList = {}
+                    G_itemList = {}
+                    G_projectiles = {}
+                    G_room = nil
+                    G_deltaT = 0
+                    -- G_hud.player:setVisible(true)
+                    G_room = Room:new(index)
+                end
             end
         end
     end
@@ -349,7 +374,10 @@ end
 
 --- Draw the game (called every frames)
 function love.draw()
-    if not G_hud.mainMenu.visible then --menu de départ => jeu non affiché
+    if G_deltaT ~= 0 then
+        love.graphics.setColor(255/255, 255/255, 255/255)
+
+    elseif not G_hud.mainMenu.visible then --menu de départ => jeu non affiché
         love.graphics.setColor(255/255, 255/255, 255/255)
         if G_PONG then
             love.graphics.scale(1, 1)
