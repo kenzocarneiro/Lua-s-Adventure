@@ -135,7 +135,10 @@ local function checkHurtHit()
         for i2, v2 in ipairs(G_hitboxes) do
             if v:collide(v2) then
                 if v2.associatedElement ~= -1 and haveCommonElement(v.layers, v2.layers) then
-                    v2.associatedElement:hurt(v.associatedElement.damage, v.associatedElement.pos)
+                    local isDead = v2.associatedElement:hurt(v.associatedElement.damage, v.associatedElement.pos)
+                    if isDead and v2.layers["enemy"] then
+                        -- TODO: insert score update here
+                    end
                     if tostring(v.associatedElement) == "Projectile" then v.associatedElement:hurt(1)
                 end
                 elseif tostring(v.associatedElement) == "Projectile" and v2.layers["tile"] then
@@ -278,14 +281,14 @@ function love.update(dt)
             if G_itemList[i] then
                 if G_player:pickup(G_itemList[i]) then
                     if tostring(G_itemList[i]) == "Coin" then
-                        G_player.gold = G_player.gold + G_itemList[i].value
+                        G_player:add_gold(G_itemList[i].value)
                         local coin=love.audio.newSource("sound/soundeffects/coin.wav","static")
                         coin:setVolume(0.2)
                         coin:play()
                     else
                         local item=love.audio.newSource("sound/soundeffects/pickup.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
                         item:setVolume(0.2)
-                        item:play()    
+                        item:play()
                     end
 
                     for j = 1,#G_hitboxes do
@@ -305,7 +308,7 @@ function love.update(dt)
             G_room.objectsGrid[G_room.exit["row"]][G_room.exit["col"]].data=7
         end
 
-        -- if the player is on the exit, 
+        -- if the player is on the exit,
         if G_player.pos.x > G_room.exit["col"]*G_room.tileSize and G_player.pos.x < (G_room.exit["col"]+1)*G_room.tileSize then
             if G_player.pos.y > G_room.exit["row"]*G_room.tileSize and G_player.pos.y < (G_room.exit["row"]+1)*G_room.tileSize then
                 G_room.isFinished = true

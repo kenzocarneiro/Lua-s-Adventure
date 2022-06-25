@@ -24,6 +24,7 @@ function Player:init(inventory, collectRadius, ...)
     self.radiusDisplay = false
     self.gold = 0
     self.nextFreeInventorySlotNum = 1
+    self.score = 0
 
     --for potion consumming
     self.potion_stock = {3, 1, 1} -- {health, damage, speed}
@@ -253,6 +254,11 @@ function Player:energyUpdate(dt)
             self.energyTimer = Timer:new(0.01)
         end
     end
+end
+
+function Player:add_gold(amount)
+    self.gold = self.gold + amount
+    self.score = self.score + 10*amount
 end
 
 return Player
