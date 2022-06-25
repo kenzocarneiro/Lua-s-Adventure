@@ -1,3 +1,94 @@
+--MONSTERS
+local troll_sc = SpriteCollection:new("troll")
+troll_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6)),
+    Sprite:new("img/troll_run-Sheet.png", true, "run", 16, 16, Vector:new(7, 6), false, {0.12, 0.12, 0.12, 0.12})})
+
+local rhino_sc = SpriteCollection:new("rhino")
+rhino_sc:init({Sprite:new("img/rhino_idle-Sheet.png", true, "idle", 16, 16, Vector:new(6, 13)),
+    Sprite:new("img/rhino_run-Sheet.png", true, "run", 16, 16, Vector:new(6, 13))})
+
+local trollHF = HitboxFactory:new(
+    {name="hitbox", layers={enemy=true}, width=5, height=11, offset=Vector:new(-2, -2)},
+    {name="hurtbox", layers={player=true}, width=7, height=13, offset=Vector:new(-3, -3)}
+)
+
+local rhinoHF = HitboxFactory:new(
+    {name="hitbox", layers={enemy=true}, width=4, height=7, offset=Vector:new(-2, -6)},
+    {name="hurtbox", layers={player=true}, width=6, height=9, offset=Vector:new(-3, -7)}
+)
+
+--STAFFS
+local cool_staff_sc = SpriteCollection:new("item")
+cool_staff_sc:init({Sprite:new("img/magic_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+local cool_staffHF = HitboxFactory:new(
+    {"hitbox", {item=true}, 3, 14, Vector:new(-5, -5)}
+)
+
+local simple_staff_sc = SpriteCollection:new("item")
+simple_staff_sc:init({Sprite:new("img/simple_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+local simple_staffHF = HitboxFactory:new(
+    {"hitbox", {item=true}, 3, 10, Vector:new(-6, -5)}
+)
+
+local gold_staff_sc = SpriteCollection:new("item")
+gold_staff_sc:init({Sprite:new("img/gold_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+local gold_staffHF = HitboxFactory:new(
+    {"hitbox", {item=true}, 3, 14, Vector:new(-5, -5)}
+)
+
+local power_staff_sc = SpriteCollection:new("item")
+power_staff_sc:init({Sprite:new("img/power_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+local power_staffHF = HitboxFactory:new(
+    {"hitbox", {item=true}, 3, 13, Vector:new(-5, -4)}
+)
+
+--POTIONS
+local bluePotionSc = SpriteCollection:new("consumable")
+bluePotionSc:init({Sprite:new("img/potion_blue.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+local redPotionSc = SpriteCollection:new("consumable")
+redPotionSc:init({Sprite:new("img/potion_red.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+local yellowPotionSc = SpriteCollection:new("consumable")
+yellowPotionSc:init({Sprite:new("img/potion_yellow.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+local coinSc = SpriteCollection:new("coin")
+coinSc:init({Sprite:new("img/coin.png", false, "idle", 16, 16, Vector:new(7, 6))})
+
+local troll = Monster:new()
+    troll:init(80, "advanced", 0.5, 0.3, "epee", Vector:new(70, 80), troll_sc, trollHF)
+
+    local rhino = Monster:new()
+    rhino:init(50, "simple", 0.5, 0.5, "epee", Vector:new(150, 150), rhino_sc, rhinoHF)
+
+
+    local speedPotion = Consumable:new()
+    speedPotion:init("speed", 0.5, "potion of speed", Vector:new(250, 150), bluePotionSc)
+    local healthPotion = Consumable:new()
+    healthPotion:init("health", 1, "potion of heatlh", Vector:new(30, 150), redPotionSc)
+
+    local damagePotion = Consumable:new()
+    damagePotion:init("damage", 1, "potion of health", Vector:new(30, 50), yellowPotionSc)
+
+    local goldCoin = Coin:new()
+    goldCoin:init(3, "coin of gold", Vector:new(200, 20), coinSc)
+
+    local simple_staff = Weapon:new()
+    simple_staff:init(1, "The simple staff", Vector:new(90, 70), simple_staff_sc, simple_staffHF)
+
+    local cool_staff = Weapon:new()
+    cool_staff:init(2, "The cooler staff", Vector:new(200, 90), cool_staff_sc, cool_staffHF)
+
+    local power_staff = Weapon:new()
+    power_staff:init(5, "The powerful staff", Vector:new(80, 40), power_staff_sc, power_staffHF)
+
+    local gold_staff = Weapon:new()
+    gold_staff:init(10, "You achieved capitalism", Vector:new(250, 40), gold_staff_sc, gold_staffHF)
+
 return {
   version = "1.5",
   luaversion = "5.1",

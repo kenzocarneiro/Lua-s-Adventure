@@ -13,17 +13,21 @@ function Monster:new() return Entity.new(self) end
 
 
 --- Initializes the monster.
+--- @param aggroRadius number
+--- @param typeOfMove string
 --- @param chanceOfDrop number --between 0 and 1
 --- @param speed number
 --- @param weapon string
 --- @param pos Vector
 --- @param spriteCollection SpriteCollection
 --- @param hitboxFactory HitboxFactory
-function Monster:init(typeOfMove, chanceOfDrop, speed, weapon, pos, spriteCollection, hitboxFactory)
+function Monster:init(aggroRadius, typeOfMove, chanceOfDrop, speed, weapon, pos, spriteCollection, hitboxFactory)
     self.chanceOfDrop = chanceOfDrop or 0
     self.goal = nil
     self.direction = nil
     self.typeOfMove = typeOfMove or "simple"
+    self.aggroRadius = aggroRadius or 0
+    self.radiusDisplay = false
 
     Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)
     G_monsterList[#G_monsterList+1] = self
@@ -32,28 +36,24 @@ end
 
 --- Update the monster (called every frames).
 --- @param dt number
-function Monster:update(dt)
-    if self.typeOfMove == "simple" then
-        self:move(self.goal)
-    elseif self.typeOfMove == "advanced" then
-        self:betterMove(self.goal)
+function Monster:update(dt, player)
+    if self:aggro(player) then
+        self.goal = player.pos
     else
-        self:move(self.goal)
+        self.goal = nil
     end
 
-    Entity.update(self, dt)
-end
-
---- To kill the Monster.
---- @return table --the table of Monsters with him deleted
-function Monster:die(monsterList)
-    for i = 1,#monsterList do
-        if monsterList[i] == self then
-            table.remove(monsterList, i)
+    if self.goal then
+        if self.typeOfMove == "simple" then
+            self:move(self.goal)
+        elseif self.typeOfMove == "advanced" then
+            self:betterMove(self.goal)
+        else
+            self:move(self.goal)
         end
     end
 
-    return monsterList
+    Entity.update(self, dt)
 end
 
 
@@ -148,6 +148,24 @@ end
 
 function Monster:__tostring()
     return "Monster"
+end
+
+function Monster:aggro(player)
+    if ((player.pos.x-self.pos.x)^2 + (player.pos.y - self.pos.y)^2) <= (self.aggroRadius^2) then
+        return true
+    else
+        return false
+    end
+end
+
+function Monster:draw()
+
+    if self.radiusDisplay then
+        love.graphics.setLineWidth(0.3)
+        love.graphics.circle("line", self.pos.x, self.pos.y, self.aggroRadius)
+    end
+
+    Entity.draw(self)
 end
 
 return Monster

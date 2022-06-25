@@ -41,9 +41,9 @@ function SpriteCollection:draw(state, pos, frameNumber, flipH, flipV, angle)
     flipV = flipV or 1
     angle = angle or 0
     if self.sprites[state].isSheet then
-        love.graphics.draw(self.sprites[state].loveImg, self.sprites[state].frames[frameNumber], pos.x, pos.y, angle, flipH, flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
+        love.graphics.draw(self.sprites[state].loveImg, self.sprites[state].frames[frameNumber], pos.x, pos.y, math.rad(angle), flipH, flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
     else
-        love.graphics.draw(self.sprites[state].loveImg, pos.x, pos.y, angle, flipH, flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
+        love.graphics.draw(self.sprites[state].loveImg, pos.x, pos.y, math.rad(angle), flipH, flipV, self.sprites[state].middle.x, self.sprites[state].middle.y)
     end
 end
 
