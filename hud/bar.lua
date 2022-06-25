@@ -22,6 +22,10 @@ function Bar:new(pX, pY, pW, pH, pMax, pColorOut, pColorIn)
     return myBar
 end
 
+function Bar:setColorIn(pColor)
+    self.colorIn = pColor
+end
+
 function Bar:setImages(pImageBack, pImageBar, pScale)
     self.imgBack = pImageBack
     self.imgBar = pImageBar

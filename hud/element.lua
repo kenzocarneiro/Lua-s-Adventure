@@ -25,6 +25,11 @@ function Element:setVisible(pVisible)
     self.visible = pVisible
 end
 
+function Element:setPosition(posX, posY)
+    self.x = posX
+    self.y = posY
+end
+
 function Element:__tostring()
     return "Element"
 end

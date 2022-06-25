@@ -1,6 +1,7 @@
 Entity = require("entity/entity")
 Item = require("item")
 Timer = require("timer")
+LootTable = require("lootTable")
 --IA = require("AI")
 
 --- Class representing the Monster.
@@ -13,23 +14,25 @@ function Monster:new() return Entity.new(self) end
 
 
 --- Initializes the monster.
+--- @param lootTable table
 --- @param aggroRadius number
 --- @param typeOfMove string
---- @param chanceOfDrop number --between 0 and 1
 --- @param speed number
 --- @param weapon string
 --- @param pos Vector
 --- @param spriteCollection SpriteCollection
 --- @param hitboxFactory HitboxFactory
-function Monster:init(name, aggroRadius, typeOfMove, chanceOfDrop, speed, weapon, pos, spriteCollection, hitboxFactory)
+function Monster:init(lootTable, name, aggroRadius, typeOfMove, speed, weapon, pos, spriteCollection, hitboxFactory)
     self.name = name
     self.aggroRadius = aggroRadius or 0
     self.typeOfMove = typeOfMove or "simple"
-    self.chanceOfDrop = chanceOfDrop or 0
 
     self.goal = nil
     self.direction = nil
     self.radiusDisplay = false
+
+    self.lootTable = LootTable:new()
+    self.lootTable:init(lootTable)
 
     Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)
     G_monsterList[#G_monsterList+1] = self
@@ -59,23 +62,23 @@ function Monster:update(dt, player)
 end
 
 
---- The monster drops an item
---- @return Item -- ir nil if doesnt drop
-function Monster:drop()
-    local item_sc = SpriteCollection:new("item")
-    item_sc:init({Sprite:new("img/axe.png", false, "idle", 16, 16, Vector:new(7, 6))})
+-- --- The monster drops an item
+-- --- @return Item -- ir nil if doesnt drop
+-- function Monster:drop()
+--     local item_sc = SpriteCollection:new("item")
+--     item_sc:init({Sprite:new("img/axe.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
-    local itemHF = HitboxFactory:new({"hitbox", {items=true}, 4, 7, Vector:new(-5, -5)})
+--     local itemHF = HitboxFactory:new({"hitbox", {items=true}, 4, 7, Vector:new(-5, -5)})
 
-    local i = Item:new()
-    i:init("AXE !", Vector:new(self.pos.x, self.pos.y), item_sc, itemHF)
+--     local i = Item:new()
+--     i:init("AXE !", Vector:new(self.pos.x, self.pos.y), item_sc, itemHF)
 
-    if math.random() <= self.chanceOfDrop then
-        return i
-    else
-        return nil
-    end
-end
+--     if math.random() <= self.chanceOfDrop then
+--         return i
+--     else
+--         return nil
+--     end
+-- end
 
 function Monster:move(vect)
     --initialization of the move we want to do

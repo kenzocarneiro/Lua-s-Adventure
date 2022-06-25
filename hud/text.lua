@@ -19,13 +19,55 @@ function Text:new(pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pColor)
     myText.hAlign = pHAlign
     myText.vAlign = pVAlign
     myText.color = pColor
-
+    myText.speedTimer = nil
+    -- si lifespan est négatif, il est permanent, sinon il est temporaire
+    myText.lifeSpan = nil
+    myText.timer = nil
+    myText.movementNb = 0
+    myText.enabled = true
     return myText
 end
 
+function Text:setVelocity(pSpeed)
+  self.speedTimer = Timer:new(pSpeed)
+end
+
+function Text:setLifeSpan(pLifeSpan)
+  if self.enabled then
+    self.lifeSpan = Timer:new(pLifeSpan)
+    self:setVisible(true)
+    self.enabled = false
+  end
+end
+
+-- pour les textes temporaires et / ou flottants
+function Text:update(dt)
+    if self.lifeSpan and self.lifeSpan:update(dt) then
+        self.lifeSpan = nil
+        self:setVisible(false)
+    end
+end
+
+function Text:posUpdate(dt)
+  if self.speedTimer and self.speedTimer:update(dt) then
+    if self.movementNb < 20 then
+      self.speedTimer = nil
+      self.posUpdate(self.x, self.y - 1)
+      self.movementNb = self.movementNb + 1
+      self.speedTimer = Timer:new(0.2)
+    elseif self.movementNb > 20 then
+      self.speedTimer = nil
+    end
+  end
+end
+
+
+
 function Text:draw()
     if not self.visible then return end
-    if self.visible == false then return end
+
+  
+    Panel.draw(self)
     love.graphics.setFont(self.font)
     if self.color ~= nil then
         love.graphics.setColor(self.color[1]/255, self.color[2]/255, self.color[3]/255)
