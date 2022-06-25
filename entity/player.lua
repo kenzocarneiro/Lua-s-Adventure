@@ -1,5 +1,6 @@
 Entity = require("entity/entity")
 Projectile = require("entity/projectile")
+Score = require("score")
 
 --- Class representing the Player.
 --- @class Player:Entity Player is a subclass of Entity.
@@ -27,7 +28,7 @@ function Player:init(inventory, collectRadius, ...)
     self.radiusDisplay = false
     self.gold = 0
     self.nextFreeInventorySlotNum = 1
-    self.score = 0
+    self.score = Score()
     self.selectedWeapon = nil
 
     --for potion consumming
@@ -37,9 +38,17 @@ function Player:init(inventory, collectRadius, ...)
     self.timer2 = nil
     self.buffs = {0, 0}  --damage and speed
 
-    self.score = 0
 
     Entity.init(self, ...)
+end
+
+--- Hurt the Player and check if they are dead.
+--- @param damage number
+--- @param pos Vector|nil
+--- @return boolean isDead tells if the entity is dead
+function Player:hurt(damage, pos)
+    if not self.invulnerable then self.score.addScore("wasHurt", damage) end
+    return Entity.hurt(self, damage, pos)
 end
 
 --- Update the player (called every frames).
@@ -154,24 +163,37 @@ local inventory_size = 5
 
     if ((itemX-self.pos.x)^2 + (itemY - self.pos.y)^2) <= (self.collectRadius^2) then
 
+        local coinSound = love.audio.newSource("sound/soundeffects/coin.wav","static")
+        local itemSound = love.audio.newSource("sound/soundeffects/pickup.wav", "static") -- the "stream" argument instead of "static" tells LÖVE to stream the file from disk, good for longer music tracks
+        --coins
+        if tostring(item) == "Coin" then
+            self.gold = self.gold + item.value
+            self.score.addScore("pickupCoin", item.value)
+            coinSound:setVolume(0.2)
+            coinSound:play()
         --potions
-        if tostring(item)=="Consumable" then
+        elseif tostring(item)=="Consumable" then
+            itemSound:setVolume(0.2)
+            itemSound:play()
             --potion de vie
             if item.target =="health" then
-                self.score = self.score + 5
+                self.score.addScore("pickupHealthPotion")
                 self.potion_stock[1] = self.potion_stock[1] + 1
             --potion buff de dommages
             elseif item.target =="damage" then
-                self.score = self.score + 10
+                self.score.addScore("pickupDamagePotion")
                 self.potion_stock[2] = self.potion_stock[2] + 1
             --potion de vitesse
             elseif item.target =="speed" then
-                self.score = self.score + 15
+                self.score.addScore("pickupSpeedPotion")
                 self.potion_stock[3] = self.potion_stock[3] + 1
             end
 
         -- objet permanent
         else
+            self.score.addScore("pickupOther")
+            itemSound:setVolume(0.2)
+            itemSound:play()
             -- si on a de la place
             if self.nextFreeInventorySlotNum <= 5 and tostring(item) ~= "Coin" then
                 self.nextFreeInventorySlotNum = self.nextFreeInventorySlotNum + 1
@@ -260,14 +282,9 @@ function Player:energyUpdate(dt)
             -- self.currentEnergy = self.currentEnergy + 0.01
             self.currentEnergy = self.currentEnergy + 0.1
            -- self.skillAngleCd  = self.skillAngleCd + 360/100
-            self.energyTimer = Timer:new(0.01)     
+            self.energyTimer = Timer:new(0.01)
         end
     end
-end
-
-function Player:add_gold(amount)
-    self.gold = self.gold + amount
-    self.score = self.score + 10*amount
 end
 
 return Player
