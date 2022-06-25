@@ -2,6 +2,8 @@
 io.stdout:setvbuf('no')
 
 if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
+rawset = nil -- Disable rawset
+rawget = nil -- Disable rawget
 
 -- Pour notre magnifique HUD
 local Hud = require("hud/hud")
@@ -103,7 +105,7 @@ function love.keypressed(k)
         G_player:changeState("special")
 
     elseif k == "v" then
-        print(G_player.score)
+        print(G_player.score.getScore())
 
     elseif k == "escape" then
         love.event.quit()
@@ -143,12 +145,11 @@ local function checkHurtHit()
                     local isDead = v2.associatedElement:hurt(v.associatedElement.damage, v.associatedElement.pos)
                     if isDead and v2.layers["enemy"] then
                         if v2.associatedElement.name == "troll" then
-                            G_player.score = G_player.score + 100
-                            v2.associatedElement.lootTable:loot(v2.associatedElement.pos)
+                            G_player.score.addScore("killedTroll")
                         elseif v2.associatedElement.name == "rhino" then
-                            G_player.score = G_player.score + 75
-                            v2.associatedElement.lootTable:loot(v2.associatedElement.pos)
+                            G_player.score.addScore("killedRhino")
                         end
+                        v2.associatedElement.lootTable:loot(v2.associatedElement.pos)
                     end
                     if tostring(v.associatedElement) == "Projectile" then v.associatedElement:hurt(1)
                 end
@@ -347,6 +348,7 @@ function love.update(dt)
 
         --to change room if room is finished
         if G_room.isFinished then
+            G_player.score.addScore("roomFinished", G_room.number)
             local index = G_room.number+1
 
             if index > G_nb_rooms then
@@ -388,11 +390,11 @@ function love.draw()
         if G_blackoutOnPlayer then
             love.graphics.setColor(G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255)
         end
-    
+
         if G_blackoutOnPlayer then
             love.graphics.setColor(255/255, 255/255, 255/255)
         end
-    
+
         if G_blackoutOnPlayer then
             love.graphics.setColor(G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255)
         end
@@ -426,7 +428,7 @@ function love.draw()
                 v:draw({255, 255, 0})
             end
         end
-        
+
         love.graphics.scale(1/4, 1/4)
     end
   --  love.graphics.setColor(255/255, 255/255, 255/255)
