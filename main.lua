@@ -67,10 +67,10 @@ function love.load()
 
     --initialize sprite collections for monster player and item
     local player_sc = SpriteCollection:new("player")
-    player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
-        Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9), false),
-        Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9)),
-        Sprite:new("img/wizard_special-Sheet.png", true, "special", 18, 18, Vector:new(7, 9), false, {0.5, 0.05, 0.25, 0.25, 0.25, 0.25, 0.06, 0.1, 0.1, 0.1})
+    player_sc:init({Sprite:new("img/wizard_idle-Sheet0.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
+        Sprite:new("img/wizard_run-Sheet0.png", true, "run", 18, 18, Vector:new(7, 9), false),
+        Sprite:new("img/wizard_run-Sheet0.png", true, "attack", 18, 18, Vector:new(7, 9)),
+        Sprite:new("img/wizard_run-Sheet0.png", true, "special", 18, 18, Vector:new(7, 9), false, {0.5, 0.05, 0.25, 0.25, 0.25, 0.25, 0.06, 0.1, 0.1, 0.1})
     })
 
     local playerHF = HitboxFactory:new(
@@ -101,7 +101,7 @@ function love.keypressed(k)
         G_player:applyPotionEffect(3) -- TODO: This value should be linked to the potion .value attribute
 
     -- Compétence
-    elseif k == "e" and G_player.currentEnergy > 9.9 then
+    elseif k == "e" and G_player.currentEnergy > 9.9 and #G_player.inventory > 0 then
         G_player:changeState("special")
 
     elseif k == "v" then
