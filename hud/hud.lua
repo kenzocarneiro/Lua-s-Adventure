@@ -33,6 +33,10 @@ function Hud:new()
     myHud.parameter = self.setParameter()
         myHud.parameter:setVisible(false)
 
+    --leaderboard menu
+    myHud.leader = self.setLeader()
+        myHud.leader:setVisible(false)
+
     --credits menu
     myHud.credits = self.setCredits()
         myHud.credits:setVisible(false)
@@ -41,6 +45,10 @@ function Hud:new()
     myHud.victory = self.setVictory()
         myHud.victory:setVisible(false)
     
+    --defeat menu
+    myHud.defeat = self.setDefeat()
+        myHud.defeat:setVisible(false)
+
     return myHud
 end
 
@@ -65,12 +73,16 @@ function Hud.setMainMenu()
     local optionsKbButton = KbButton:new(playKbButton.x, screenHeight/2 - 1*8*16)
         optionsKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),7)
         local optionsText = Text:new(optionsKbButton.x + optionsKbButton.w/2, optionsKbButton.y + optionsKbButton.h/2, 0, 0, "Options", mainFontMenu, "", "", {0, 0, 0})
+    
+    local leaderKbButton = KbButton:new(playKbButton.x, screenHeight/2 + 0*8*16)
+    leaderKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),7)
+        local leaderText = Text:new(leaderKbButton.x + leaderKbButton.w/2, leaderKbButton.y + leaderKbButton.h/2, 0, 0, "LeaderBoard", mainFontMenu, "", "", {0, 0, 0})
 
     local creditsKbButton = KbButton:new(playKbButton.x, screenHeight/2 + 1*8*16)
         creditsKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),7)
         local creditsText = Text:new(creditsKbButton.x + creditsKbButton.w/2, creditsKbButton.y + creditsKbButton.h/2, 0, 0, "Credits", mainFontMenu, "", "", {0, 0, 0})
 
-    local exitKbButton = KbButton:new(playKbButton.x, screenHeight/2 + 1*8*16)
+    local exitKbButton = KbButton:new(playKbButton.x, screenHeight/2 + 2*8*16)
         exitKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),7)
         local exitText = Text:new(exitKbButton.x + exitKbButton.w/2, exitKbButton.y + exitKbButton.h/2, 0, 0, "Exit", mainFontMenu, "", "", {0, 0, 0})
 
@@ -86,6 +98,9 @@ function Hud.setMainMenu()
 
     group:addElement(optionsKbButton, "optionsKbButton")
     group:addElement(optionsText, "optionsText")
+
+    group:addElement(leaderKbButton, "leaderKbButton")
+    group:addElement(leaderText, "leaderText")
 
     group:addElement(creditsKbButton, "creditsKbButton")
     group:addElement(creditsText, "creditsText")
@@ -269,40 +284,47 @@ function Hud.setOptions()
         upKbButton:modifySelected()
         local upText = Text:new(upKbButton.x + upKbButton.w/2, upKbButton.y + upKbButton.h/2, 0, 0, "Up", mainFontMenu, "", "", {0, 0, 0})
 
-    local optionsKbButton = KbButton:new(upKbButton.x, screenHeight/2 - 1*7*16)
-        optionsKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
-        local optionsText = Text:new(optionsKbButton.x + optionsKbButton.w/2, optionsKbButton.y + optionsKbButton.h/2, 0, 0, "Options", mainFontMenu, "", "", {0, 0, 0})
-
-    local saveKbButton = KbButton:new(upKbButton.x, screenHeight/2 + 0*7*16)
-        saveKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
-        local saveText = Text:new(saveKbButton.x + saveKbButton.w/2, saveKbButton.y + saveKbButton.h/2, 0, 0, "Save", mainFontMenu, "", "", {0, 0, 0})
-
     local menuKbButton = KbButton:new(upKbButton.x, screenHeight/2 + 1*7*16)
         menuKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
         local menuText = Text:new(menuKbButton.x + menuKbButton.w/2, menuKbButton.y + menuKbButton.h/2, 0, 0, "Menu", mainFontMenu, "", "", {0, 0, 0})
+    
 
-    --parameters du joueur (en bas à droite)
-    local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
-    love.graphics.setFont(mainFont)
-    local buttonParam = Panel:new(screenWidth - 60 , screenHeight - 70, 40, 40)
-        buttonParam:setImage(love.graphics.newImage("sprites/hud/gear.png"))
-    local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , screenHeight - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {255, 255, 255})
-
-    group:addElement(upKbButton, "inventoryKbButton")
-    group:addElement(upText, "inventoryText")
-
-    group:addElement(optionsKbButton, "optionsKbButton")
-    group:addElement(optionsText, "optionsText")
-
-    group:addElement(saveKbButton, "saveKbButton")
-    group:addElement(saveText, "saveText")
+    group:addElement(upKbButton, "upKbButton")
+    group:addElement(upText, "upText")
 
     group:addElement(menuKbButton, "menuKbButton")
     group:addElement(menuText, "menuText")
 
 
-    group:addElement(buttonParam, "buttonParam")
-    group:addElement(paramHotKey, "paramHotKey")
+    return group
+end
+
+function Hud.setLeader()
+    local mainFontMenu = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 40)
+    love.graphics.setFont(mainFontMenu)
+
+    local screenWidth = love.graphics.getWidth()
+    local screenHeight = love.graphics.getHeight()
+
+    local group = Group:new()
+
+    local upKbButton = KbButton:new(0, screenHeight/2 - 2*7*16) --16px * (zoom+espace) * decalage
+        upKbButton:setImages(love.graphics.newImage("sprites/hud/button_white_default.png"), love.graphics.newImage("sprites/hud/button_white_pressed.png"), 6)
+        upKbButton.x = screenWidth/2 - 3*upKbButton.w --2*inventory.w pour que le bouton soit centré (*4 pour le zoom et /2 pour le décalage)
+        upKbButton:modifySelected()
+        local upText = Text:new(upKbButton.x + upKbButton.w/2, upKbButton.y + upKbButton.h/2, 0, 0, "Up", mainFontMenu, "", "", {0, 0, 0})
+
+    local menuKbButton = KbButton:new(upKbButton.x, screenHeight/2 + 1*7*16)
+        menuKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
+        local menuText = Text:new(menuKbButton.x + menuKbButton.w/2, menuKbButton.y + menuKbButton.h/2, 0, 0, "Menu", mainFontMenu, "", "", {0, 0, 0})
+    
+
+    group:addElement(upKbButton, "upKbButton")
+    group:addElement(upText, "upText")
+
+    group:addElement(menuKbButton, "menuKbButton")
+    group:addElement(menuText, "menuText")
+
 
     return group
 end
@@ -433,11 +455,17 @@ function Hud.setCredits()
     local imgPanel = Panel:new(0, 0) --16px * (zoom+espace) * decalage
         imgPanel:setImage(love.graphics.newImage("sprites/hud/victory.jpg"), 1)
     
+    local titleText = Text:new(screenWidth/2, 0, 0, 0, "Lua 's Adventure", mainFontMenu, "", "", {0, 0, 0})
+    local devText = Text:new(0, 200, 0, 0, "Developed by : us", mainFontMenu, "", "", {0, 0, 0})
+    
     local menuKbButton = KbButton:new(imgPanel.x, screenHeight/2 + 2*7*16)
         menuKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
         local menuText = Text:new(menuKbButton.x + menuKbButton.w/2, menuKbButton.y + menuKbButton.h/2, 0, 0, "Menu", mainFontMenu, "", "", {0, 0, 0})
 
-    group:addElement(imgPanel, "imgPanel")
+    group:addElement(imgPanel, "1imgPanel")
+
+    group:addElement(titleText, "titleText")
+    group:addElement(devText, "devText")
     
     group:addElement(menuKbButton, "menuKbButton")
     group:addElement(menuText, "menuText")
@@ -469,14 +497,44 @@ function Hud.setVictory()
     return group
 end
 
+
+function Hud.setDefeat()
+    local mainFontMenu = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 40)
+    love.graphics.setFont(mainFontMenu)
+
+    local screenWidth = love.graphics.getWidth()
+    local screenHeight = love.graphics.getHeight()
+
+    local group = Group:new()
+
+    local imgPanel = Panel:new(0, 0) --16px * (zoom+espace) * decalage
+        imgPanel:setImage(love.graphics.newImage("sprites/hud/defeat.jpg"), 1)
+    
+    local menuKbButton = KbButton:new(imgPanel.x, screenHeight/2 + 2*7*16)
+        menuKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
+        local menuText = Text:new(menuKbButton.x + menuKbButton.w/2, menuKbButton.y + menuKbButton.h/2, 0, 0, "Menu", mainFontMenu, "", "", {0, 0, 0})
+
+    group:addElement(imgPanel, "imgPanel")
+
+    group:addElement(menuKbButton, "menuKbButton")
+    group:addElement(menuText, "menuText")
+
+    return group
+end
+
 -- Use keypressed to manage the HUD
 
 function Hud:keypressed(k)
+    --debug / cheet
     if k == "m" then
         G_player.currentHealth =G_player.currentHealth + 5
     elseif k == "l" then
         G_player.currentHealth =G_player.currentHealth - 5
-    elseif k == "p" and (self.player.visible or self.parameter.visible) then --button parameter
+    elseif k == "t" then
+        G_player.currentEnergy = G_player.currentEnergy + 1
+
+    --button parameter
+    elseif k == "p" and (self.player.visible or self.parameter.visible) then 
         if self.parameter.visible then
             self.player:setVisible(true)
             self.inventorySlots:setVisible(true)
@@ -487,26 +545,28 @@ function Hud:keypressed(k)
             self.parameter:setVisible(true)
         end
 
+    -- during the game
     --potion
-    elseif k == "a" then
+    elseif k == "a" and self.player.visible then
         G_player:applyPotionEffect(3) -- TODO: This value should be linked to the potion .value attribute
-
     --compétence
-    elseif k == "e" then
+    elseif k == "e" and self.player.visible then
         G_player:changeState("special")
-
-    elseif k == "t" then
-    G_player.currentEnergy = G_player.currentEnergy + 1
     
-
-    elseif k ==  "i" then
+    elseif k ==  "i" and (self.player.visible or self.characterSheet.visible) then
         self:displayCharacterSheet()
     end
     
+    -- when a menu is displayed
     if self.parameter.visible then
         self:keypressedParameter(k)
     elseif self.mainMenu.visible then
         self:keypressedMainMenu(k)
+    elseif k == "return" and (self.optionsMenu.visible or self.leader.visible or self.credits.visible or self.victory.visible or self.defeat.visible) then
+        for _, value in pairs(self) do
+            value:setVisible(false)
+        end
+        self.mainMenu:setVisible(true)
     end
 
 end
@@ -533,9 +593,17 @@ function Hud:keypressedMainMenu(k)
             self.mainMenu.elements["optionsKbButton"]:modifySelected()
             self.mainMenu.elements["playKbButton"]:modifySelected()
 
+        elseif self.mainMenu.elements["leaderKbButton"]:getSelected() then
+            self.mainMenu.elements["leaderKbButton"]:modifySelected()
+            self.mainMenu.elements["optionsKbButton"]:modifySelected()
+        
+        elseif self.mainMenu.elements["creditsKbButton"]:getSelected() then
+            self.mainMenu.elements["creditsKbButton"]:modifySelected()
+            self.mainMenu.elements["leaderKbButton"]:modifySelected()
+
         elseif self.mainMenu.elements["exitKbButton"]:getSelected() then
             self.mainMenu.elements["exitKbButton"]:modifySelected()
-            self.mainMenu.elements["optionsKbButton"]:modifySelected()
+            self.mainMenu.elements["creditsKbButton"]:modifySelected()
         end
 
     elseif k == "down" then
@@ -545,6 +613,14 @@ function Hud:keypressedMainMenu(k)
 
         elseif self.mainMenu.elements["optionsKbButton"]:getSelected() then
             self.mainMenu.elements["optionsKbButton"]:modifySelected()
+            self.mainMenu.elements["leaderKbButton"]:modifySelected()
+
+        elseif self.mainMenu.elements["leaderKbButton"]:getSelected() then
+            self.mainMenu.elements["leaderKbButton"]:modifySelected()
+            self.mainMenu.elements["creditsKbButton"]:modifySelected()
+        
+        elseif self.mainMenu.elements["creditsKbButton"]:getSelected() then
+            self.mainMenu.elements["creditsKbButton"]:modifySelected()
             self.mainMenu.elements["exitKbButton"]:modifySelected()
 
         elseif self.mainMenu.elements["exitKbButton"]:getSelected() then
@@ -559,6 +635,16 @@ function Hud:keypressedMainMenu(k)
             self.inventorySlots:setVisible(true)
 
         elseif self.mainMenu.elements["optionsKbButton"]:getSelected() then
+            self.mainMenu:setVisible(false)
+            self.optionsMenu:setVisible(true)
+
+        elseif self.mainMenu.elements["leaderKbButton"]:getSelected() then
+            self.mainMenu:setVisible(false)
+            self.leader:setVisible(true)
+        
+        elseif self.mainMenu.elements["creditsKbButton"]:getSelected() then
+            self.mainMenu:setVisible(false)
+            self.credits:setVisible(true)
 
         elseif self.mainMenu.elements["exitKbButton"]:getSelected() then
             love.event.quit()
