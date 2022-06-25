@@ -110,12 +110,14 @@ function Entity:hurt(damage, pos)
             self.targetHealth = self.targetHealth - damage
             if self.targetHealth <= 0 then
                 G_deadElements[#G_deadElements + 1] = self
+                isDead = true
             end
         --si c'est un monstre
         else
             self.currentHealth = self.currentHealth - damage
             if self.currentHealth <= 0 then
                 G_deadElements[#G_deadElements + 1] = self
+                isDead = true
             end
         end
 
