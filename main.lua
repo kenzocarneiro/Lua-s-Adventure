@@ -2,6 +2,8 @@
 io.stdout:setvbuf('no')
 
 if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
+rawset = nil -- Disable rawset
+rawget = nil -- Disable rawget
 
 -- Pour notre magnifique HUD
 local Hud = require("hud/hud")

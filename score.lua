@@ -48,10 +48,14 @@ local function newScore()
         return self.score
     end
 
-    local returned_score = {}
-    -- setmetatable(returned_score, {__index = function() {print("You can't access this field.")}})
+    local returned_score = {getScore=getScore, addScore=addScore}
+    setmetatable(returned_score, {
+        __index = function(table, key) print("You can't access this field.") end,
+        __newindex = function() print("You can't assign this field.") end})
 
-    return {getScore=getScore, addScore=addScore}
+    return returned_score
 end
-
+local s = newScore()
+s.addScore = 5
+print(s.addScore)
 return newScore
