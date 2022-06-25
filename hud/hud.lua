@@ -579,7 +579,7 @@ end
 -- Use keypressed to manage the HUD
 
 function Hud:keypressed(k)
-    --debug / cheet
+    --debug / cheat
     if k == "m" and self.player.visible then
         self:get_health(30)
     elseif k == "l" and self.player.visible then
@@ -601,8 +601,12 @@ function Hud:keypressed(k)
     --inventory
     elseif k ==  "i" and (self.player.visible or self.characterSheet.visible) then
         self:displayCharacterSheet()
+    elseif k == "return" and self.characterSheet.visible then
+        self.characterSheet:setVisible(false)
+        self.parameter:setVisible(true)
     end
-    
+
+
     -- when a menu is displayed
     if self.parameter.visible then
         self:keypressedParameter(k)
@@ -738,7 +742,8 @@ function Hud:keypressedParameter(k)
 
     elseif k == "return" then
         if self.parameter.elements["inventoryKbButton"]:getSelected() then
-
+            self.parameter:setVisible(false)
+            self.characterSheet:setVisible(true)
 
         elseif self.parameter.elements["optionsKbButton"]:getSelected() then
 
