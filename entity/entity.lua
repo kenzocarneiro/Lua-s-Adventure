@@ -21,7 +21,7 @@ function Entity:init(speed, weapon, pos, spriteCollection, hitboxFactory)
     self.speed = speed or 1
     self.weapon = weapon or "epee"
     self.hasShoot = false
-    self.damage = 1
+    self.damage = 5
 
     Element.init(self, pos, spriteCollection, hitboxFactory)
 end
@@ -103,9 +103,18 @@ end
 function Entity:hurt(damage, pos)
     if not self.invulnerable then
         -- print("PAF")
-        self.currentHealth = self.currentHealth - damage
-        if self.currentHealth <= 0 then
-            G_deadElements[#G_deadElements + 1] = self
+        -- si c'est un joueur qui est blessé
+        if tostring(self) == "Player" then
+            self.targetHealth = self.targetHealth - damage
+            if self.targetHealth <= 0 then
+                G_deadElements[#G_deadElements + 1] = self
+            end
+        --si c'est un monstre
+        else
+            self.currentHealth = self.currentHealth - damage
+            if self.currentHealth <= 0 then
+                G_deadElements[#G_deadElements + 1] = self
+            end
         end
 
         if pos then

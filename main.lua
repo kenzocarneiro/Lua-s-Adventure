@@ -322,6 +322,8 @@ function love.update(dt)
 
             if index > G_nb_rooms then
                 print("Victory")
+                G_hud.player:setVisible(false)
+                G_hud.victory:setVisible(true)
             else
 
                 --reset G_variables
@@ -340,54 +342,59 @@ end
 
 --- Draw the game (called every frames)
 function love.draw()
-    love.graphics.setColor(255/255, 255/255, 255/255)
-    if G_PONG then
-        love.graphics.scale(1, 1)
-        Pong.draw()
-        return
-    end
-    if G_blackoutOnPlayer then
-        love.graphics.setColor(G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255)
-    end
-    love.graphics.scale(4, 4)
-    G_room:draw()
-
-    if G_blackoutOnPlayer then
+    if not G_hud.mainMenu.visible then --menu de départ => jeu non affiché
         love.graphics.setColor(255/255, 255/255, 255/255)
-    end
-    G_player:draw()
-
-    if G_blackoutOnPlayer then
-        love.graphics.setColor(G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255)
-    end
-    -- drawing Monsters
-    for i = 1,#G_monsterList do
-        if G_monsterList[i] then
-            G_monsterList[i]:draw()
-        end
-    end
-
-    --drawing Items on the map
-    for i = 1,#G_itemList do
-        if G_itemList[i] then
-            G_itemList[i]:draw()
-        end
-    end
-
-    for i, v in ipairs(G_projectiles) do
-        v:draw()
-    end
-
-    if G_hitboxActivated then
-        for i, v in ipairs(G_hitboxes) do
-            v:draw({0, 255, 255})
+        if G_PONG then
+            love.graphics.scale(1, 1)
+            Pong.draw()
+            return
         end
 
-        for i, v in ipairs(G_hurtboxes) do
-            v:draw({255, 255, 0})
+        love.graphics.scale(4, 4)
+        if G_blackoutOnPlayer then
+            love.graphics.setColor(G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255)
         end
-    end
+    
+        if G_blackoutOnPlayer then
+            love.graphics.setColor(255/255, 255/255, 255/255)
+        end
+    
+        if G_blackoutOnPlayer then
+            love.graphics.setColor(G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255)
+        end
+        G_room:draw()
+        G_player:draw()
 
-    love.graphics.scale(1/4, 1/4)
+        -- drawing Monsters
+        for i = 1,#G_monsterList do
+            if G_monsterList[i] then
+                G_monsterList[i]:draw()
+            end
+        end
+
+        --drawing Items on the map
+        for i = 1,#G_itemList do
+            if G_itemList[i] then
+                G_itemList[i]:draw()
+            end
+        end
+
+        for i, v in ipairs(G_projectiles) do
+            v:draw()
+        end
+
+        if G_hitboxActivated then
+            for i, v in ipairs(G_hitboxes) do
+                v:draw({0, 255, 255})
+            end
+
+            for i, v in ipairs(G_hurtboxes) do
+                v:draw({255, 255, 0})
+            end
+        end
+        
+        love.graphics.scale(1/4, 1/4)
+    end
+  --  love.graphics.setColor(255/255, 255/255, 255/255)
     G_hud:draw()
 end
