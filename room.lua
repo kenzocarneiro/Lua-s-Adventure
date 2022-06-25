@@ -41,6 +41,7 @@ function Room:new(roomNbr)
     if G_soundOn then
         r.music = love.audio.newSource("sound/bgmusic/room"..roomNbr..".mp3", "stream") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
         r.music:setVolume(0.5)
+        r.music:setLooping(true)
         r.music:play()
     end
 
@@ -54,6 +55,12 @@ function Room:new(roomNbr)
     if G_player then
         G_player.pos.x = (r.entrance["col"]+0.5)*r.tileSize
         G_player.pos.y = (r.entrance["row"]-0.5)*r.tileSize
+    end
+
+    if G_soundOn and roomNbr ~= 0 then
+        local won = love.audio.newSource("sound/soundeffects/change_room.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
+        won:setVolume(0.5)
+        won:play()
     end
 
     -- Initialisation de la carte :
