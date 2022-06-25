@@ -29,6 +29,13 @@ function Panel:setImage(pImage, pScale)
     self.h = pImage:getHeight()
 end
 
+function Panel:setColor(pColor)
+    self.colorOut = pColor
+end
+
+function Panel:setWidth(pWidth)
+    self.w = pWidth
+end
 
 function Panel:setEvent(pEventType, pFunction)
     print("setEvent : " .. pEventType)
@@ -62,7 +69,7 @@ function Panel:draw()
         love.graphics.setColor(255/255,255/255,255/255)
     end
     if self.image == nil then
-        love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+        love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
     else
 
         love.graphics.setColor(255/255,255/255,255/255)

@@ -20,16 +20,14 @@ function Hud:new()
     --game hud
     myHud.player = self.setPlayer()
         myHud.player:setVisible(false)
-    myHud.inventorySlots = self:setInventory()
     myHud.characterSheet = self:setCharacterSheet()
     
-        myHud.inventorySlots:setVisible(false)
-
     --options menu
     myHud.optionsMenu = self.setOptions()
         myHud.optionsMenu:setVisible(false)
 
     --parameter menu
+
     myHud.parameter = self.setParameter()
         myHud.parameter:setVisible(false)
 
@@ -126,18 +124,20 @@ function Hud.setPlayer()
     --barre de vie
     local healthHeart = Panel:new(0, 0)
         healthHeart:setImage(love.graphics.newImage("sprites/hud/health.png"), 0.1)
-    local healthBar = Bar:new(35,11, 164, 20, G_player.maxHealth, nil,{0,255,0})
+    local healthBar = Panel:new(35,11, 164, 20, {200,30,30})
+
+    local transitionBar = Panel:new(160,11, 0, 20,{200,30,30})
 
     -- barre d'energie
     local energyBarImg = Panel:new(0, 40)
         energyBarImg:setImage(love.graphics.newImage("sprites/hud/mana.png"), 0.1)
-    local energyBar = Bar:new(30,50, 153, 20, G_player.maxEnergy, nil,{0,0,200})
+    local energyBar = Panel:new(30,50, 153, 20,{0,0,200})
 
 
     local manaCost = Panel:new(170,hauteur - 25)
         manaCost:setImage(love.graphics.newImage("sprites/hud/mana_ball.png"),2.4)
         local manaCostText = Text:new(176 , hauteur - 19, 0, 0,"10", mainFont, "", "", {200, 0, 0})
-        local HealthValueText = Text:new(85 , 11, 0, 0, G_player.currentHealth .. "/" .. G_player.maxHealth, mainFont, "", "", {0, 0, 0})
+        local HealthValueText = Text:new(85 , 11, 0, 0, G_player.currentHealth .. "/" .. G_player.maxHealth, mainFont, "", "", {255, 255, 255})
         local ManaValueText = Text:new(90 , 51, 0, 0, G_player.currentEnergy .. "/" .. G_player.maxEnergy, mainFont, "", "", {255, 255, 255})
 
 
@@ -176,14 +176,14 @@ function Hud.setPlayer()
 
     local inventory_slot_2 = Panel:new(offset - distanceBetweenInvSlot, hauteur - 60, 40, 40)
         inventory_slot_2:setImage(love.graphics.newImage("sprites/hud/blank_slot.png"))
-    
+
     local inventory_slot_3 = Panel:new(offset, hauteur - 64, 40, 40)
         inventory_slot_3:setImage(love.graphics.newImage("sprites/hud/blank_slot.png"))
-    
-    local inventory_slot_4 = Panel:new(offset +distanceBetweenInvSlot, hauteur - 60, 40, 40)
+
+    local inventory_slot_4 = Panel:new(offset +distanceBetweenInvSlot, hauteur - 64, 40, 40)
         inventory_slot_4:setImage(love.graphics.newImage("sprites/hud/blank_slot.png"))
-    
-    local inventory_slot_5 = Panel:new(offset +distanceBetweenInvSlot *2, hauteur - 60, 40, 40)
+
+    local inventory_slot_5 = Panel:new(offset +distanceBetweenInvSlot *2, hauteur - 64, 40, 40)
         inventory_slot_5:setImage(love.graphics.newImage("sprites/hud/blank_slot.png"))
 
     --parameters du joueur (en bas à droite)
@@ -197,6 +197,32 @@ function Hud.setPlayer()
     local buff_2 = Panel:new(260,0)
         buff_2:setImage(love.graphics.newImage("sprites/hud/speed_buff.png"), 3)
 
+
+    --inventaire du joueur (icone du milieu pour l'instant)
+    local offset = largeur / 2 + 10
+    local distanceBetweenInvSlot = 65
+
+    local img_inventory_slot_1 = Panel:new(offset - distanceBetweenInvSlot * 2, hauteur - 55, 60, 60)
+        img_inventory_slot_1:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
+
+    local img_inventory_slot_2 = Panel:new(offset - distanceBetweenInvSlot, hauteur - 55, 60, 60)
+        img_inventory_slot_2:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
+
+    local img_inventory_slot_3 = Panel:new(offset, hauteur - 55, 60, 60)
+        img_inventory_slot_3:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
+
+    local img_inventory_slot_4 = Panel:new(offset +distanceBetweenInvSlot, hauteur - 55, 60, 60)
+        img_inventory_slot_4:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
+
+    local img_inventory_slot_5 = Panel:new(offset +distanceBetweenInvSlot *2, hauteur - 55, 60, 60)
+        img_inventory_slot_5:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
+
+    group:addElement(img_inventory_slot_1, "z1")
+    group:addElement(img_inventory_slot_2, "z2")
+    group:addElement(img_inventory_slot_3, "z3")
+    group:addElement(img_inventory_slot_4, "z4")
+    group:addElement(img_inventory_slot_5, "z5")
+
     group:addElement(skill_3, "skill_3")
     group:addElement(skill_2, "skill_2")
     group:addElement(skill_1, "skill_1")
@@ -206,7 +232,7 @@ function Hud.setPlayer()
     group:addElement(skillHotkey1, "skillHotkey1")
     group:addElement(skillHotkey2, "skillHotkey2")
     group:addElement(skillHotKey3, "skillHotkey3")
-    
+
     group:addElement(inventory_slot_1, "inventory_slot_1")
     group:addElement(inventory_slot_2, "inventory_slot_2")
     group:addElement(inventory_slot_3, "inventory_slot_3")
@@ -228,46 +254,10 @@ function Hud.setPlayer()
     group:addElement(manaCostText, "zManaCostText")
     group:addElement(HealthValueText, "zHealthValueText")
     group:addElement(ManaValueText, "zEnergyValueText")
+    group:addElement(transitionBar, "transitionBar")
 
     return group
 end
-
-function Hud:setInventory()
-
-    local inv_group = Group:new()
-    local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
-
-    local largeur = love.graphics.getWidth()
-    local hauteur = love.graphics.getHeight()
-
-    --inventaire du joueur (icone du milieu pour l'instant)
-    local offset = largeur / 2 + 10
-    local distanceBetweenInvSlot = 65
-
-    local img_inventory_slot_1 = Panel:new(offset - distanceBetweenInvSlot * 2, hauteur - 55, 60, 60)
-        img_inventory_slot_1:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
-
-    local img_inventory_slot_2 = Panel:new(offset - distanceBetweenInvSlot, hauteur - 55, 60, 60)
-        img_inventory_slot_2:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
-
-    local img_inventory_slot_3 = Panel:new(offset, hauteur - 55, 60, 60)
-        img_inventory_slot_3:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
-
-    local img_inventory_slot_4 = Panel:new(offset +distanceBetweenInvSlot, hauteur - 55, 60, 60)
-        img_inventory_slot_4:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
-
-    local img_inventory_slot_5 = Panel:new(offset +distanceBetweenInvSlot *2, hauteur - 55, 60, 60)
-        img_inventory_slot_5:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
-
-    inv_group:addElement(img_inventory_slot_1, "1")
-    inv_group:addElement(img_inventory_slot_2, "2")
-    inv_group:addElement(img_inventory_slot_3, "3")
-    inv_group:addElement(img_inventory_slot_4, "4")
-    inv_group:addElement(img_inventory_slot_5, "5")
-
-    return inv_group
-end
-
 
 function Hud.setOptions()
     local mainFontMenu = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 40)
@@ -337,6 +327,10 @@ function Hud.setParameter()
     local screenHeight = love.graphics.getHeight()
 
     local group = Group:new()
+
+    --inventaire du joueur (icone du milieu pour l'instant)
+    local offset = screenWidth / 2
+    local distanceBetweenInvSlot = 65
 
     local inventoryKbButton = KbButton:new(0, screenHeight/2 - 2*7*16) --16px * (zoom+espace) * decalage
         inventoryKbButton:setImages(love.graphics.newImage("sprites/hud/button_white_default.png"), love.graphics.newImage("sprites/hud/button_white_pressed.png"), 6)
@@ -526,33 +520,25 @@ end
 
 function Hud:keypressed(k)
     --debug / cheet
-    if k == "m" then
-        G_player.currentHealth =G_player.currentHealth + 5
-    elseif k == "l" then
+    if k == "m" and self.player.visible then
+        self:get_health(30)
+    elseif k == "l" and self.player.visible then
+        self:get_damage(30)
         G_player.currentHealth =G_player.currentHealth - 5
-    elseif k == "t" then
+    elseif k == "t" and self.player.visible then
         G_player.currentEnergy = G_player.currentEnergy + 1
 
     --button parameter
     elseif k == "p" and (self.player.visible or self.parameter.visible) then 
         if self.parameter.visible then
             self.player:setVisible(true)
-            self.inventorySlots:setVisible(true)
             self.parameter:setVisible(false)
         else
             self.player:setVisible(false)
-            self.inventorySlots:setVisible(false)
             self.parameter:setVisible(true)
         end
 
-    -- during the game
-    --potion
-    elseif k == "a" and self.player.visible then
-        G_player:applyPotionEffect(3) -- TODO: This value should be linked to the potion .value attribute
-    --compétence
-    elseif k == "e" and self.player.visible then
-        G_player:changeState("special")
-    
+    --inventory
     elseif k ==  "i" and (self.player.visible or self.characterSheet.visible) then
         self:displayCharacterSheet()
     end
@@ -574,11 +560,9 @@ end
 function Hud:displayCharacterSheet()
     if self.characterSheet.visible then
         self.player:setVisible(true)
-        self.inventorySlots:setVisible(true)
         self.characterSheet:setVisible(false)
     else
         self.player:setVisible(false)
-        self.inventorySlots:setVisible(false)
         self.characterSheet:setVisible(true)
     end
 end
@@ -632,7 +616,6 @@ function Hud:keypressedMainMenu(k)
         if self.mainMenu.elements["playKbButton"]:getSelected() then
             self.mainMenu:setVisible(false)
             self.player:setVisible(true)
-            self.inventorySlots:setVisible(true)
 
         elseif self.mainMenu.elements["optionsKbButton"]:getSelected() then
             self.mainMenu:setVisible(false)
@@ -730,12 +713,13 @@ function Hud:update(dt)
         self.player.elements["buff_2"]:setImage(love.graphics.newImage("sprites/hud/transparent.png"), 3)
     end
 
-    self:updateHealthPlayer(G_player.currentHealth)
-    self:updateEnergyPlayer(G_player.currentEnergy)
+    self:updateHealthPlayer()
+    self:updateEnergyPlayer()
     self:updateInventory()
     self:updatePotionStock()
     self:updateManaCosts()
     self:updateCharacterSheet()
+    self:updateHealthPlayerBetter(1)
 
     for key, value in pairs(self) do
         value:update(dt)
@@ -768,24 +752,24 @@ function Hud:updatePotionStock()
     self.player.elements["t_skillCharges1"]:edit(G_player.potion_stock[G_player.currentPotion])
 end
 
-function Hud:updateHealthPlayer(pAmount)
-    self.player.elements["healthBar"]:setValue(pAmount)
+function Hud:updateHealthPlayer()
+    self.player.elements["healthBar"]:setWidth((G_player.currentHealth / G_player.maxHealth) * 162)
     self.player.elements["zHealthValueText"]:edit(G_player.currentHealth .. "/" .. G_player.maxHealth)
 end
-
-function Hud:updateEnergyPlayer(pAmount)
-    self.player.elements["energyBar"]:setValue(pAmount)
+-- 156 : bar length
+function Hud:updateEnergyPlayer()
+    self.player.elements["energyBar"]:setWidth((G_player.currentEnergy / G_player.maxEnergy) * 151)
     self.player.elements["zEnergyValueText"]:edit(G_player.currentEnergy .. "/" .. G_player.maxEnergy)
 end
 
 function Hud:updateInvSlot(pNumberSlot, pImage)
-    self.inventorySlots.elements[tostring(pNumberSlot)]:setImage(pImage)
+    self.player.elements["z"..tostring(pNumberSlot)]:setImage(pImage)
 end
 
 function Hud:updateInventory()
     if G_player.nextFreeInventorySlotNum > 1 and G_player.nextFreeInventorySlotNum <= 6 then
         for i = 1, G_player.nextFreeInventorySlotNum - 1 do
-            self.inventorySlots.elements[tostring(i)]:setImage(G_player.inventory[i].spriteCollection.sprites["idle"].loveImg,5)
+            self.player.elements["z"..tostring(i)]:setImage(G_player.inventory[i].spriteCollection.sprites["idle"].loveImg,5)
         end
     end
 end
@@ -801,12 +785,103 @@ function Hud:updateManaCosts()
     end
 end
 
+function Hud:updateParameter(k)
+    if k == "up" then
+        if self.parameter.elements["inventoryKbButton"]:getSelected() then
+            self.parameter.elements["inventoryKbButton"]:modifySelected()
+            self.parameter.elements["exitKbButton"]:modifySelected()
+
+        elseif self.parameter.elements["optionsKbButton"]:getSelected() then
+            self.parameter.elements["optionsKbButton"]:modifySelected()
+            self.parameter.elements["inventoryKbButton"]:modifySelected()
+
+        elseif self.parameter.elements["saveKbButton"]:getSelected() then
+            self.parameter.elements["saveKbButton"]:modifySelected()
+            self.parameter.elements["optionsKbButton"]:modifySelected()
+
+        elseif self.parameter.elements["exitKbButton"]:getSelected() then
+            self.parameter.elements["exitKbButton"]:modifySelected()
+            self.parameter.elements["saveKbButton"]:modifySelected()
+        end
+
+    elseif k == "down" then
+        if self.parameter.elements["inventoryKbButton"]:getSelected() then
+            self.parameter.elements["inventoryKbButton"]:modifySelected()
+            self.parameter.elements["optionsKbButton"]:modifySelected()
+
+        elseif self.parameter.elements["optionsKbButton"]:getSelected() then
+            self.parameter.elements["optionsKbButton"]:modifySelected()
+            self.parameter.elements["saveKbButton"]:modifySelected()
+
+        elseif self.parameter.elements["saveKbButton"]:getSelected() then
+            self.parameter.elements["saveKbButton"]:modifySelected()
+            self.parameter.elements["exitKbButton"]:modifySelected()
+
+        elseif self.parameter.elements["exitKbButton"]:getSelected() then
+            self.parameter.elements["exitKbButton"]:modifySelected()
+            self.parameter.elements["inventoryKbButton"]:modifySelected()
+        end
+
+    elseif k == "return" then
+
+    end
+end
 
 -- function Hud:__tostring()
 --     for key, value in pairs(self) do
 
 --     end
 -- end
+
+function Hud:get_damage(amount)
+    if G_player.targetHealth > 0 then
+        G_player.targetHealth = G_player.targetHealth - amount
+    end
+
+    if G_player.targetHealth < 0 then
+        G_player.targetHealth = 0
+    end
+end
+
+function Hud:get_health(amount)
+    if G_player.targetHealth < G_player.maxHealth then
+        G_player.targetHealth = G_player.targetHealth + amount
+    end
+
+    if G_player.targetHealth > G_player.maxHealth then
+        G_player.targetHealth = G_player.maxHealth
+    end
+end
+
+function Hud:updateHealthPlayerBetter(pAmount)
+
+    local healthRatio = G_player.maxHealth / 162
+    local healthChangeSpeed = 1
+    local transition_width = 0
+    local transition_color = {255,0,0}
+
+    -- on a gagné de la vie
+    if G_player.currentHealth < G_player.targetHealth then
+        G_player.currentHealth = G_player.currentHealth + healthChangeSpeed
+        transition_width = tonumber((G_player.targetHealth - G_player.currentHealth) / healthRatio)
+        transition_color = {0,255,0}
+    end
+
+    -- on a perdu de la vie
+    if G_player.currentHealth > G_player.targetHealth then
+        G_player.currentHealth = G_player.currentHealth - healthChangeSpeed 
+        transition_width = tonumber((G_player.targetHealth - G_player.currentHealth) / healthRatio)
+        transition_color = {255,255,0}
+    end
+
+    local health_bar_width = tonumber(G_player.currentHealth / healthRatio)
+
+    self.player.elements["transitionBar"]:setPosition(self.player.elements["healthBar"].x + self.player.elements["healthBar"].w, self.player.elements["transitionBar"].y)
+    self.player.elements["transitionBar"]:setWidth(transition_width)
+    self.player.elements["transitionBar"]:setColor(transition_color)
+    
+
+end
 
 return Hud
 

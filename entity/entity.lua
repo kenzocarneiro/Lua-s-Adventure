@@ -11,7 +11,6 @@ Entity = Element:new()
 --- @return Entity
 function Entity:new() return Element.new(self) end
 
-
 --- Initializes the entity.
 --- @param speed number
 --- @param weapon string
@@ -22,7 +21,7 @@ function Entity:init(speed, weapon, pos, spriteCollection, hitboxFactory)
     self.speed = speed or 1
     self.weapon = weapon or "epee"
     self.hasShoot = false
-    self.damage = 1
+    self.damage = 5
 
     Element.init(self, pos, spriteCollection, hitboxFactory)
 end
@@ -96,6 +95,43 @@ function Entity:move(move)
     --     end
     -- end
 
+end
+
+--- Hurt the Entity and check if the Element is dead.
+--- @param damage number
+--- @param pos Vector|nil
+function Entity:hurt(damage, pos)
+    if not self.invulnerable then
+        -- print("PAF")
+        -- si c'est un joueur qui est blessé
+        if tostring(self) == "Player" then
+            self.targetHealth = self.targetHealth - damage
+            if self.targetHealth <= 0 then
+                G_deadElements[#G_deadElements + 1] = self
+            end
+        --si c'est un monstre
+        else
+            self.currentHealth = self.currentHealth - damage
+            if self.currentHealth <= 0 then
+                G_deadElements[#G_deadElements + 1] = self
+            end
+        end
+
+        if pos then
+            local knockback = 5
+            local newPos = self.pos - pos
+            newPos = newPos:normalized()*knockback
+
+            local collisionH, collisionV = self:willCollide(newPos)
+
+            if collisionH then newPos.x = 0 end
+            if collisionV then newPos.y = 0 end
+
+            self.pos = self.pos + newPos
+        end
+
+        self.invulnerable = true
+    end
 end
 
 --- Update the entity (called every frames).

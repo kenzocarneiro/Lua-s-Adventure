@@ -33,6 +33,10 @@ function love.load()
     G_fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
 
     G_fireballHF = HitboxFactory:new({"hurtbox", {enemy=true}, 3, 3, Vector:new(-2, -2)})
+    G_blackoutOnPlayer = false
+    G_blackoutCurrentFrame = 250
+    G_blackoutSFX = false
+    G_gandalf = false
 
     --declaration des variables globales de controle
     --- @type Hitbox[]
@@ -45,138 +49,73 @@ function love.load()
     G_itemList = {}
     --- @type Monster[]
     G_monsterList = {}
-    G_hitboxActivated = false
+    G_hitboxActivated = true
+
+    G_soundOn = true
+    G_soundEffectsOn = true
+
     G_room = Room:new(1)
 
     --- @type Element[]
     G_deadElements = {}
 
+    G_nb_rooms = 2
+
     --initialize sprite collections for monster player and item
     local player_sc = SpriteCollection:new("player")
     player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
         Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9), false),
-        Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9))})
+        Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9)),
+        Sprite:new("img/wizard_special-Sheet.png", true, "special", 18, 18, Vector:new(7, 9), false, {0.5, 0.05, 0.25, 0.25, 0.25, 0.25, 0.06, 0.1, 0.1, 0.1})
+    })
 
     local playerHF = HitboxFactory:new(
         -- {"hurtbox", {enemy=true}, 5, 5, Vector:new(-5, -5)},
         {"hitbox", {player=true}, 4, 10, Vector:new(-2, -2)}
     )
 
-    --MONSTERS
-    local troll_sc = SpriteCollection:new("troll")
-    troll_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6)),
-        Sprite:new("img/troll_run-Sheet.png", true, "run", 16, 16, Vector:new(7, 6), false, {0.12, 0.12, 0.12, 0.12})})
-
-
-    local rhino_sc = SpriteCollection:new("rhino")
-    rhino_sc:init({Sprite:new("img/rhino_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6)),
-        Sprite:new("img/rhino_run-Sheet.png", true, "run", 16, 16, Vector:new(7, 6))})
-
-
-    local trollHF = HitboxFactory:new(
-        {name="hitbox", layers={enemy=true}, width=5, height=11, offset=Vector:new(-2, -2)},
-        {name="hurtbox", layers={player=true}, width=7, height=13, offset=Vector:new(-3, -3)}
-    )
-
-    local rhinoHF = HitboxFactory:new(
-        {name="hitbox", layers={enemy=true}, width=4, height=7, offset=Vector:new(-3, 1)},
-        {name="hurtbox", layers={player=true}, width=6, height=9, offset=Vector:new(-4, 0)}
-    )
-
-    --STAFFS
-    local cool_staff_sc = SpriteCollection:new("item")
-    cool_staff_sc:init({Sprite:new("img/magic_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
-
-    local cool_staffHF = HitboxFactory:new(
-        {"hitbox", {item=true}, 3, 14, Vector:new(-5, -5)}
-    )
-
-    local simple_staff_sc = SpriteCollection:new("item")
-    simple_staff_sc:init({Sprite:new("img/simple_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
-
-    local simple_staffHF = HitboxFactory:new(
-        {"hitbox", {item=true}, 3, 10, Vector:new(-6, -5)}
-    )
-
-    local gold_staff_sc = SpriteCollection:new("item")
-    gold_staff_sc:init({Sprite:new("img/gold_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
-
-    local gold_staffHF = HitboxFactory:new(
-        {"hitbox", {item=true}, 3, 14, Vector:new(-5, -5)}
-    )
-
-    local power_staff_sc = SpriteCollection:new("item")
-    power_staff_sc:init({Sprite:new("img/power_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
-
-    local power_staffHF = HitboxFactory:new(
-        {"hitbox", {item=true}, 3, 13, Vector:new(-5, -4)}
-    )
-
-    --POTIONS
-    local bluePotionSc = SpriteCollection:new("consumable")
-    bluePotionSc:init({Sprite:new("img/potion_blue.png", false, "idle", 16, 16, Vector:new(7, 6))})
-
-    local redPotionSc = SpriteCollection:new("consumable")
-    redPotionSc:init({Sprite:new("img/potion_red.png", false, "idle", 16, 16, Vector:new(7, 6))})
-
-    local yellowPotionSc = SpriteCollection:new("consumable")
-    yellowPotionSc:init({Sprite:new("img/potion_yellow.png", false, "idle", 16, 16, Vector:new(7, 6))})
-
-    local coinSc = SpriteCollection:new("coin")
-    coinSc:init({Sprite:new("img/coin.png", false, "idle", 16, 16, Vector:new(7, 6))})
-
     -- G_player because player is a global variable
     G_player = Player:new()
     -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
     -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
-    G_player:init({}, 15, 1, "epee", Vector:new(100, 100), player_sc, playerHF)
-
-    local troll = Monster:new()
-    troll:init("advanced", 0.5, 0.3, "epee", Vector:new(70, 80), troll_sc, trollHF)
-
-    local rhino = Monster:new()
-    rhino:init("simple", 0.5, 0.5, "epee", Vector:new(150, 150), rhino_sc, rhinoHF)
-
-
-    local speedPotion = Consumable:new()
-    speedPotion:init("speed", 0.5, "potion of speed", Vector:new(250, 150), bluePotionSc)
-    local healthPotion = Consumable:new()
-    healthPotion:init("health", 1, "potion of heatlh", Vector:new(30, 150), redPotionSc)
-
-    local damagePotion = Consumable:new()
-    damagePotion:init("damage", 1, "potion of health", Vector:new(30, 50), yellowPotionSc)
-
-    local goldCoin = Coin:new()
-    goldCoin:init(3, "coin of gold", Vector:new(200, 20), coinSc)
-
-    local simple_staff = Weapon:new()
-    simple_staff:init(1, "The simple staff", Vector:new(90, 70), simple_staff_sc, simple_staffHF)
-
-    local cool_staff = Weapon:new()
-    cool_staff:init(2, "The cooler staff", Vector:new(200, 90), cool_staff_sc, cool_staffHF)
-
-    local power_staff = Weapon:new()
-    power_staff:init(5, "The powerful staff", Vector:new(80, 40), power_staff_sc, power_staffHF)
-
-    local gold_staff = Weapon:new()
-    gold_staff:init(10, "You achieved capitalism", Vector:new(250, 40), gold_staff_sc, gold_staffHF)
+    G_player:init({}, 15, 1, "epee", Vector:new((G_room.entrance["col"]+0.5)*G_room.tileSize, (G_room.entrance["row"]-0.5)*G_room.tileSize), player_sc, playerHF)
 
     G_hud = Hud:new()
     -- print(G_hud.player[14]) debug A ne pas supprimer
 end
 
 function love.keypressed(k)
+    if G_PONG then if k == "escape" then love.event.quit() else return end end
+
     G_hud:keypressed(k)
-    if k == "space" then
+    -- Attaque
+    if k == "space" and G_player.state ~= "special" then
         G_player:changeState("attack")
-        --print("BOOM")
-    elseif k == "i" then
-        for i, v in ipairs(G_player.inventory) do
-            --print(i, v)
-        end
+
+    -- Potion
+    elseif k == "a" then
+        G_player:applyPotionEffect(3) -- TODO: This value should be linked to the potion .value attribute
+
+    -- Compétence
+    elseif k == "e" and G_player.currentEnergy > 9.9 then
+        G_player:changeState("special")
+
     elseif k == "escape" then
         love.event.quit()
     end
+end
+
+--- Converts a polar coordinate to a cartesian coordinate.
+--- @param x number
+--- @param y number
+function G_cartToCyl(x, y) return Vector:new(math.sqrt(x*x + y+y),  math.atan(y / x)) end
+
+--- Converts a cartesian coordinate to a polar coordinate.
+--- @param theta number theta en radian :  math.atan(y / x)
+--- @param r number|nil longueur : math.sqrt(x*x + y+y)
+function G_cylToCart(theta, r)
+    r = r or 1
+    return Vector:new(r * math.cos(theta),  r * math.sin(theta))
 end
 
 -- Check if a layers1 and layers2 have a common element
@@ -196,9 +135,10 @@ local function checkHurtHit()
         for i2, v2 in ipairs(G_hitboxes) do
             if v:collide(v2) then
                 if v2.associatedElement ~= -1 and haveCommonElement(v.layers, v2.layers) then
-                    v2.associatedElement:hurt(v.associatedElement.damage)
+                    v2.associatedElement:hurt(v.associatedElement.damage, v.associatedElement.pos)
+                    if tostring(v.associatedElement) == "Projectile" then v.associatedElement:hurt(1)
                 end
-                if tostring(v.associatedElement) == "Projectile" and not v2.layers["item"] then
+                elseif tostring(v.associatedElement) == "Projectile" and v2.layers["tile"] then
                     v.associatedElement:hurt(1)
                 end
             end
@@ -260,6 +200,7 @@ end
 --- Update the game (called every frames)
 --- @param dt number the time elapsed since the last frame
 function love.update(dt)
+
     G_hud:update(dt) -- HUD
     if G_hud.player.visible then --jeu en cours
 
@@ -276,6 +217,16 @@ function love.update(dt)
             G_player.radiusDisplay = true
         else
             G_player.radiusDisplay = false
+        end
+
+        if love.keyboard.isDown("lalt") then
+            for i, v in pairs(G_monsterList) do
+                G_monsterList[i].radiusDisplay = true
+            end
+        else
+            for i, v in pairs(G_monsterList) do
+                G_monsterList[i].radiusDisplay = false
+            end
         end
 
         if love.keyboard.isDown("1") then
@@ -311,7 +262,7 @@ function love.update(dt)
         for i = 1,#G_monsterList do
             if G_monsterList[i] then
                 G_monsterList[i].goal = G_player.pos
-                G_monsterList[i]:update(dt)
+                G_monsterList[i]:update(dt, G_player)
             end
         end
 
@@ -328,6 +279,13 @@ function love.update(dt)
                 if G_player:pickup(G_itemList[i]) then
                     if tostring(G_itemList[i]) == "Coin" then
                         G_player.gold = G_player.gold + G_itemList[i].value
+                        local coin=love.audio.newSource("sound/soundeffects/coin.wav","static")
+                        coin:setVolume(0.2)
+                        coin:play()
+                    else
+                        local item=love.audio.newSource("sound/soundeffects/pickup.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
+                        item:setVolume(0.2)
+                        item:play()    
                     end
 
                     for j = 1,#G_hitboxes do
@@ -342,23 +300,67 @@ function love.update(dt)
             end
         end
 
+        -- make the exit of the room appear
+        if #G_monsterList == 0 then
+            G_room.objectsGrid[G_room.exit["row"]][G_room.exit["col"]].data=7
+        end
+
+        -- if the player is on the exit, 
+        if G_player.pos.x > G_room.exit["col"]*G_room.tileSize and G_player.pos.x < (G_room.exit["col"]+1)*G_room.tileSize then
+            if G_player.pos.y > G_room.exit["row"]*G_room.tileSize and G_player.pos.y < (G_room.exit["row"]+1)*G_room.tileSize then
+                G_room.isFinished = true
+            end
+        end
+
         checkHurtHit()
 
         killEntities()
+
+        --to change room if room is finished
+        if G_room.isFinished then
+            local index = G_room.number+1
+
+            if index > G_nb_rooms then
+                print("Victory")
+            else
+
+                --reset G_variables
+                G_hitboxes = {G_player.hitboxes["hitbox"]}
+                G_hurtboxes = {}
+                G_monsterList = {}
+                G_itemList = {}
+                G_projectiles = {}
+                G_room.music:pause()
+                G_room = nil
+                G_room = Room:new(index)
+            end
+        end
     end
 end
 
 --- Draw the game (called every frames)
 function love.draw()
     if not G_hud.mainMenu.visible then --menu de départ => jeu non affiché
+        love.graphics.setColor(255/255, 255/255, 255/255)
         if G_PONG then
             love.graphics.scale(1, 1)
             Pong.draw()
             return
         end
-        love.graphics.scale(4, 4)
-        G_room:draw()
 
+        love.graphics.scale(4, 4)
+        if G_blackoutOnPlayer then
+            love.graphics.setColor(G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255)
+        end
+    
+        if G_blackoutOnPlayer then
+            love.graphics.setColor(255/255, 255/255, 255/255)
+        end
+    
+        if G_blackoutOnPlayer then
+            love.graphics.setColor(G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255)
+        end
+        G_room:draw()
         G_player:draw()
 
         -- drawing Monsters
@@ -388,8 +390,9 @@ function love.draw()
                 v:draw({255, 255, 0})
             end
         end
-
+        
         love.graphics.scale(1/4, 1/4)
     end
+  --  love.graphics.setColor(255/255, 255/255, 255/255)
     G_hud:draw()
 end
