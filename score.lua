@@ -48,14 +48,32 @@ local function newScore()
         return self.score
     end
 
-    local returned_score = {getScore=getScore, addScore=addScore}
-    setmetatable(returned_score, {
-        __index = function(table, key) print("You can't access this field.") end,
-        __newindex = function() print("You can't assign this field.") end})
 
-    return returned_score
+    local originalScore = {getScore=getScore, addScore=addScore}
+
+    -- Proxy pattern to prevent access, assigning and reassigning
+    local proxy = {}
+    local proxy_mt = {
+        __index = function(table, key)
+            if originalScore[key] then
+                return originalScore[key]
+            else print("[ERROR] You can't access directly a field of a Score.")
+            end
+        end,
+        __newindex = function()
+            print("[ERROR] You can't assign or reassign a field of a Score.")
+        end}
+    setmetatable(proxy, proxy_mt)
+
+    return proxy
 end
-local s = newScore()
-s.addScore = 5
-print(s.addScore)
+
+-- Testing the security of the Score class
+-- local s = newScore()
+-- s.test = 5
+-- print(s.test)
+-- s.addScore = 100
+-- print(s.addScore)
+-- print(s.getScore)
+
 return newScore
