@@ -20,11 +20,8 @@ function Hud:new()
     --game hud
     myHud.player = self.setPlayer()
         myHud.player:setVisible(false)
-    myHud.inventorySlots = self:setInventory()
     myHud.characterSheet = self:setCharacterSheet()
     
-        myHud.inventorySlots:setVisible(false)
-
     --options menu
     myHud.optionsMenu = self.setOptions()
         myHud.optionsMenu:setVisible(false)
@@ -125,7 +122,7 @@ function Hud.setPlayer()
     local manaCost = Panel:new(170,hauteur - 25)
         manaCost:setImage(love.graphics.newImage("sprites/hud/mana_ball.png"),2.4)
         local manaCostText = Text:new(176 , hauteur - 19, 0, 0,"10", mainFont, "", "", {200, 0, 0})
-        local HealthValueText = Text:new(85 , 11, 0, 0, G_player.currentHealth .. "/" .. G_player.maxHealth, mainFont, "", "", {0, 0, 0})
+        local HealthValueText = Text:new(85 , 11, 0, 0, G_player.currentHealth .. "/" .. G_player.maxHealth, mainFont, "", "", {255, 255, 255})
         local ManaValueText = Text:new(90 , 51, 0, 0, G_player.currentEnergy .. "/" .. G_player.maxEnergy, mainFont, "", "", {255, 255, 255})
 
 
@@ -185,6 +182,32 @@ function Hud.setPlayer()
     local buff_2 = Panel:new(260,0)
         buff_2:setImage(love.graphics.newImage("sprites/hud/speed_buff.png"), 3)
 
+
+    --inventaire du joueur (icone du milieu pour l'instant)
+    local offset = largeur / 2 + 10
+    local distanceBetweenInvSlot = 65
+
+    local img_inventory_slot_1 = Panel:new(offset - distanceBetweenInvSlot * 2, hauteur - 55, 60, 60)
+        img_inventory_slot_1:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
+
+    local img_inventory_slot_2 = Panel:new(offset - distanceBetweenInvSlot, hauteur - 55, 60, 60)
+        img_inventory_slot_2:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
+
+    local img_inventory_slot_3 = Panel:new(offset, hauteur - 55, 60, 60)
+        img_inventory_slot_3:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
+
+    local img_inventory_slot_4 = Panel:new(offset +distanceBetweenInvSlot, hauteur - 55, 60, 60)
+        img_inventory_slot_4:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
+
+    local img_inventory_slot_5 = Panel:new(offset +distanceBetweenInvSlot *2, hauteur - 55, 60, 60)
+        img_inventory_slot_5:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
+
+    group:addElement(img_inventory_slot_1, "z1")
+    group:addElement(img_inventory_slot_2, "z2")
+    group:addElement(img_inventory_slot_3, "z3")
+    group:addElement(img_inventory_slot_4, "z4")
+    group:addElement(img_inventory_slot_5, "z5")
+
     group:addElement(skill_3, "skill_3")
     group:addElement(skill_2, "skill_2")
     group:addElement(skill_1, "skill_1")
@@ -220,43 +243,6 @@ function Hud.setPlayer()
 
     return group
 end
-
-function Hud:setInventory()
-
-    local inv_group = Group:new()
-    local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
-
-    local largeur = love.graphics.getWidth()
-    local hauteur = love.graphics.getHeight()
-
-    --inventaire du joueur (icone du milieu pour l'instant)
-    local offset = largeur / 2 + 10
-    local distanceBetweenInvSlot = 65
-
-    local img_inventory_slot_1 = Panel:new(offset - distanceBetweenInvSlot * 2, hauteur - 55, 60, 60)
-        img_inventory_slot_1:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
-
-    local img_inventory_slot_2 = Panel:new(offset - distanceBetweenInvSlot, hauteur - 55, 60, 60)
-        img_inventory_slot_2:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
-
-    local img_inventory_slot_3 = Panel:new(offset, hauteur - 55, 60, 60)
-        img_inventory_slot_3:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
-
-    local img_inventory_slot_4 = Panel:new(offset +distanceBetweenInvSlot, hauteur - 55, 60, 60)
-        img_inventory_slot_4:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
-
-    local img_inventory_slot_5 = Panel:new(offset +distanceBetweenInvSlot *2, hauteur - 55, 60, 60)
-        img_inventory_slot_5:setImage(love.graphics.newImage("sprites/hud/transparent.png"))
-
-    inv_group:addElement(img_inventory_slot_1, "1")
-    inv_group:addElement(img_inventory_slot_2, "2")
-    inv_group:addElement(img_inventory_slot_3, "3")
-    inv_group:addElement(img_inventory_slot_4, "4")
-    inv_group:addElement(img_inventory_slot_5, "5")
-
-    return inv_group
-end
-
 
 function Hud.setOptions()
     local mainFontMenu = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 40)
@@ -488,11 +474,9 @@ function Hud:keypressed(k)
     elseif k == "p" and (self.player.visible or self.parameter.visible) then --button parameter
         if self.parameter.visible then
             self.player:setVisible(true)
-            self.inventorySlots:setVisible(true)
             self.parameter:setVisible(false)
         else
             self.player:setVisible(false)
-            self.inventorySlots:setVisible(false)
             self.parameter:setVisible(true)
         end
 
@@ -514,11 +498,9 @@ end
 function Hud:displayCharacterSheet()
     if self.characterSheet.visible then
         self.player:setVisible(true)
-        self.inventorySlots:setVisible(true)
         self.characterSheet:setVisible(false)
     else
         self.player:setVisible(false)
-        self.inventorySlots:setVisible(false)
         self.characterSheet:setVisible(true)
     end
 end
@@ -556,7 +538,6 @@ function Hud:keypressedMainMenu(k)
         if self.mainMenu.elements["playKbButton"]:getSelected() then
             self.mainMenu:setVisible(false)
             self.player:setVisible(true)
-            self.inventorySlots:setVisible(true)
 
         elseif self.mainMenu.elements["optionsKbButton"]:getSelected() then
 
@@ -694,13 +675,13 @@ function Hud:updateEnergyPlayer()
 end
 
 function Hud:updateInvSlot(pNumberSlot, pImage)
-    self.inventorySlots.elements[tostring(pNumberSlot)]:setImage(pImage)
+    self.player.elements["z"..tostring(pNumberSlot)]:setImage(pImage)
 end
 
 function Hud:updateInventory()
     if G_player.nextFreeInventorySlotNum > 1 and G_player.nextFreeInventorySlotNum <= 6 then
         for i = 1, G_player.nextFreeInventorySlotNum - 1 do
-            self.inventorySlots.elements[tostring(i)]:setImage(G_player.inventory[i].spriteCollection.sprites["idle"].loveImg,5)
+            self.player.elements["z"..tostring(i)]:setImage(G_player.inventory[i].spriteCollection.sprites["idle"].loveImg,5)
         end
     end
 end
