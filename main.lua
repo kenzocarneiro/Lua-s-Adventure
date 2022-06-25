@@ -100,6 +100,9 @@ function love.keypressed(k)
     elseif k == "e" and G_player.currentEnergy > 9.9 then
         G_player:changeState("special")
 
+    elseif k == "v" then
+        print(G_player.score)
+
     elseif k == "escape" then
         love.event.quit()
     end
@@ -137,7 +140,11 @@ local function checkHurtHit()
                 if v2.associatedElement ~= -1 and haveCommonElement(v.layers, v2.layers) then
                     local isDead = v2.associatedElement:hurt(v.associatedElement.damage, v.associatedElement.pos)
                     if isDead and v2.layers["enemy"] then
-                        -- TODO: insert score update here
+                        if v2.associatedElement.name == "troll" then
+                            G_player.score = G_player.score + 100
+                        elseif v2.associatedElement.name == "rhino" then
+                            G_player.score = G_player.score + 75
+                        end
                     end
                     if tostring(v.associatedElement) == "Projectile" then v.associatedElement:hurt(1)
                 end

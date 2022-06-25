@@ -60,10 +60,10 @@ local coinSc = SpriteCollection:new("coin")
 coinSc:init({Sprite:new("img/coin.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
 local troll = Monster:new()
-    troll:init(80, "advanced", 0.5, 0.3, "epee", Vector:new(70, 80), troll_sc, trollHF)
+    troll:init("troll", 80, "advanced", 0.5, 0.3, "epee", Vector:new(70, 80), troll_sc, trollHF)
 
     local rhino = Monster:new()
-    rhino:init(50, "simple", 0.5, 0.5, "epee", Vector:new(150, 150), rhino_sc, rhinoHF)
+    rhino:init("rhino", 50, "simple", 0.5, 0.5, "epee", Vector:new(150, 150), rhino_sc, rhinoHF)
 
 
     local speedPotion = Consumable:new()
