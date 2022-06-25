@@ -74,35 +74,38 @@ yellowPotionSc:init({Sprite:new("img/potion_yellow.png", false, "idle", 16, 16, 
 local coinSc = SpriteCollection:new("coin")
 coinSc:init({Sprite:new("img/coin.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
+
+local speedPotion = Consumable:new()
+speedPotion:init("speed", 0.5, "potion of speed", Vector:new(250, 150), bluePotionSc)
+local healthPotion = Consumable:new()
+healthPotion:init("health", 1, "potion of heatlh", Vector:new(30, 150), redPotionSc)
+
+local damagePotion = Consumable:new()
+damagePotion:init("damage", 1, "potion of damage", Vector:new(30, 50), yellowPotionSc)
+
+local goldCoin = Coin:new()
+goldCoin:init(3, "coin of gold", Vector:new(200, 20), coinSc)
+
+local simple_staff = Weapon:new()
+simple_staff:init(1, "The simple staff", Vector:new(90, 70), simple_staff_sc, simple_staffHF)
+
+local cool_staff = Weapon:new()
+cool_staff:init(2, "The cooler staff", Vector:new(200, 90), cool_staff_sc, cool_staffHF)
+
+local power_staff = Weapon:new()
+power_staff:init(5, "The powerful staff", Vector:new(80, 40), power_staff_sc, power_staffHF)
+
+local gold_staff = Weapon:new()
+gold_staff:init(10, "You achieved capitalism", Vector:new(250, 40), gold_staff_sc, gold_staffHF)
+
 local troll = Monster:new()
-    troll:init(80, "advanced", 0.5, 0.3, "epee", Vector:new(70, 80), troll_sc, trollHF)
+troll:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {0.5, "simple_staff", simple_staff_sc, simple_staffHF}, 
+{0.8, "coin", coinSc}}, 
+"troll", 80, "advanced", 0.3, "epee", Vector:new(70, 80), troll_sc, trollHF)
 
-    local rhino = Monster:new()
-    rhino:init(50, "simple", 0.5, 0.5, "epee", Vector:new(150, 150), rhino_sc, rhinoHF)
-
-
-    local speedPotion = Consumable:new()
-    speedPotion:init("speed", 0.5, "potion of speed", Vector:new(250, 150), bluePotionSc)
-    local healthPotion = Consumable:new()
-    healthPotion:init("health", 1, "potion of heatlh", Vector:new(30, 150), redPotionSc)
-
-    local damagePotion = Consumable:new()
-    damagePotion:init("damage", 1, "potion of health", Vector:new(30, 50), yellowPotionSc)
-
-    local goldCoin = Coin:new()
-    goldCoin:init(3, "coin of gold", Vector:new(200, 20), coinSc)
-
-    local simple_staff = Weapon:new()
-    simple_staff:init(1, "The simple staff", Vector:new(90, 70), simple_staff_sc, simple_staffHF)
-
-    local cool_staff = Weapon:new()
-    cool_staff:init(2, "The cooler staff", Vector:new(200, 90), cool_staff_sc, cool_staffHF)
-
-    local power_staff = Weapon:new()
-    power_staff:init(5, "The powerful staff", Vector:new(80, 40), power_staff_sc, power_staffHF)
-
-    local gold_staff = Weapon:new()
-    gold_staff:init(10, "You achieved capitalism", Vector:new(250, 40), gold_staff_sc, gold_staffHF)
+local rhino = Monster:new()
+rhino:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {1, "healthPotion", redPotionSc}}, 
+"rhino", 50, "simple", 0.5, "epee", Vector:new(150, 150), rhino_sc, rhinoHF)
 
 return {
   version = "1.5",

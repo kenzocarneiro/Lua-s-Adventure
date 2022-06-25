@@ -90,18 +90,18 @@ function Element:changeState(state)
     end
 end
 
---- Hurt the Element and check if the Element is dead.
---- @param damage number
-function Element:hurt(damage)
-    if not self.invulnerable then
-        -- print("PAF", self)
-        self.currentHealth = self.currentHealth - damage
-        if self.currentHealth <= 0 then
-            G_deadElements[#G_deadElements + 1] = self
-        end
-        self.invulnerable = true
-    end
-end
+-- --- Hurt the Element and check if the Element is dead.
+-- --- @param damage number
+-- function Element:hurt(damage)
+--     if not self.invulnerable then
+--         -- print("PAF", self)
+--         self.currentHealth = self.currentHealth - damage
+--         if self.currentHealth <= 0 then
+--             G_deadElements[#G_deadElements + 1] = self
+--         end
+--         self.invulnerable = true
+--     end
+-- end
 
 --- Converts the Element to a string.
 function Element:__tostring()

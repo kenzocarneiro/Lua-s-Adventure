@@ -15,8 +15,8 @@ local rhino_sc = SpriteCollection:new("rhino")
 
 
 --INITIALISATION OF MONSTERS AND ITEMS
-local rhino = Monster:new()
-rhino:init(50, "simple", 0.5, 0.5, "epee", Vector:new(88, 40), rhino_sc, rhinoHF)
+-- local rhino = Monster:new()
+-- rhino:init("rhino", 50, "simple", 0.5, 0.5, "epee", Vector:new(88, 40), rhino_sc, rhinoHF)
 
 return {
   version = "1.5",
