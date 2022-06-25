@@ -27,6 +27,7 @@ function Player:init(inventory, collectRadius, ...)
     self.radiusDisplay = false
     self.gold = 0
     self.nextFreeInventorySlotNum = 1
+    self.score = 0
     self.selectedWeapon = nil
 
     --for potion consumming
@@ -79,7 +80,6 @@ function Player:update(dt)
     local currentFrame, animationFinished = self.spriteTimer:update(dt, self.spriteCollection:getSpriteFramesDuration(self.state), self.spriteCollection:getNumberOfSprites(self.state))
 
     -- attack handling
-    -- TODO: Using the sprite frame to define the attack fireRate isn't a good idea.
     if self.state == "attack" then
 
         if currentFrame == 4 and not self.hasShoot then
@@ -156,12 +156,15 @@ local inventory_size = 5
         if tostring(item)=="Consumable" then
             --potion de vie
             if item.target =="health" then
+                self.score = self.score + 5
                 self.potion_stock[1] = self.potion_stock[1] + 1
             --potion buff de dommages
             elseif item.target =="damage" then
+                self.score = self.score + 10
                 self.potion_stock[2] = self.potion_stock[2] + 1
             --potion de vitesse
             elseif item.target =="speed" then
+                self.score = self.score + 15
                 self.potion_stock[3] = self.potion_stock[3] + 1
             end
 
@@ -258,6 +261,11 @@ function Player:energyUpdate(dt)
             self.energyTimer = Timer:new(0.01)     
         end
     end
+end
+
+function Player:add_gold(amount)
+    self.gold = self.gold + amount
+    self.score = self.score + 10*amount
 end
 
 return Player

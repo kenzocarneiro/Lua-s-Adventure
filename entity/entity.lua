@@ -100,7 +100,9 @@ end
 --- Hurt the Entity and check if the Element is dead.
 --- @param damage number
 --- @param pos Vector|nil
+--- @return boolean isDead tells if the entity is dead
 function Entity:hurt(damage, pos)
+    local isDead = false
     if not self.invulnerable then
         -- print("PAF")
         -- si c'est un joueur qui est blessé
@@ -132,6 +134,7 @@ function Entity:hurt(damage, pos)
 
         self.invulnerable = true
     end
+    return isDead
 end
 
 --- Update the entity (called every frames).
