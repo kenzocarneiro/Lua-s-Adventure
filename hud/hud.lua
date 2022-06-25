@@ -31,7 +31,6 @@ function Hud:new()
         myHud.optionsMenu:setVisible(false)
 
     --parameter menu
-
     myHud.parameter = self.setParameter()
         myHud.parameter:setVisible(false)
 
@@ -93,25 +92,27 @@ function Hud.setMainMenu()
 
     local group = Group:new()
 
-    local playKbButton = TextButton:new(0, screenHeight/2 - 2*8*16, nil, nil, "Play", mainFontMenu, "center", "center", textColor, textColorSelected) --16px * (zoom+espace) * decalage
+    local coeffX, coeffW = 1.06, 6
+
+    local playKbButton = TextButton:new(0, screenHeight/2 - 2*8*16, nil, nil, "Play", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW) --16px * (zoom+espace) * decalage
         playKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"), 7)
         playKbButton.x = screenWidth/2 - 3.5*playKbButton.w --2*inventory.w pour que le bouton soit centré (*4 pour le zoom et /2 pour le décalage)
         playKbButton:modifySelected()
         -- local playText = Text:new(playKbButton.x + playKbButton.w/2, playKbButton.y + playKbButton.h/2, 0, 0, "Play", mainFontMenu, "", "", {0, 0, 0})
 
-    local optionsKbButton = TextButton:new(playKbButton.x, screenHeight/2 - 1*8*16, 0, 0, "Options", mainFontMenu, "center", "center", textColor, textColorSelected)
+    local optionsKbButton = TextButton:new(playKbButton.x, screenHeight/2 - 1*8*16, 0, 0, "Options", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         optionsKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),7)
         -- local optionsText = Text:new(optionsKbButton.x + optionsKbButton.w/2, optionsKbButton.y + optionsKbButton.h/2, 0, 0, "Options", mainFontMenu, "", "", {0, 0, 0})
     
-    local leaderKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 0*8*16, 0, 0, "LeaderBoard", mainFontMenu, "center", "center", textColor, textColorSelected)
+    local leaderKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 0*8*16, 0, 0, "LeaderBoard", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
     leaderKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),7)
         -- local leaderText = Text:new(leaderKbButton.x + leaderKbButton.w/2, leaderKbButton.y + leaderKbButton.h/2, 0, 0, "LeaderBoard", mainFontMenu, "", "", {0, 0, 0})
 
-    local creditsKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 1*8*16, 0, 0, "Credits", mainFontMenu, "center", "center", textColor, textColorSelected)
+    local creditsKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 1*8*16, 0, 0, "Credits", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         creditsKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),7)
         -- local creditsText = Text:new(creditsKbButton.x + creditsKbButton.w/2, creditsKbButton.y + creditsKbButton.h/2, 0, 0, "Credits", mainFontMenu, "", "", {0, 0, 0})
 
-    local exitKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 2*8*16, 0, 0, "Exit", mainFontMenu, "center", "center", textColor, textColorSelected)
+    local exitKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 2*8*16, 0, 0, "Exit", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         exitKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),7)
         -- local exitText = Text:new(exitKbButton.x + exitKbButton.w/2, exitKbButton.y + exitKbButton.h/2, 0, 0, "Exit", mainFontMenu, "", "", {0, 0, 0})
 
@@ -359,23 +360,25 @@ function Hud.setParameter()
     local offset = screenWidth / 2
     local distanceBetweenInvSlot = 65
 
-    local inventoryKbButton = KbButton:new(0, screenHeight/2 - 2*7*16) --16px * (zoom+espace) * decalage
+    local coeffX, coeffW = 1.05, 5
+
+    local inventoryKbButton = TextButton:new(0, screenHeight/2 - 2*7*16, 0, 0, "Inventory", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW) --16px * (zoom+espace) * decalage
         inventoryKbButton:setImages(love.graphics.newImage("sprites/hud/button_white_default.png"), love.graphics.newImage("sprites/hud/button_white_pressed.png"), 6)
         inventoryKbButton.x = screenWidth/2 - 3*inventoryKbButton.w --2*inventory.w pour que le bouton soit centré (*4 pour le zoom et /2 pour le décalage)
         inventoryKbButton:modifySelected()
-        local inventoryText = Text:new(inventoryKbButton.x + inventoryKbButton.w/2, inventoryKbButton.y + inventoryKbButton.h/2, 0, 0, "Inventory", mainFontMenu, "", "", {0, 0, 0})
+        -- local inventoryText = Text:new(inventoryKbButton.x + inventoryKbButton.w/2, inventoryKbButton.y + inventoryKbButton.h/2, 0, 0, "Inventory", mainFontMenu, "", "", {0, 0, 0})
 
-    local optionsKbButton = KbButton:new(inventoryKbButton.x, screenHeight/2 - 1*7*16)
+    local optionsKbButton = TextButton:new(inventoryKbButton.x, screenHeight/2 - 1*7*16, 0, 0, "Options", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         optionsKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
-        local optionsText = Text:new(optionsKbButton.x + optionsKbButton.w/2, optionsKbButton.y + optionsKbButton.h/2, 0, 0, "Options", mainFontMenu, "", "", {0, 0, 0})
+        -- local optionsText = Text:new(optionsKbButton.x + optionsKbButton.w/2, optionsKbButton.y + optionsKbButton.h/2, 0, 0, "Options", mainFontMenu, "", "", {0, 0, 0})
 
-    local saveKbButton = KbButton:new(inventoryKbButton.x, screenHeight/2 + 0*7*16)
+    local saveKbButton = TextButton:new(inventoryKbButton.x, screenHeight/2 + 0*7*16, 0, 0, "Save", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         saveKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
-        local saveText = Text:new(saveKbButton.x + saveKbButton.w/2, saveKbButton.y + saveKbButton.h/2, 0, 0, "Save", mainFontMenu, "", "", {0, 0, 0})
+        -- local saveText = Text:new(saveKbButton.x + saveKbButton.w/2, saveKbButton.y + saveKbButton.h/2, 0, 0, "Save", mainFontMenu, "", "", {0, 0, 0})
 
-    local menuKbButton = KbButton:new(inventoryKbButton.x, screenHeight/2 + 1*7*16)
+    local menuKbButton = TextButton:new(inventoryKbButton.x, screenHeight/2 + 1*7*16, 0, 0, "Menu", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         menuKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
-        local menuText = Text:new(menuKbButton.x + menuKbButton.w/2, menuKbButton.y + menuKbButton.h/2, 0, 0, "Menu", mainFontMenu, "", "", {0, 0, 0})
+        -- local menuText = Text:new(menuKbButton.x + menuKbButton.w/2, menuKbButton.y + menuKbButton.h/2, 0, 0, "Menu", mainFontMenu, "", "", {0, 0, 0})
 
     --parameters du joueur (en bas à droite)
     local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
@@ -385,16 +388,16 @@ function Hud.setParameter()
     local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , screenHeight - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {255, 255, 255})
 
     group:addElement(inventoryKbButton, "inventoryKbButton")
-    group:addElement(inventoryText, "inventoryText")
+    -- group:addElement(inventoryText, "inventoryText")
 
     group:addElement(optionsKbButton, "optionsKbButton")
-    group:addElement(optionsText, "optionsText")
+    -- group:addElement(optionsText, "optionsText")
 
     group:addElement(saveKbButton, "saveKbButton")
-    group:addElement(saveText, "saveText")
+    -- group:addElement(saveText, "saveText")
 
     group:addElement(menuKbButton, "menuKbButton")
-    group:addElement(menuText, "menuText")
+    -- group:addElement(menuText, "menuText")
 
 
     group:addElement(buttonParam, "buttonParam")
@@ -473,13 +476,15 @@ function Hud.setCredits()
 
     local group = Group:new()
 
-    local imgPanel = Panel:new(0, 0) --16px * (zoom+espace) * decalage
+    local coeffX, coeffW = 1.05, 5
+
+    local imgPanel = Panel:new(0, 0)
         imgPanel:setImage(love.graphics.newImage("sprites/hud/Victory2.png"), 0.8)
     
-    local titleText = Text:new(screenWidth/2, 0, 0, 0, "Lua 's Adventure", mainFontMenu, "", "", {0, 0, 0})
-    local devText = Text:new(0, 200, 0, 0, "Developed by : us", mainFontMenu, "", "", {0, 0, 0})
+    local titleText = Text:new(0, 0, screenWidth, 0, "Lua 's Adventure", mainFontMenu, "center", "", {255, 255, 255})
+    local devText = Text:new(0, 200, 0, 0, "Developed by : us", mainFontMenu, "", "", {255, 255, 255})
     
-    local menuKbButton = TextButton:new(imgPanel.x, screenHeight/2 + 2*7*16, 0, 0, "Menu", mainFontMenu, "center", "center", textColor, textColorSelected)
+    local menuKbButton = TextButton:new(imgPanel.x, screenHeight/2 + 2*7*16, 0, 0, "Menu", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         menuKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
         menuKbButton:modifySelected()
         -- local menuText = Text:new(menuKbButton.x + menuKbButton.w/2, menuKbButton.y + menuKbButton.h/2, 0, 0, "Menu", mainFontMenu, "", "", {0, 0, 0})
@@ -504,10 +509,13 @@ function Hud.setVictory()
 
     local group = Group:new()
 
+    
+    local coeffX, coeffW = 1.05, 5
+
     local imgPanel = Panel:new(0, 0) 
         imgPanel:setImage(love.graphics.newImage("sprites/hud/Victory2.png"), 0.87)
     
-    local menuKbButton = TextButton:new(imgPanel.x, screenHeight/2 + 2*7*16, 0, 0, "Menu", mainFontMenu, "center", "center", textColor, textColorSelected)--16px * (zoom+espace) * decalage
+    local menuKbButton = TextButton:new(imgPanel.x, screenHeight/2 + 2*7*16, 0, 0, "Menu", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)--16px * (zoom+espace) * decalage
         menuKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
         -- local menuText = Text:new(menuKbButton.x + menuKbButton.w/2, menuKbButton.y + menuKbButton.h/2, 0, 0, "Menu", mainFontMenu, "", "", {0, 0, 0})
         menuKbButton:modifySelected()

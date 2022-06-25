@@ -358,7 +358,7 @@ end
 
 --- Draw the game (called every frames)
 function love.draw()
-    if not G_hud.mainMenu.visible then --menu de départ => jeu non affiché
+    if G_hud.player.visible or G_hud.parameter.visible or G_hud.characterSheet.visible then --menu de départ => jeu non affiché
         love.graphics.setColor(255/255, 255/255, 255/255)
         if G_PONG then
             love.graphics.scale(1, 1)
