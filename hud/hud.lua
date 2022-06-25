@@ -170,9 +170,9 @@ function Hud.setPlayer()
         local HealthValueText = Text:new(85 , 11, 0, 0, G_player.currentHealth .. "/" .. G_player.maxHealth, mainFont, "", "", {255, 255, 255})
         local ManaValueText = Text:new(90 , 51, 0, 0, G_player.currentEnergy .. "/" .. G_player.maxEnergy, mainFont, "", "", {255, 255, 255})
 
-    local scoreImg =  Panel:new(largeur - 75, 5)
+    local scoreImg =  Panel:new(largeur - 100, 5)
     scoreImg:setImage(love.graphics.newImage("sprites/hud/Score.png"), 0.65)
-    local scoreText = Text:new(largeur - 35 , 8, 0, 0, G_player.score.getScore(), mainFont, "", "", {255, 150, 0})
+    local scoreText = Text:new(largeur - 75, 8, 0, 0, G_player.score.getScore(), mainFont, "", "", {255, 150, 0})
 
     -- compétences du joueur (icones en bas à gauche)
     local skill_1 = Panel:new(0, hauteur - 64, 40, 40)
