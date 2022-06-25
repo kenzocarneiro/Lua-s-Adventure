@@ -293,7 +293,6 @@ function love.update(dt)
             if G_itemList[i] then
                 if G_player:pickup(G_itemList[i]) then
                     if tostring(G_itemList[i]) == "Coin" then
-                        G_player:add_gold(G_itemList[i].value)
                         if G_soundEffectsOn then
                             local coin=love.audio.newSource("sound/soundeffects/coin.wav","static")
                             coin:setVolume(0.2)
