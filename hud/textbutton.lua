@@ -4,13 +4,13 @@ local TextButton = {}
 
 
 -- Classe fille TextButton qui hérite de Text
-function TextButton:new(pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pDefaultColor, pSelectedColor, pCoeffX, pCoeffW)
+function TextButton:new(pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pDefaultColor, pSelectedColor, pCoeffX, pCoeffW, pCoeffH)
     self.__index = self
     setmetatable(self, {__index = Text}) --heritage
 
     local notBackground = true
 
-    local myTextButton = Text.new(self, pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pDefaultColor, notBackground, pCoeffX, pCoeffW) --appel constructeur de la classe mère
+    local myTextButton = Text.new(self, pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pDefaultColor, notBackground, pCoeffX, pCoeffW, pCoeffH) --appel constructeur de la classe mère
     setmetatable(myTextButton, self)
 
     -- initialisation

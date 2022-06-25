@@ -93,27 +93,28 @@ function Hud.setMainMenu()
     local group = Group:new()
 
     local coeffX, coeffW = 1.06, 6
+    local imgZoom = 7
 
-    local playKbButton = TextButton:new(0, screenHeight/2 - 2*8*16, nil, nil, "Play", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW) --16px * (zoom+espace) * decalage
-        playKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"), 7)
+    local playKbButton = TextButton:new(0, screenHeight/2 - 2*(imgZoom+1)*16, nil, nil, "Play", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW) --16px * (zoom+espace) * decalage
+        playKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"), imgZoom)
         playKbButton.x = screenWidth/2 - 3.5*playKbButton.w --2*inventory.w pour que le bouton soit centré (*4 pour le zoom et /2 pour le décalage)
         playKbButton:modifySelected()
         -- local playText = Text:new(playKbButton.x + playKbButton.w/2, playKbButton.y + playKbButton.h/2, 0, 0, "Play", mainFontMenu, "", "", {0, 0, 0})
 
-    local optionsKbButton = TextButton:new(playKbButton.x, screenHeight/2 - 1*8*16, 0, 0, "Options", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
-        optionsKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),7)
+    local optionsKbButton = TextButton:new(playKbButton.x, screenHeight/2 - 1*(imgZoom+1)*16, 0, 0, "Options", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        optionsKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),imgZoom)
         -- local optionsText = Text:new(optionsKbButton.x + optionsKbButton.w/2, optionsKbButton.y + optionsKbButton.h/2, 0, 0, "Options", mainFontMenu, "", "", {0, 0, 0})
     
-    local leaderKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 0*8*16, 0, 0, "LeaderBoard", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
-    leaderKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),7)
+    local leaderKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 0*(imgZoom+1)*16, 0, 0, "LeaderBoard", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+    leaderKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),imgZoom)
         -- local leaderText = Text:new(leaderKbButton.x + leaderKbButton.w/2, leaderKbButton.y + leaderKbButton.h/2, 0, 0, "LeaderBoard", mainFontMenu, "", "", {0, 0, 0})
 
-    local creditsKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 1*8*16, 0, 0, "Credits", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
-        creditsKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),7)
+    local creditsKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 1*(imgZoom+1)*16, 0, 0, "Credits", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        creditsKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),imgZoom)
         -- local creditsText = Text:new(creditsKbButton.x + creditsKbButton.w/2, creditsKbButton.y + creditsKbButton.h/2, 0, 0, "Credits", mainFontMenu, "", "", {0, 0, 0})
 
-    local exitKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 2*8*16, 0, 0, "Exit", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
-        exitKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),7)
+    local exitKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 2*(imgZoom+1)*16, 0, 0, "Exit", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        exitKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),imgZoom)
         -- local exitText = Text:new(exitKbButton.x + exitKbButton.w/2, exitKbButton.y + exitKbButton.h/2, 0, 0, "Exit", mainFontMenu, "", "", {0, 0, 0})
 
     --parameters du joueur (en bas à droite)
@@ -288,7 +289,7 @@ function Hud.setPlayer()
 end
 
 function Hud.setOptions()
-    local mainFontMenu = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 40)
+    local mainFontMenu = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 20)
     love.graphics.setFont(mainFontMenu)
 
     local screenWidth = love.graphics.getWidth()
@@ -296,23 +297,44 @@ function Hud.setOptions()
 
     local group = Group:new()
 
-    local upKbButton = KbButton:new(0, screenHeight/2 - 2*7*16) --16px * (zoom+espace) * decalage
-        upKbButton:setImages(love.graphics.newImage("sprites/hud/button_white_default.png"), love.graphics.newImage("sprites/hud/button_white_pressed.png"), 6)
-        upKbButton.x = screenWidth/2 - 3*upKbButton.w --2*inventory.w pour que le bouton soit centré (*4 pour le zoom et /2 pour le décalage)
-        upKbButton:modifySelected()
-        local upText = Text:new(upKbButton.x + upKbButton.w/2, upKbButton.y + upKbButton.h/2, 0, 0, "Up", mainFontMenu, "", "", {0, 0, 0})
+    local xLeft = screenWidth / 2 - 300
+    local xRight = screenWidth / 2 + 100
+    local coeffX, coeffW = 1.05, 3
+    local imgZoom = 4
 
-    local menuKbButton = KbButton:new(upKbButton.x, screenHeight/2 + 1*7*16)
-        menuKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
-        local menuText = Text:new(menuKbButton.x + menuKbButton.w/2, menuKbButton.y + menuKbButton.h/2, 0, 0, "Menu", mainFontMenu, "", "", {0, 0, 0})
+    -- G_soundOn = true
+    -- G_soundEffectsOn = true
+    local soundText = TextButton:new(xLeft, screenHeight/2 - 3*(imgZoom+1)*16, 0, 0, "Sound", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        soundText:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"), imgZoom)
+        local soundTextButton = TextButton:new(xRight, soundText.y, nil, nil, "on", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        soundTextButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"), imgZoom)
+        soundTextButton:modifySelected()
     
+    local soundEffectsText = TextButton:new(xLeft, screenHeight/2 - 2*(imgZoom+1)*16, 0, 0, "Sound\nEffects", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW, coeffW-1)--car sur 2 lignes
+        soundEffectsText:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"), imgZoom)
+        local soundEffectsTextButton = TextButton:new(xRight, soundEffectsText.y, nil, nil, "on", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        soundEffectsTextButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"), imgZoom)
 
-    group:addElement(upKbButton, "upKbButton")
+    local upText = TextButton:new(xLeft, screenHeight/2 - 1*(imgZoom+1)*16, 0, 0, "Up", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        upText:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"), imgZoom)
+        local upTextButton = TextButton:new(xRight, upText.y, nil, nil, "on", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        upTextButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"), imgZoom)
+
+
+    local menuTextButton = TextButton:new(0, screenHeight/2 + 1*(imgZoom+1)*16, 0, 0, "Menu", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        menuTextButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),imgZoom)
+        menuTextButton.x = screenWidth/2 - 3*menuTextButton.w --centré
+    
+    group:addElement(soundText, "soundText")
+    group:addElement(soundTextButton, "soundTextButton")
+
+    group:addElement(soundEffectsText, "soundEffectsText")
+    group:addElement(soundEffectsTextButton, "soundEffectsTextButton")
+
     group:addElement(upText, "upText")
+    group:addElement(upTextButton, "upTextButton")
 
-    group:addElement(menuKbButton, "menuKbButton")
-    group:addElement(menuText, "menuText")
-
+    group:addElement(menuTextButton, "menuTextButton")
 
     return group
 end
@@ -586,7 +608,9 @@ function Hud:keypressed(k)
         self:keypressedParameter(k)
     elseif self.mainMenu.visible then
         self:keypressedMainMenu(k)
-    elseif k == "return" and (self.optionsMenu.visible or self.leader.visible or self.credits.visible or self.victory.visible or self.defeat.visible) then
+    elseif self.optionsMenu.visible then
+        self:keypressedOptions(k)
+    elseif k == "return" and (self.leader.visible or self.credits.visible or self.victory.visible or self.defeat.visible) then
         for _, value in pairs(self) do
             value:setVisible(false)
         end
@@ -724,6 +748,65 @@ function Hud:keypressedParameter(k)
 
         elseif self.parameter.elements["menuKbButton"]:getSelected() then
             self.parameter:setVisible(false)
+            self.mainMenu:setVisible(true)
+        end
+    end
+end
+
+
+function Hud:keypressedOptions(k)
+    if k == "up" then
+        if self.optionsMenu.elements["soundTextButton"]:getSelected() then
+            self.optionsMenu.elements["soundTextButton"]:modifySelected()
+            self.optionsMenu.elements["menuTextButton"]:modifySelected()
+
+        elseif self.optionsMenu.elements["soundEffectsTextButton"]:getSelected() then
+            self.optionsMenu.elements["soundEffectsTextButton"]:modifySelected()
+            self.optionsMenu.elements["soundTextButton"]:modifySelected()
+        
+        elseif self.optionsMenu.elements["upTextButton"]:getSelected() then
+            self.optionsMenu.elements["upTextButton"]:modifySelected()
+            self.optionsMenu.elements["soundEffectsTextButton"]:modifySelected()
+
+        elseif self.optionsMenu.elements["menuTextButton"]:getSelected() then
+            self.optionsMenu.elements["menuTextButton"]:modifySelected()
+            self.optionsMenu.elements["upTextButton"]:modifySelected()
+        end
+
+    elseif k == "down" then
+        if self.optionsMenu.elements["soundTextButton"]:getSelected() then
+            self.optionsMenu.elements["soundTextButton"]:modifySelected()
+            self.optionsMenu.elements["soundEffectsTextButton"]:modifySelected()
+        
+        elseif self.optionsMenu.elements["soundEffectsTextButton"]:getSelected() then
+            self.optionsMenu.elements["soundEffectsTextButton"]:modifySelected()
+            self.optionsMenu.elements["upTextButton"]:modifySelected()
+        
+        elseif self.optionsMenu.elements["upTextButton"]:getSelected() then
+            self.optionsMenu.elements["upTextButton"]:modifySelected()
+            self.optionsMenu.elements["menuTextButton"]:modifySelected()
+        
+        elseif self.optionsMenu.elements["menuTextButton"]:getSelected() then
+            self.optionsMenu.elements["menuTextButton"]:modifySelected()
+            self.optionsMenu.elements["soundTextButton"]:modifySelected()
+        end
+
+    elseif k == "return" then
+        -- G_soundOn = true
+        -- G_soundEffectsOn = true
+        if self.optionsMenu.elements["soundTextButton"]:getSelected() then
+            G_soundOn = not G_soundOn
+            self.optionsMenu.elements["soundTextButton"].text = G_soundOn and "On" or "Off"
+        
+        elseif self.optionsMenu.elements["soundEffectsTextButton"]:getSelected() then
+            G_soundEffectsOn = not G_soundEffectsOn
+            self.optionsMenu.elements["soundEffectsTextButton"].text = G_soundEffectsOn and "On" or "Off"
+        
+        elseif self.optionsMenu.elements["upTextButton"]:getSelected() then
+            
+
+        elseif self.optionsMenu.elements["menuTextButton"]:getSelected() then
+            self.optionsMenu:setVisible(false)
             self.mainMenu:setVisible(true)
         end
     end

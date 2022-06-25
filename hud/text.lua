@@ -4,7 +4,7 @@ local Text = {}
 
 
 -- Classe fille Text qui hérite de Panel
-function Text:new(pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pColor, pNotBackground, pCoeffX, pCoeffW)
+function Text:new(pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pColor, pNotBackground, pCoeffX, pCoeffW, pCoeffH)
     self.__index = self
     setmetatable(self, {__index = Panel}) --heritage
 
@@ -20,6 +20,7 @@ function Text:new(pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pColor, pNotBa
     myText.vAlign = pVAlign
     myText.coeffX = pCoeffX or 1
     myText.coeffW = pCoeffW or 1
+    myText.coeffH = pCoeffH or pCoeffW or 1
     myText.color = pColor
     myText.speedTimer = nil
     -- si lifespan est négatif, il est permanent, sinon il est temporaire
@@ -82,14 +83,18 @@ function Text:draw()
         x = self.coeffX*x + ((self.w*self.coeffW - self.textW) / 2)
     end
     if self.vAlign == "center" then
-        y = y + ((self.h*self.coeffW - self.textH) / 2)
+        y = y + ((self.h*self.coeffH - self.textH) / 2)
     end
     -- print(self.x .. " " .. x .. " " .. self.w .. " " .. self.textW)
     love.graphics.print(self.text, x, y)
   end
 
-  function Text:edit(pString)
+  function Text:setText(pString)
     self.text =pString
+  end
+
+  function Text:edit(pString) --old function (retrocompatility)
+    self:setText(pString)
   end
   
   function Text:setColor(pColor)
