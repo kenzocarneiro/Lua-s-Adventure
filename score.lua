@@ -4,6 +4,8 @@
 -- --- @field private score number
 --- @field public addScore fun(context: string, value: number|nil) Function to add points to the score depending on the context.
 --- @field public getScore fun() Function to get the score.
+-- --- @field public saveScore fun() Function to save the score.
+-- --- @field public loadScore fun() Function to load the score.
 
 --- Constructor of Score.
 --- @return Score
@@ -48,6 +50,28 @@ local function newScore()
         return self.score
     end
 
+    local function saveScore()
+        local file = io.open("score.save", "wb")
+        if not file then
+            return false
+        else
+            file:write(self.score)
+            file:close()
+            return true
+        end
+    end
+
+    local function loadScore()
+        local file = io.open("score.save", "rb")
+        if not file then
+            return false
+        else
+            self.score = file:read()
+            print(self.score)
+            file:close()
+            return true
+        end
+    end
 
     local originalScore = {getScore=getScore, addScore=addScore}
 
@@ -75,5 +99,9 @@ end
 -- s.addScore = 100
 -- print(s.addScore)
 -- print(s.getScore)
+-- local s2 = newScore()
+-- s2.addScore("killedTroll")
+-- s2.saveScore()
+-- s2.loadScore()
 
 return newScore
