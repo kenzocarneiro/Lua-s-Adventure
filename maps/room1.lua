@@ -66,7 +66,7 @@ local healthPotion = Consumable:new()
 healthPotion:init("health", 1, "potion of heatlh", Vector:new(30, 150), redPotionSc)
 
 local damagePotion = Consumable:new()
-damagePotion:init("damage", 1, "potion of health", Vector:new(30, 50), yellowPotionSc)
+damagePotion:init("damage", 1, "potion of damage", Vector:new(30, 50), yellowPotionSc)
 
 local goldCoin = Coin:new()
 goldCoin:init(3, "coin of gold", Vector:new(200, 20), coinSc)
@@ -84,10 +84,13 @@ local gold_staff = Weapon:new()
 gold_staff:init(10, "You achieved capitalism", Vector:new(250, 40), gold_staff_sc, gold_staffHF)
 
 local troll = Monster:new()
-troll:init(20, {{1, gold_staff}}, 80, "advanced", 0.3, "epee", Vector:new(70, 80), troll_sc, trollHF)
+troll:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {0.5, "simple_staff", simple_staff_sc, simple_staffHF}, 
+{0.8, "coin", coinSc}}, 
+"troll", 80, "advanced", 0.3, "epee", Vector:new(70, 80), troll_sc, trollHF)
 
 local rhino = Monster:new()
-rhino:init(10, {}, 50, "simple", 0.5, "epee", Vector:new(150, 150), rhino_sc, rhinoHF)
+rhino:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {1, "healthPotion", redPotionSc}}, 
+"rhino", 50, "simple", 0.5, "epee", Vector:new(150, 150), rhino_sc, rhinoHF)
 
 return {
   version = "1.5",

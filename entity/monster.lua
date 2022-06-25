@@ -22,11 +22,13 @@ function Monster:new() return Entity.new(self) end
 --- @param pos Vector
 --- @param spriteCollection SpriteCollection
 --- @param hitboxFactory HitboxFactory
-function Monster:init(maxHealth, lootTable, aggroRadius, typeOfMove, speed, weapon, pos, spriteCollection, hitboxFactory)
+function Monster:init(lootTable, name, aggroRadius, typeOfMove, speed, weapon, pos, spriteCollection, hitboxFactory)
+    self.name = name
+    self.aggroRadius = aggroRadius or 0
+    self.typeOfMove = typeOfMove or "simple"
+
     self.goal = nil
     self.direction = nil
-    self.typeOfMove = typeOfMove or "simple"
-    self.aggroRadius = aggroRadius or 0
     self.radiusDisplay = false
 
     self.lootTable = LootTable:new()
