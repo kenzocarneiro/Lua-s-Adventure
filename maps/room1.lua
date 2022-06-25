@@ -12,39 +12,39 @@
 -- local firePillar = Element:new()
 --     firePillar:init(Vector:new(150,150), fire_pillar_sc, fire_pillar)
 
-local d = require("data")
+local D = require("data")
 
 local speedPotion = Consumable:new()
-speedPotion:init("speed", 0.5, "potion of speed", Vector:new(250, 150), d.bluePotionSc)
+speedPotion:init("speed", 0.5, "potion of speed", Vector:new(250, 150), D.bluePotionSc)
 local healthPotion = Consumable:new()
-healthPotion:init("health", 1, "potion of heatlh", Vector:new(30, 150), d.redPotionSc)
+healthPotion:init("health", 1, "potion of heatlh", Vector:new(30, 150), D.redPotionSc)
 
 local damagePotion = Consumable:new()
-damagePotion:init("damage", 1, "potion of damage", Vector:new(30, 50), d.yellowPotionSc)
+damagePotion:init("damage", 1, "potion of damage", Vector:new(30, 50), D.yellowPotionSc)
 
 local goldCoin = Coin:new()
-goldCoin:init(3, "coin of gold", Vector:new(200, 20), d.coinSc)
+goldCoin:init(3, "coin of gold", Vector:new(200, 20), D.coinSc)
 
 local simple_staff = Weapon:new()
-simple_staff:init(1, "The simple staff", Vector:new(90, 70), d.simple_staff_sc, d.simple_staffHF)
+simple_staff:init(1, "The simple staff", Vector:new(90, 70), D.simple_staff_sc, D.simple_staffHF)
 
 local cool_staff = Weapon:new()
-cool_staff:init(2, "The cooler staff", Vector:new(200, 90), d.cool_staff_sc, d.cool_staffHF)
+cool_staff:init(2, "The cooler staff", Vector:new(200, 90), D.cool_staff_sc, D.cool_staffHF)
 
 local power_staff = Weapon:new()
-power_staff:init(5, "The powerful staff", Vector:new(80, 40), d.power_staff_sc, d.power_staffHF)
+power_staff:init(5, "The powerful staff", Vector:new(80, 40), D.power_staff_sc, D.power_staffHF)
 
 local gold_staff = Weapon:new()
-gold_staff:init(10, "You achieved capitalism", Vector:new(250, 40), d.gold_staff_sc, d.gold_staffHF)
+gold_staff:init(10, "You achieved capitalism", Vector:new(250, 40), D.gold_staff_sc, D.gold_staffHF)
 
 local troll = Monster:new()
-troll:init({{0.1, "gold_staff", d.gold_staff_sc, d.gold_staffHF}, {0.5, "simple_staff", d.simple_staff_sc, d.simple_staffHF},
-{0.8, "coin", d.coinSc}},
-"troll", 80, "advanced", 0.3, "epee", Vector:new(70, 80), d.troll_sc, d.trollHF)
+troll:init({{0.1, "gold_staff", D.gold_staff_sc, D.gold_staffHF}, {0.5, "simple_staff", D.simple_staff_sc, D.simple_staffHF},
+{0.8, "coin", D.coinSc}},
+"troll", 80, "advanced", 0.3, "epee", Vector:new(70, 80), D.troll_sc, D.trollHF)
 
 local rhino = Monster:new()
-rhino:init({{0.1, "gold_staff", d.gold_staff_sc, d.gold_staffHF}, {1, "healthPotion", d.redPotionSc}},
-"rhino", 50, "simple", 0.5, "epee", Vector:new(150, 150), d.rhino_sc, d.rhinoHF)
+rhino:init({{0.1, "gold_staff", D.gold_staff_sc, D.gold_staffHF}, {1, "healthPotion", D.redPotionSc}},
+"rhino", 50, "simple", 0.5, "epee", Vector:new(150, 150), D.rhino_sc, D.rhinoHF)
 
 return {
   version = "1.5",
