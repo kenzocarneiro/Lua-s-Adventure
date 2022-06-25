@@ -501,7 +501,7 @@ function Hud.setVictory()
     local group = Group:new()
 
     local imgPanel = Panel:new(0, 0) --16px * (zoom+espace) * decalage
-        imgPanel:setImage(love.graphics.newImage("sprites/hud/Victory2.png"), 0.8)
+        imgPanel:setImage(love.graphics.newImage("sprites/hud/Victory2.png"), 0.87)
     
     local menuKbButton = KbButton:new(imgPanel.x, screenHeight/2 + 2*7*16)
         menuKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
@@ -526,7 +526,7 @@ function Hud.setDefeat()
     local group = Group:new()
 
     local imgPanel = Panel:new(0, 0) --16px * (zoom+espace) * decalage
-        imgPanel:setImage(love.graphics.newImage("sprites/hud/defeat.jpg"), 1)
+        imgPanel:setImage(love.graphics.newImage("sprites/hud/defeat.jpg"), 1.6)
     
     local menuKbButton = KbButton:new(imgPanel.x, screenHeight/2 + 2*7*16)
         menuKbButton:setImages(love.graphics.newImage("sprites/hud/button_blue_default.png"), love.graphics.newImage("sprites/hud/button_blue_pressed.png"),6)
