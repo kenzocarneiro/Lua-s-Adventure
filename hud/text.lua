@@ -4,11 +4,11 @@ local Text = {}
 
 
 -- Classe fille Text qui hérite de Panel
-function Text:new(pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pColor)
+function Text:new(pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pColor, pNotBackground, pCoeffX, pCoeffW)
     self.__index = self
     setmetatable(self, {__index = Panel}) --heritage
 
-    local myText = Panel.new(self, pX, pY, pW, pH) --appel constructeur de la classe mère
+    local myText = Panel.new(self, pX, pY, pW, pH, nil, pNotBackground) --appel constructeur de la classe mère
     setmetatable(myText, self)
     
     -- initialisation
@@ -18,6 +18,8 @@ function Text:new(pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pColor)
     myText.textH = pFont:getHeight(pText)
     myText.hAlign = pHAlign
     myText.vAlign = pVAlign
+    myText.coeffX = pCoeffX or 1
+    myText.coeffW = pCoeffW or 1
     myText.color = pColor
     myText.speedTimer = nil
     -- si lifespan est négatif, il est permanent, sinon il est temporaire
@@ -77,11 +79,12 @@ function Text:draw()
     local x = self.x
     local y = self.y
     if self.hAlign == "center" then
-        x = x + ((self.w - self.textW) / 2)
+        x = self.coeffX*x + ((self.w*self.coeffW - self.textW) / 2)
     end
     if self.vAlign == "center" then
-        y = y + ((self.h - self.textH) / 2)
+        y = y + ((self.h*self.coeffW - self.textH) / 2)
     end
+    -- print(self.x .. " " .. x .. " " .. self.w .. " " .. self.textW)
     love.graphics.print(self.text, x, y)
   end
 
