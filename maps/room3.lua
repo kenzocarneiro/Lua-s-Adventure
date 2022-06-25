@@ -1,59 +1,17 @@
-  
---MONSTERS
-local troll_sc = SpriteCollection:new("troll")
-troll_sc:init({Sprite:new("img/troll_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6)),
-    Sprite:new("img/troll_run-Sheet.png", true, "run", 16, 16, Vector:new(7, 6), false, {0.12, 0.12, 0.12, 0.12})})
 
-local rhino_sc = SpriteCollection:new("rhino")
-rhino_sc:init({Sprite:new("img/rhino_idle-Sheet.png", true, "idle", 16, 16, Vector:new(6, 13)),
-    Sprite:new("img/rhino_run-Sheet.png", true, "run", 16, 16, Vector:new(6, 13))})
-
-
-local trollHF = HitboxFactory:new(
-    {name="hitbox", layers={enemy=true}, width=5, height=11, offset=Vector:new(-2, -2)},
-    {name="hurtbox", layers={player=true}, width=7, height=13, offset=Vector:new(-3, -3)}
-)
-
-local rhinoHF = HitboxFactory:new(
-    {name="hitbox", layers={enemy=true}, width=4, height=7, offset=Vector:new(-2, -6)},
-    {name="hurtbox", layers={player=true}, width=6, height=9, offset=Vector:new(-3, -7)}
-)
-
---STAFFS
-local cool_staff_sc = SpriteCollection:new("item")
-cool_staff_sc:init({Sprite:new("img/magic_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
-
-local cool_staffHF = HitboxFactory:new(
-    {"hitbox", {item=true}, 3, 14, Vector:new(-5, -5)}
-)
-
---POTIONS
-local redPotionSc = SpriteCollection:new("consumable")
-redPotionSc:init({Sprite:new("img/potion_red.png", false, "idle", 16, 16, Vector:new(7, 6))})
-
-local coinSc = SpriteCollection:new("coin")
-coinSc:init({Sprite:new("img/coin.png", false, "idle", 16, 16, Vector:new(7, 6))})
-
-local yellowPotionSc = SpriteCollection:new("consumable")
-yellowPotionSc:init({Sprite:new("img/potion_yellow.png", false, "idle", 16, 16, Vector:new(7, 6))})
-
-local damagePotion = Consumable:new()
-damagePotion:init("damage", 1, "potion of damage", Vector:new(48, 24), yellowPotionSc)
-
-
-
+local d = require("data")
 
 local goldCoin = Coin:new()
-goldCoin:init(3, "coin of gold", Vector:new(32, 134), coinSc)
+goldCoin:init(3, "coin of gold", Vector:new(32, 134), d.coinSc)
 
 local goldCoin2 = Coin:new()
-goldCoin2:init(3, "coin of gold", Vector:new(260, 140), coinSc)
+goldCoin2:init(3, "coin of gold", Vector:new(260, 140), d.coinSc)
 
 local goldCoin3 = Coin:new()
-goldCoin3:init(3, "coin of gold", Vector:new(280, 140), coinSc)
+goldCoin3:init(3, "coin of gold", Vector:new(280, 140), d.coinSc)
 
 local cool_staff = Weapon:new()
-cool_staff:init(2, "The cooler staff", Vector:new(176, 104), cool_staff_sc, cool_staffHF)
+cool_staff:init(2, "The cooler staff", Vector:new(176, 104), d.cool_staff_sc, d.cool_staffHF)
 
 
 local simple_staff_sc = SpriteCollection:new("item")
@@ -79,36 +37,36 @@ local power_staffHF = HitboxFactory:new(
 
 
 local troll = Monster:new()
-troll:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {0.5, "simple_staff", simple_staff_sc, simple_staffHF}, 
-{0.8, "coin", coinSc}}, 
-"troll", 80, "advanced", 0.3, "epee", Vector:new(120, 24), troll_sc, trollHF)
+troll:init({{0.1, "gold_staff", d.gold_staff_sc, d.gold_staffHF}, {0.5, "simple_staff", d.simple_staff_sc, d.simple_staffHF},
+{0.8, "coin", d.coinSc}},
+"troll", 80, "advanced", 0.3, "epee", Vector:new(120, 24), d.troll_sc, d.trollHF)
 
 local troll2 = Monster:new()
-troll2:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {0.5, "simple_staff", simple_staff_sc, simple_staffHF}, 
-{0.8, "coin", coinSc}}, 
-"troll", 80, "advanced", 0.3, "epee", Vector:new(120, 145), troll_sc, trollHF)
+troll2:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {0.5, "simple_staff", simple_staff_sc, simple_staffHF},
+{0.8, "coin", d.coinSc}},
+"troll", 80, "advanced", 0.3, "epee", Vector:new(120, 145), d.troll_sc, d.trollHF)
 
 local troll3 = Monster:new()
-troll3:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {0.5, "simple_staff", simple_staff_sc, simple_staffHF}, 
-{0.8, "coin", coinSc}}, 
-"troll", 80, "advanced", 0.3, "epee", Vector:new(184, 145), troll_sc, trollHF)
+troll3:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {0.5, "simple_staff", simple_staff_sc, simple_staffHF},
+{0.8, "coin", d.coinSc}},
+"troll", 80, "advanced", 0.3, "epee", Vector:new(184, 145), d.troll_sc, d.trollHF)
 
 local troll4 = Monster:new()
-troll4:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {0.5, "simple_staff", simple_staff_sc, simple_staffHF}, 
-{0.8, "coin", coinSc}}, 
-"troll", 80, "advanced", 0.3, "epee", Vector:new(184, 24), troll_sc, trollHF)
+troll4:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {0.5, "simple_staff", simple_staff_sc, simple_staffHF},
+{0.8, "coin", d.coinSc}},
+"troll", 80, "advanced", 0.3, "epee", Vector:new(184, 24), d.troll_sc, d.trollHF)
 
 local rhino = Monster:new()
-rhino:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {1, "healthPotion", redPotionSc}}, 
-"rhino", 50, "simple", 0.5, "epee", Vector:new(56, 34), rhino_sc, rhinoHF)
+rhino:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {1, "healthPotion", d.redPotionSc}},
+"rhino", 50, "simple", 0.5, "epee", Vector:new(56, 34), d.rhino_sc, d.rhinoHF)
 
 local rhino3 = Monster:new()
-rhino3:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {1, "healthPotion", redPotionSc}}, 
-"rhino", 50, "simple", 0.5, "epee", Vector:new(40, 34), rhino_sc, rhinoHF)
+rhino3:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {1, "healthPotion", d.redPotionSc}},
+"rhino", 50, "simple", 0.5, "epee", Vector:new(40, 34), d.rhino_sc, d.rhinoHF)
 
 local rhino2 = Monster:new()
-rhino2:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {1, "healthPotion", redPotionSc}}, 
-"rhino", 50, "simple", 0.5, "epee", Vector:new(264, 80), rhino_sc, rhinoHF)
+rhino2:init({{0.1, "gold_staff", gold_staff_sc, gold_staffHF}, {1, "healthPotion", d.redPotionSc}},
+"rhino", 50, "simple", 0.5, "epee", Vector:new(264, 80), d.rhino_sc, d.rhinoHF)
 
 
 return {

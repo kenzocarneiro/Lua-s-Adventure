@@ -5,11 +5,6 @@ if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
 rawset = nil -- Disable rawset
 rawget = nil -- Disable rawget
 
--- Pour notre magnifique HUD
-local Hud = require("hud/hud")
-G_eltCounter = 0
-
-
 local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
 love.graphics.setFont(mainFont)
 
@@ -19,22 +14,15 @@ function love.load()
     math.randomseed(os.time())
     love.graphics.setBackgroundColor(0, 0, 0)
     love.graphics.setDefaultFilter("nearest", "nearest")
+    -- Pour notre magnifique HUD
+    local Hud = require("hud/hud")
+    G_eltCounter = 0
+
     local Player = require("entity/player")
-    local Monster = require("entity/monster")
     local Room = require("Room")
-    local Item = require("item")
     local Vector = require("vector")
-    local Sprite = require("sprite/sprite")
-    local SpriteCollection = require("sprite/spriteC")
-    local Consumable = require("consumable")
-    local Coin = require("coin")
-    local Weapon = require("weapon")
-    local HitboxFactory = require("hitboxF")
+    local Data = require("data")
 
-    G_fireballSC = SpriteCollection:new("fireball")
-    G_fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
-
-    G_fireballHF = HitboxFactory:new({"hurtbox", {enemy=true}, 3, 3, Vector:new(-2, -2)})
     G_blackoutOnPlayer = false
     G_blackoutCurrentFrame = 250
     G_blackoutSFX = false
@@ -65,24 +53,11 @@ function love.load()
 
     G_nb_rooms = 3
 
-    --initialize sprite collections for monster player and item
-    local player_sc = SpriteCollection:new("player")
-    player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
-        Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9), false),
-        Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9)),
-        Sprite:new("img/wizard_special-Sheet.png", true, "special", 18, 18, Vector:new(7, 9), false, {0.5, 0.05, 0.25, 0.25, 0.25, 0.25, 0.06, 0.1, 0.1, 0.1})
-    })
-
-    local playerHF = HitboxFactory:new(
-        -- {"hurtbox", {enemy=true}, 5, 5, Vector:new(-5, -5)},
-        {"hitbox", {player=true}, 4, 10, Vector:new(-2, -2)}
-    )
-
     -- G_player because player is a global variable
     G_player = Player:new()
     -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
     -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
-    G_player:init({}, 15, 1, "epee", Vector:new(152,80), player_sc, playerHF)
+    G_player:init({}, 15, 1, "epee", Vector:new(152,80), Data.player_sc, Data.playerHF)
 
     G_hud = Hud:new()
     -- print(G_hud.player[14]) debug A ne pas supprimer

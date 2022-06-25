@@ -1,6 +1,7 @@
-Entity = require("entity/entity")
-Projectile = require("entity/projectile")
-Score = require("score")
+local Entity = require("entity/entity")
+local Projectile = require("entity/projectile")
+local Score = require("score")
+local Data = require("data")
 
 --- Class representing the Player.
 --- @class Player:Entity Player is a subclass of Entity.
@@ -104,9 +105,9 @@ function Player:update(dt)
             local direction = Vector:new(self.flipH, 0)
 
             if self.flipH == 1 then
-                p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+                p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), Data.fireballSC, Data.fireballHF)
             elseif self.flipH == -1 then
-                p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
+                p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), Data.fireballSC, Data.fireballHF)
             end
 
         elseif animationFinished then
@@ -254,9 +255,9 @@ function Player:castSpell()
         for i=0, 360 - direction_step, direction_step do
             p = Projectile:new()
             if self.flipH == 1 then
-                p:init(i, 5, "bullet", self.pos + Vector:new(4, -2), G_fireballSC, G_fireballHF)
+                p:init(i, 5, "bullet", self.pos + Vector:new(4, -2), Data.fireballSC, Data.fireballHF)
             elseif self.flipH == -1 then
-                p:init(i, 5, "bullet", self.pos + Vector:new(-4, -2), G_fireballSC, G_fireballHF)
+                p:init(i, 5, "bullet", self.pos + Vector:new(-4, -2), Data.fireballSC, Data.fireballHF)
             end
         end
     end
