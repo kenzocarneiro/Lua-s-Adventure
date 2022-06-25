@@ -81,7 +81,6 @@ function love.load()
     G_player:init({}, 15, 1, "epee", Vector:new((G_room.entrance["col"]+0.5)*G_room.tileSize, (G_room.entrance["row"]-0.5)*G_room.tileSize), player_sc, playerHF)
 
     G_hud = Hud:new()
-    -- print(G_hud.player[14]) debug A ne pas supprimer
 end
 
 function love.keypressed(k)
@@ -204,6 +203,8 @@ local function killEntities()
         elseif tostring(v) == "Weapon" then deleteFromList(G_itemList, v)
         elseif tostring(v) == "Item" then deleteFromList(G_itemList, v)
         elseif tostring(v) == "Player" then delete(v)
+            G_hud.player:setVisible(false)
+            G_hud.defeat:setVisible(true)
         else print("Unknown Element: " .. tostring(v)) end
     end
     G_deadElements = {}
