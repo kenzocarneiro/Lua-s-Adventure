@@ -180,8 +180,10 @@ local function killEntities()
         elseif tostring(v) == "Weapon" then deleteFromList(G_itemList, v)
         elseif tostring(v) == "Item" then deleteFromList(G_itemList, v)
         elseif tostring(v) == "Player" then delete(v)
+            G_player:changeState("idle")
             G_hud.player:setVisible(false)
             G_hud.defeat:setVisible(true)
+            G_room.music:pause()
         else print("Unknown Element: " .. tostring(v)) end
     end
     G_deadElements = {}
@@ -367,6 +369,9 @@ function G_resetGVariable(roomIndex)
     G_projectiles = {}
     G_room = nil
     G_deltaT = 0
+    G_blackoutOnPlayer = false
+    G_blackoutCurrentFrame = 250
+
     -- G_hud.player:setVisible(true)
     if roomIndex == 0 then -- new game
         G_hitboxes = {}

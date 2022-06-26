@@ -8,7 +8,7 @@ function RoomObjects.createObjects(roomNbr)
         local cool_staff = Weapon:new()
         cool_staff:init(2, "The cooler staff", Vector:new(200, 80), D.cool_staffSC, D.cool_staffHF)
 
-        
+
 
     --- Room 1 ---
     elseif roomNbr == 1 then

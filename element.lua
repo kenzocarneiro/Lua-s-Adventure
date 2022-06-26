@@ -15,7 +15,7 @@ Timer = require("timer")
 --- @field flipH number
 --- @field flipV number
 --- @field angle number
-Element = {currentHealth = 1, damage = 1, state = "idle", invulnTimer=0.5}
+Element = {currentHealth = 1, damage = 1, state = "idle", invulnTime=0.5}
 
 --- Constructor of Element.
 --- @return Element
@@ -49,7 +49,8 @@ function Element:init(pos, spriteCollection, hitboxFactory, flipH, flipV, angle)
     self.flipH = flipH or 1
     self.flipV = flipV or 1
     self.angle = angle or 0
-    self.invulnTimer = Timer:new(self.invulnTimer)
+
+    self.invulnTimer = Timer:new(self.invulnTime)
     self.invulnAnimTimer = Timer:new()
     self.invulnerable = false
 
