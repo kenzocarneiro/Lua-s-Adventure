@@ -5,7 +5,7 @@ if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
 rawset = nil -- Disable rawset
 rawget = nil -- Disable rawget
 
-local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
+local mainFont = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 15)
 love.graphics.setFont(mainFont)
 
 

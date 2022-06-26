@@ -25,7 +25,7 @@
 --   print("Switch is:"..pState)
 -- end
 
--- local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
+-- local mainFont = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 15)
 -- love.graphics.setFont(mainFont)
 -- local Checkbox = require("hud/checkbox")
 
@@ -39,11 +39,11 @@
 --     -- test perso
 --     -- tests du HUD
 --     G_healthHeart = Panel:new(0, 0)
---     G_healthHeart:setImage(love.graphics.newImage("sprites/hud/health.png"), 0.1)
+--     G_healthHeart:setImage(love.graphics.newImage("img/hud/health.png"), 0.1)
 --     G_healthHeart:setEvent("hover", onPanelHover)
 
 --     G_panelTest1 = Panel:new(10, 50)
---     G_panelTest1:setImage(love.graphics.newImage("sprites/hud/panel1.png"), 0.1)
+--     G_panelTest1:setImage(love.graphics.newImage("img/hud/panel1.png"), 0.1)
 --     G_title1 = Text:new(G_panelTest1.x + 35, G_panelTest1.y + 45, 0, 0,
 --     "Shield Generator", mainFont, "", "", {157, 164, 174})
 --     G_healthBar = Bar:new(10,2, 41, 7, 10, nil,{0,255,0})
@@ -59,37 +59,37 @@
 
 --   buttonYes = Button:new(500, 20, 100, 43,"Yes", mainFont, {151, 220, 250})
 --   buttonYes:setImages(
---     love.graphics.newImage("sprites/hud/button_default.png"),
---     love.graphics.newImage("sprites/hud/button_hover.png"),
---     love.graphics.newImage("sprites/hud/button_pressed.png")
+--     love.graphics.newImage("img/hud/button_default.png"),
+--     love.graphics.newImage("img/hud/button_hover.png"),
+--     love.graphics.newImage("img/hud/button_pressed.png")
 --     )
 
 --     buttonParam = Button:new(largeur - 64, hauteur - 64, 16, 16,"", mainFont, {151, 220, 250})
 --     buttonParam:setImages(
---       love.graphics.newImage("sprites/hud/gear2.jpg")
+--       love.graphics.newImage("img/hud/gear2.jpg")
 --       )
 
 --   buttonNo = myGUI.newButton(650, 20, 100, 43,"No", mainFont, {151, 220, 250})
 --   buttonNo:setImages(
---     love.graphics.newImage("sprites/hud/button_default.png"),
---     love.graphics.newImage("sprites/hud/button_hover.png"),
---     love.graphics.newImage("sprites/hud/button_pressed.png")
+--     love.graphics.newImage("img/hud/button_default.png"),
+--     love.graphics.newImage("img/hud/button_hover.png"),
+--     love.graphics.newImage("img/hud/button_pressed.png")
 --     )
 
 --   panelTest1 = Panel:new(10, 220, 300, 200)
---   panelTest1:setImage(love.graphics.newImage("sprites/hud/panel1.png"))
+--   panelTest1:setImage(love.graphics.newImage("img/hud/panel1.png"))
 --   panelTest1:setEvent("hover", onPanelHover)
 
 --   panelTest2 = Panel:new(350, 250)
---   panelTest2:setImage(love.graphics.newImage("sprites/hud/panel2.png"))
+--   panelTest2:setImage(love.graphics.newImage("img/hud/panel2.png"))
 
 --   textTest = Text:new(panelTest1.x+10, panelTest1.y,
 --                            300, 28, "HULL STATUS", mainFont, "", "center", {151, 220, 250})
 
 --   checkBoxTest1 = Checkbox:new(250, 30, 24, 24)
 --   checkBoxTest1:setImages(
---     love.graphics.newImage("sprites/hud/dotRed.png"),
---     love.graphics.newImage("sprites/hud/dotGreen.png")
+--     love.graphics.newImage("img/hud/dotRed.png"),
+--     love.graphics.newImage("img/hud/dotGreen.png")
 --   )
 --   -- checkBoxTest1:setEvent("pressed", onCheckboxSwitch)
 
@@ -98,8 +98,8 @@
 
 --   progressTest1 = Bar:new(panelTest1.x + 35, panelTest1.y + 68, 220, 26, 100, {50,50,50}, {250, 129, 50})
 
---   progressTest1:setImages(love.graphics.newImage("sprites/hud/progress_grey.png"),
---                          love.graphics.newImage("sprites/hud/progress_orange.png"))
+--   progressTest1:setImages(love.graphics.newImage("img/hud/progress_grey.png"),
+--                          love.graphics.newImage("img/hud/progress_orange.png"))
 
 
 --   title2 = Text:new(panelTest1.x + 35, panelTest1.y + 45 + 70, 0, 0,
@@ -107,8 +107,8 @@
 
 --   progressTest2 = Bar:new(panelTest1.x + 35, panelTest1.y + 68 + 70, 220, 26, 100, {50,50,50}, {250, 129, 50})
 
---   progressTest2:setImages(love.graphics.newImage("sprites/hud/progress_grey.png"),
---                          love.graphics.newImage("sprites/hud/progress_green.png"))
+--   progressTest2:setImages(love.graphics.newImage("img/hud/progress_grey.png"),
+--                          love.graphics.newImage("img/hud/progress_green.png"))
 
 --   progressTest2:setValue(0)
 
@@ -134,7 +134,7 @@
 --    G_groupTest:addElement(G_button)
 
 --     G_checkbox = Checkbox:new(30, 30, 10, 10)
---     G_checkbox:setImages(love.graphics.newImage("sprites/hud/dotGreen.png"), love.graphics.newImage("sprites/hud/dotRed.png"))
+--     G_checkbox:setImages(love.graphics.newImage("img/hud/dotGreen.png"), love.graphics.newImage("img/hud/dotRed.png"))
 
 --     G_groupTest = Group:new()
 --     G_health = Group:new()

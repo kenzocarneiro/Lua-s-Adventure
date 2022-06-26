@@ -1,7 +1,7 @@
 -- -- Elements interactibles
 -- local fire_pillar_sc = SpriteCollection:new("fire_pillar")
--- fire_pillar_sc:init({Sprite:new("sprites/hud/fire_pillar_off.png", true, "off", 16, 16, Vector:new(7, 6)),
---     Sprite:new("sprites/hud/fire_pillar_on.png", true, "on", 16, 16, Vector:new(7, 6), false, {0.12, 0.12, 0.12, 0.12})})
+-- fire_pillar_sc:init({Sprite:new("img/hud/fire_pillar_off.png", true, "off", 16, 16, Vector:new(7, 6)),
+--     Sprite:new("img/hud/fire_pillar_on.png", true, "on", 16, 16, Vector:new(7, 6), false, {0.12, 0.12, 0.12, 0.12})})
 
 --   local fire_pillar = HitboxFactory:new(
 --     {name="hitbox", layers={enemy=true}, width=5, height=11, offset=Vector:new(-2, -2)},
