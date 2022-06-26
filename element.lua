@@ -85,9 +85,10 @@ end
 --- @param customState string|nil to set manually which state is drawn
 function Element:draw(customState)
     local state = customState or self.state
-    if self.invulnWhite then love.graphics.setColor(255, 0, 0) end
+    local previous_r, previous_g, previous_b, previous_a = love.graphics.getColor()
+    if self.invulnWhite then love.graphics.setColor(255/255, 0, 0) end
     self.spriteCollection:draw(state, self.pos, self.spriteTimer:getCurrentFrame(), self.flipH, self.flipV, self.angle)
-    if self.invulnWhite then love.graphics.setColor(255, 255, 255) end
+    if self.invulnWhite then love.graphics.setColor(previous_r, previous_g, previous_b, previous_a) end
 end
 
 --- Change the Element state and its corresponding sprite
