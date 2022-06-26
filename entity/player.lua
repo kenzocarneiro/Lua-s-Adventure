@@ -94,7 +94,6 @@ function Player:update(dt)
     -- attack handling
     if #self.inventory > 0 then
         if self.state == "attack" then
-
             if currentFrame == 4 and not self.hasShoot then
                 if G_soundEffectsOn then
                     local sound = love.audio.newSource("sound/soundeffects/player_attack.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
@@ -115,24 +114,32 @@ function Player:update(dt)
                 self.state = "idle"
                 self.hasShoot = false
             end
+
+
         elseif self.state == "special" then
             G_blackoutCurrentFrame = 250 - (currentFrame - 1)*25
             if animationFinished then
                 self.state = "idle"
                 self.hasShoot = false
-            elseif G_gandalf and currentFrame == 1 and not G_blackoutSFX then
+            elseif currentFrame == 2 and not G_blackoutSFX then
                 if G_soundEffectsOn then
-                    local sound = love.audio.newSource("ysnp.mp3", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
-                    sound:setVolume(1)
+                    local sound
+                    if G_gandalf then
+                        sound = love.audio.newSource("ysnp.mp3", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+                        sound:setVolume(1)
+                    else
+                        sound = love.audio.newSource("sound/soundeffects/special_attack_cling.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+                        sound:setVolume(0.4)
+                    end
                     sound:play()
                 end
                 G_blackoutSFX = true
-            elseif currentFrame == 2 then -- Not 1 because when the animation is finished it is in frame 1
+            elseif currentFrame == 3 then -- Not 1 because when the animation is finished it is in frame 1
                 G_blackoutOnPlayer = true
                 G_blackoutSFX = false
             elseif currentFrame == 7 then
-                self.hasShoot = true
                 self:castSpell()
+                self.hasShoot = true
                 G_blackoutCurrentFrame = 250 - (currentFrame - 2)*25
             elseif currentFrame == 8 then
                 G_blackoutCurrentFrame = 250 - (currentFrame - 3)*25
@@ -279,7 +286,10 @@ function Player:consume()
 end
 
 function Player:castSpell()
-    if self.currentEnergy > 9.9 and #self.inventory > 0 then
+    if self.currentEnergy > 9.9 and #self.inventory > 0 and not self.hasShoot then
+        local sound=love.audio.newSource("sound/soundeffects/special_attack.wav","static")
+        sound:setVolume(0.5)
+        sound:play()
         self.currentEnergy = 0
         self.energyTimer = Timer:new(0.1)
         local p = {}

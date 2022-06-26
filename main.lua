@@ -180,6 +180,11 @@ local function killEntities()
         elseif tostring(v) == "Weapon" then deleteFromList(G_itemList, v)
         elseif tostring(v) == "Item" then deleteFromList(G_itemList, v)
         elseif tostring(v) == "Player" then delete(v)
+            if G_soundEffectsOn then
+                local sound=love.audio.newSource("sound/soundeffects/death.wav","static")
+                sound:setVolume(0.4)
+                sound:play()
+            end
             G_player:changeState("idle")
             G_hud.player:setVisible(false)
             G_hud.defeat:setVisible(true)
