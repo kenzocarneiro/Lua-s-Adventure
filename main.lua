@@ -383,8 +383,10 @@ function G_resetGVariable(roomIndex)
         G_room = Room:new(roomIndex, true)
         -- TODO: !!!!!!! reset player !!!!!!! -- health, hitbox, potions ...
         G_player:init({}, 15, 1, "epee", Vector:new(152,80), Data.playerSC, Data.playerHF)
+        G_player:changeState("idle")
     else
         G_hitboxes = {G_player.hitboxes["hitbox"]}
+        G_player:changeState("idle")
         G_room = Room:new(roomIndex)
     end
 end
