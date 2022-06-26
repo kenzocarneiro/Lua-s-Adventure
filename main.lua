@@ -308,21 +308,18 @@ function love.update(dt)
                 if G_room.number ~= 0 and G_hud.questTexts.elements["level_end"].enabled then
                     G_hud.questTexts.elements["level_end"]:setLifeSpan(4)
                 end
-                if G_player.pos.x > G_room.exit["col"]*G_room.tileSize and G_player.pos.x < (G_room.exit["col"]+1)*G_room.tileSize then
-                    if G_player.pos.y > G_room.exit["row"]*G_room.tileSize and G_player.pos.y < (G_room.exit["row"]+1)*G_room.tileSize then
-                        G_room.isFinished = true
-                        if G_deltaT == 0 then
-                            G_player.score.addScore("roomFinished", G_room.number)
-                            G_deltaT = love.timer.getTime()
-                            -- G_hud.player:setVisible(false)
-                            G_room.music:pause()
-                            if G_soundOn then
-                                local won = love.audio.newSource("sound/soundeffects/change_room.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
-                                won:setVolume(0.5)
-                                won:play()
-
-                            end
-
+                local exitPos = Vector:new(G_room.exit["col"], G_room.exit["row"])*G_room.tileSize
+                if ((G_player.pos.x-exitPos.x)^2 + (G_player.pos.y - exitPos.y)^2) <= G_room.tileSize^2 then
+                    G_room.isFinished = true
+                    if G_deltaT == 0 then
+                        G_player.score.addScore("roomFinished", G_room.number)
+                        G_deltaT = love.timer.getTime()
+                        -- G_hud.player:setVisible(false)
+                        G_room.music:pause()
+                        if G_soundOn then
+                            local won = love.audio.newSource("sound/soundeffects/change_room.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
+                            won:setVolume(0.5)
+                            won:play()
                         end
                     end
                 end
