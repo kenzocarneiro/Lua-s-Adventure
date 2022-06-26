@@ -6,9 +6,11 @@ local Field = require("tests/Pong/field")
 
 -- Load function (call one time)
 function Pong.load()
+    local screenWidth = love.graphics.getWidth()
+    local screenHeight = love.graphics.getHeight()
     G_racketLeft = Racket:new(90, 250)
-    G_racketRight = Racket:new(710, 250)
-    G_ball = Ball:new(400, 300)
+    G_racketRight = Racket:new(screenWidth-90, 250)
+    G_ball = Ball:new(screenWidth/2, screenHeight/2)
     G_field = Field:new(50, 50)
 end
 
@@ -43,7 +45,7 @@ function Pong.update(dt)
     end
 
     if G_ball:left() <= G_field:left() or G_ball:right() >= G_field:right() then
-        G_ball:place(400, 300)
+        G_ball:place(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
     end
 
 end
