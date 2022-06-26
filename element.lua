@@ -23,10 +23,6 @@ function Element:new()
     local e = {}
     setmetatable(e, self)
     self.__index = self
-
-    G_eltCounter = G_eltCounter + 1
-    e.id = G_eltCounter
-
     return e
 end
 
@@ -35,6 +31,9 @@ end
 --- @param spriteCollection SpriteCollection
 --- @param hitboxFactory HitboxFactory|nil
 function Element:init(pos, spriteCollection, hitboxFactory, flipH, flipV, angle)
+    G_eltCounter = G_eltCounter + 1
+    self.id = G_eltCounter
+
     self.pos = pos or Vector:new(0, 0)
 
     self.spriteCollection = spriteCollection

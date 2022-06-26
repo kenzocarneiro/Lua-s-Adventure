@@ -1,11 +1,3 @@
---addind everything we want on map (monsters and items)
-
-D = require("data")
-
---INITIALISATION OF MONSTERS AND ITEMS
--- local rhino = Monster:new()
--- rhino:init("rhino", 50, "simple", 0.5, 0.5, "epee", Vector:new(88, 40), D.rhino_sc, D.rhinoHF)
-
 return {
   version = "1.5",
   luaversion = "5.1",

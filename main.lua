@@ -19,7 +19,7 @@ function love.load()
     G_eltCounter = 0
 
     local Player = require("entity/player")
-    local Room = require("Room")
+    local Room = require("room")
     local Vector = require("vector")
     local Data = require("data")
 
@@ -44,14 +44,13 @@ function love.load()
     G_soundOn = true
     G_soundEffectsOn = true
 
-    G_room = Room:new(0)
-    G_room.objectsGrid[G_room.entrance["row"]][G_room.entrance["col"]].data = 0
+    G_room = Room:new(0, true)
     G_deltaT = 0
 
     --- @type Element[]
     G_deadElements = {}
 
-    G_nb_rooms = 3
+    G_nbRooms = 3
 
     -- G_player because player is a global variable
     G_player = Player:new()
@@ -328,7 +327,7 @@ function love.update(dt)
 
             if love.timer.getTime() - G_deltaT > 1 then
                 local index = G_room.number+1
-                if index > G_nb_rooms then
+                if index > G_nbRooms then
                     print("Victory")
                     G_hud.player:setVisible(false)
                     G_hud.victory:setVisible(true)
@@ -342,7 +341,7 @@ function love.update(dt)
 end
 
 function G_resetGVariable(roomIndex)
-    G_hitboxes = {G_player.hitboxes["hitbox"]}
+    local Data = require("data")
     G_hurtboxes = {}
     G_monsterList = {}
     G_itemList = {}
@@ -350,9 +349,14 @@ function G_resetGVariable(roomIndex)
     G_room = nil
     G_deltaT = 0
     -- G_hud.player:setVisible(true)
-    G_room = Room:new(roomIndex)
     if roomIndex == 0 then -- new game
-        -- !!!!!!! reset player !!!!!!! -- health, hitbox, potions ...
+        G_hitboxes = {}
+        G_room = Room:new(roomIndex, true)
+        -- TODO: !!!!!!! reset player !!!!!!! -- health, hitbox, potions ...
+        G_player:init({}, 15, 1, "epee", Vector:new(152,80), Data.player_sc, Data.playerHF)
+    else
+        G_hitboxes = {G_player.hitboxes["hitbox"]}
+        G_room = Room:new(roomIndex)
     end
 end
 

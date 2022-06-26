@@ -297,6 +297,7 @@ function Player:buffsUpdate(dt)
 end
 
 function Player:energyUpdate(dt)
+    -- TODO: Mettre une augmentation d'énergie plus faible
     if self.energyTimer and self.energyTimer:update(dt) then
         self.energyTimer = nil
         if self.currentEnergy < 9.9 then

@@ -1,4 +1,5 @@
 local Sprite = require("sprite/sprite")
+local RoomObjects = require("maps/roomObjects")
 
 --- Class representing the Room.
 --- @class Room
@@ -15,7 +16,8 @@ local Sprite = require("sprite/sprite")
 --- @field walls table<string, any>
 --- @field objectsGrid table<string, any>
 --- @field spawnCharacters boolean
-Room = {defaultLength = 40, defaultHeight = 30}
+--- @field createObjects fun(roomNbr:Room)
+Room = {defaultLength = 40, defaultHeight = 30, createObjects = RoomObjects.createObjects}
 
 local dungeon_tileset = Sprite:new("img/dungeon_topdown.png", true, "idle", 8, 8, Vector:new(0, 0), false)
 
@@ -26,7 +28,7 @@ local collision_tiles_list = {[1]="full", [2]="full", [3]="right", [4]="left", [
 --- Constructor of Room
 --- @param roomNbr number
 --- @return Room r
-function Room:new(roomNbr)
+function Room:new(roomNbr, noEntrance, entrance, exit)
     local r = {}
     setmetatable(r, self)
     self.__index = self
@@ -49,10 +51,11 @@ function Room:new(roomNbr)
     local tile_layer = tiled_room.layers[1]
     local map_width = tile_layer.width
     local map_height = tile_layer.height
-    r.entrance = {row = map_height/2, col=2}
+
+    if not noEntrance then r.entrance = {row = map_height/2, col=2} end
     r.exit = {row=map_height/2, col=map_width-1}
 
-    if G_player then
+    if G_player and not noEntrance then
         G_player.pos.x = (r.entrance["col"]+0.5)*r.tileSize
         G_player.pos.y = (r.entrance["row"]-0.5)*r.tileSize
     end
@@ -119,10 +122,12 @@ function Room:new(roomNbr)
         obj[l]=line
     end
 
-    obj[r.entrance["row"]][r.entrance["col"]].data = 7
+    if not noEntrance then obj[r.entrance["row"]][r.entrance["col"]].data = 7 end
 
     r.objectsGrid = obj
     r.spawnCharacter = Vector:new(0, 0) -- syntaxe à mettre
+
+    r.createObjects(roomNbr)
 
     -- r.objectsGrid[entrance[1]][entrance[2]] = "entrance" -- à ajuster en fonction de la forme de spawn (ici je considère que c'est juste un tableau avec les indices d'une tile dedans)
     -- r.objectsGrid[exit[1]][exit[2]] = "exit" -- meme chose
