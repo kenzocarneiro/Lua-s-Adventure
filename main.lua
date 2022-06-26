@@ -56,7 +56,7 @@ function love.load()
     G_player = Player:new()
     -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
     -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
-    G_player:init({}, 15, 1, "epee", Vector:new(152,80), Data.player_sc, Data.playerHF)
+    G_player:init({}, 15, 1, "epee", Vector:new(152,80), Data.playerSC, Data.playerHF)
 
     G_hud = Hud:new()
 end
@@ -353,7 +353,7 @@ function G_resetGVariable(roomIndex)
         G_hitboxes = {}
         G_room = Room:new(roomIndex, true)
         -- TODO: !!!!!!! reset player !!!!!!! -- health, hitbox, potions ...
-        G_player:init({}, 15, 1, "epee", Vector:new(152,80), Data.player_sc, Data.playerHF)
+        G_player:init({}, 15, 1, "epee", Vector:new(152,80), Data.playerSC, Data.playerHF)
     else
         G_hitboxes = {G_player.hitboxes["hitbox"]}
         G_room = Room:new(roomIndex)
