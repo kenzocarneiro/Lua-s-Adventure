@@ -39,6 +39,11 @@ function Player:init(inventory, collectRadius, ...)
     self.timer2 = nil
     self.buffs = {0, 0}  --damage and speed
 
+    --speed potion animation
+    self.trail1 = nil
+    self.trail2 = nil
+    self.trailTimer = Timer:new(0.1)
+
 
     Entity.init(self, ...)
 end
@@ -149,6 +154,17 @@ function Player:update(dt)
         end
     end
 
+    if self.buffs[2] > 0 then
+        if self.state == "idle" then
+            self.trail2 = self.pos
+            self.trail1 = self.pos
+        end
+        if (self.state == "run" or self.state == "attack") and self.trailTimer:update(dt) then
+            self.trail2 = self.trail1
+            self.trail1 = self.pos
+        end
+    end
+
     Entity.update(self, dt, true)
 end
 
@@ -170,7 +186,18 @@ function Player:draw()
         end
     else
         Entity.draw(self)
+
+        if self.buffs[2] > 0 and (self.state == "run" or self.state == "attack") then
+            local previous_r, previous_g, previous_b, previous_a = love.graphics.getColor()
+            love.graphics.setColor(previous_r, previous_g, previous_b, 0.5)
+            self.spriteCollection:draw(self.state, self.trail1, self.spriteTimer:getCurrentFrame(), self.flipH, self.flipV, self.angle)
+            love.graphics.setColor(previous_r, previous_g, previous_b, 0.25)
+            self.spriteCollection:draw(self.state, self.trail2, self.spriteTimer:getCurrentFrame(), self.flipH, self.flipV, self.angle)
+            love.graphics.setColor(previous_r, previous_g, previous_b, previous_a)
+        end
     end
+
+    -- if self.buffs > 2
 end
 
 
@@ -281,6 +308,8 @@ function Player:consume()
         self.buffs[2] = self.buffs[2] + 2
         self.speed = self.speed + self.buffs[2]
         self.timer2 = Timer:new(10)
+        self.trail1 = self.pos
+        self.trail2 = self.pos
     end
 
 end
