@@ -51,7 +51,8 @@ function Element:init(pos, spriteCollection, hitboxFactory, flipH, flipV, angle)
     self.angle = angle or 0
 
     self.invulnTimer = Timer:new(self.invulnTime)
-    self.invulnAnimTimer = Timer:new()
+    self.invulnAnimTimer = Timer:new(0.1)
+    self.invulnWhite = false
     self.invulnerable = false
 
     if self.hitboxes["hitbox"] then G_hitboxes[#G_hitboxes+1] = self.hitboxes["hitbox"] end
@@ -69,8 +70,13 @@ function Element:update(dt, scAlreadyUpdated)
     if self.hitboxes["hurtbox"] then self.hitboxes["hurtbox"]:move(self.pos) end
     if self.invulnerable then
         self.invulnerable = not self.invulnTimer:update(dt)
+        local change = self.invulnAnimTimer:update(dt)
+        if change then
+            self.invulnWhite = not self.invulnWhite
+        end
         if not self.invulnerable then
             self.invulnAnimTimer:reset()
+            self.invulnWhite = false
         end
     end
 end
@@ -79,7 +85,9 @@ end
 --- @param customState string|nil to set manually which state is drawn
 function Element:draw(customState)
     local state = customState or self.state
+    if self.invulnWhite then love.graphics.setColor(255, 0, 0) end
     self.spriteCollection:draw(state, self.pos, self.spriteTimer:getCurrentFrame(), self.flipH, self.flipV, self.angle)
+    if self.invulnWhite then love.graphics.setColor(255, 255, 255) end
 end
 
 --- Change the Element state and its corresponding sprite
