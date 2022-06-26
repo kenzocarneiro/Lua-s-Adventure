@@ -1,7 +1,7 @@
 Entity = require("entity/entity")
-Item = require("item")
+Item = require("item/item")
 Timer = require("timer")
-LootTable = require("lootTable")
+LootTable = require("item/lootTable")
 --IA = require("AI")
 
 --- Class representing the Monster.

@@ -1,4 +1,4 @@
-Item = require("item")
+Item = require("item/item")
 
 --- Class representing Weapon in the game
 --- @class Weapon:Item Weapon is a subclass of Item
