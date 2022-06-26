@@ -8,7 +8,7 @@ function RoomObjects.createObjects(roomNbr)
         local cool_staff = Weapon:new()
         cool_staff:init(2, "The cooler staff", Vector:new(200, 80), D.cool_staffSC, D.cool_staffHF)
 
-
+        
 
     --- Room 1 ---
     elseif roomNbr == 1 then
@@ -58,8 +58,6 @@ function RoomObjects.createObjects(roomNbr)
         rhino:init({{0.1, "gold_staff", D.gold_staffSC, D.gold_staffHF}, {1, "healthPotion", D.redPotionSc}},
         "rhino", 50, "simple", 0.5, "epee", Vector:new(150, 150), D.rhinoSC, D.rhinoHF)
 
-
-
     --- Room 2 ---
     elseif roomNbr == 2 then
         --addind everything we want on map (monsters and items)
@@ -67,6 +65,53 @@ function RoomObjects.createObjects(roomNbr)
         --INITIALISATION OF MONSTERS AND ITEMS
         -- local rhino = Monster:new()
         -- rhino:init("rhino", 50, "simple", 0.5, 0.5, "epee", Vector:new(88, 40), D.rhinoSC, D.rhinoHF)
+
+
+        local offset = 30
+
+        local goldCoin2 = Coin:new()
+        goldCoin2:init(3, "coin of gold", Vector:new(160+offset, 70), D.coinSc)
+        local goldCoin3 = Coin:new()
+        goldCoin3:init(3, "coin of gold", Vector:new(170+offset, 70), D.coinSc)
+        local goldCoin4 = Coin:new()
+        goldCoin4:init(3, "coin of gold", Vector:new(140+offset, 70), D.coinSc)
+        local goldCoin5 = Coin:new()
+        goldCoin5:init(3, "coin of gold", Vector:new(130+offset, 70), D.coinSc)
+
+        local goldCoin1 = Coin:new()
+        goldCoin1:init(3, "coin of gold", Vector:new(150+offset,80), D.coinSc)
+        local goldCoin6 = Coin:new()
+        goldCoin6:init(3, "coin of gold", Vector:new(180+offset, 80), D.coinSc)
+        local goldCoin7 = Coin:new()
+        goldCoin7:init(3, "coin of gold", Vector:new(120+offset, 80), D.coinSc)
+
+        local goldCoin8 = Coin:new()
+        goldCoin8:init(3, "coin of gold", Vector:new(190+offset, 90), D.coinSc)
+        local goldCoin9 = Coin:new()
+        goldCoin9:init(3, "coin of gold", Vector:new(110+offset, 90), D.coinSc)
+
+        local goldCoin10 = Coin:new()
+        goldCoin10:init(3, "coin of gold", Vector:new(190+offset, 100), D.coinSc)
+        local goldCoin11 = Coin:new()
+        goldCoin11:init(3, "coin of gold", Vector:new(110+offset, 100), D.coinSc)
+
+        local goldCoin12 = Coin:new()
+        goldCoin12:init(3, "coin of gold", Vector:new(180+offset, 110), D.coinSc)
+        local goldCoin13 = Coin:new()
+        goldCoin13:init(3, "coin of gold", Vector:new(120+offset, 110), D.coinSc)
+
+        local goldCoin14 = Coin:new()
+        goldCoin14:init(3, "coin of gold", Vector:new(170+offset, 120), D.coinSc)
+        local goldCoin15 = Coin:new()
+        goldCoin15:init(3, "coin of gold", Vector:new(130+offset, 120), D.coinSc)
+
+        local goldCoin16 = Coin:new()
+        goldCoin16:init(3, "coin of gold", Vector:new(140+offset, 130), D.coinSc)
+        local goldCoin17 = Coin:new()
+        goldCoin17:init(3, "coin of gold", Vector:new(160+offset, 130), D.coinSc)
+
+        local goldCoin18 = Coin:new()
+        goldCoin18:init(3, "coin of gold", Vector:new(150+offset, 140), D.coinSc)
 
 
 

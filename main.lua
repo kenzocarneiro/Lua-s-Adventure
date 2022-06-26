@@ -294,6 +294,7 @@ function love.update(dt)
                 end
             end
 
+
             -- make the exit of the room appear
             if #G_monsterList == 0 then
                 G_room.objectsGrid[G_room.exit["row"]][G_room.exit["col"]].data=7
@@ -312,7 +313,9 @@ function love.update(dt)
                                 local won = love.audio.newSource("sound/soundeffects/change_room.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
                                 won:setVolume(0.5)
                                 won:play()
+
                             end
+
                         end
                     end
                 end
@@ -327,6 +330,22 @@ function love.update(dt)
 
             if love.timer.getTime() - G_deltaT > 1 then
                 local index = G_room.number+1
+                if G_room.number == 0 then
+                    G_hud.questTexts.elements["tempText"]:setLifeSpan(4)
+                    G_hud.questTexts.elements["tuto"]:setVisible(false)
+                    G_hud.questTexts.elements["tuto"].forceOff = true
+                    G_hud.questTexts.elements["tutoEnd"].forceOff = true
+                    G_hud.questTexts.elements["tir"].forceOff = true
+
+                end
+                if G_room.number == 2 then
+                    G_hud.questTexts.elements["tempText"]:reset()
+                    G_hud.questTexts.elements["level_end"]:reset()
+                elseif G_room.number == 1 or G_room.number == 3 then
+                    G_hud.questTexts.elements["level_end"]:reset()
+                    G_hud.questTexts.elements["tempText"]:reset(4)
+                end
+
                 if index > G_nbRooms then
                     print("Victory")
                     G_hud.player:setVisible(false)

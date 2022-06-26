@@ -28,11 +28,16 @@ function Text:new(pX, pY, pW, pH, pText, pFont, pHAlign, pVAlign, pColor, pNotBa
     myText.timer = nil
     myText.movementNb = 0
     myText.enabled = true
+    myText.forceOff = false
     return myText
 end
 
 function Text:setVelocity(pSpeed)
   self.speedTimer = Timer:new(pSpeed)
+end
+
+function Text:reset()
+  self.enabled = true
 end
 
 function Text:setLifeSpan(pLifeSpan)
@@ -48,6 +53,19 @@ function Text:update(dt)
     if self.lifeSpan and self.lifeSpan:update(dt) then
         self.lifeSpan = nil
         self:setVisible(false)
+    
+      if self.text == "Déplacez vous dans la pièce avec les touches zqsd" then
+          G_hud.questTexts.elements["tir"]:setLifeSpan(4)
+          if self.forceOff then
+            G_hud.questTexts.elements["tir"]:setVisible(false)
+          end
+
+      elseif self.text == "Attaquez avec la touche espace" then
+        G_hud.questTexts.elements["tutoEnd"]:setLifeSpan(4)
+        if self.forceOff then
+          G_hud.questTexts.elements["tutoEnd"]:setVisible(false)
+        end
+      end
     end
 end
 

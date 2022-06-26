@@ -82,6 +82,18 @@ function Hud.setQuestTexts()
     local level_end = Text:new(275, 5, 0, 0, "Niveau terminé. RENDEZ-vous à l'échelle pour passer à la salle suivante", mainFontMenu, "", "", {0, 225, 0})
     group:addElement(level_end, "level_end")
 
+    -- texte temporaire
+    local tuto = Text:new(275, 5, 0, 0, "Déplacez vous dans la pièce avec les touches zqsd", mainFontMenu, "", "", {255, 225, 0})
+    group:addElement(tuto, "tuto")
+
+    -- texte temporaire
+    local tir = Text:new(325, 5, 0, 0, "Attaquez avec la touche espace", mainFontMenu, "", "", {255, 225, 0})
+    group:addElement(tir, "tir")
+
+    -- texte temporaire
+    local tutoEnd = Text:new(275, 5, 0, 0, "Empruntez l'échelle de droite pour passer à la salle suivante", mainFontMenu, "", "", {0, 225, 0})
+    group:addElement(tutoEnd, "tutoEnd")
+
     return group
 end
 
@@ -192,9 +204,9 @@ function Hud.setPlayer()
     -- nombre en doré
     local skilChargesNum1 = Text:new(skill_1.w -15 , hauteur -23, 0, 0,G_player.potion_stock[G_player.currentPotion], mainFont, "", "", {238, 226, 123})
 
-    local skillHotkey2 = Text:new(skill_1.w/2 + skill_2.w , hauteur - skill_1.h -20, 0, 0,"E", mainFont, "", "", {255, 255, 255})
+    local skillHotkey2 = Text:new(skill_1.w/2 + skill_2.w , hauteur - skill_1.h -20, 0, 0,"", mainFont, "", "", {255, 255, 255})
 
-    local skillHotKey3 = Text:new(skill_1.w/2 + skill_2.w*2 , hauteur - skill_1.h -20, 0, 0,"T", mainFont, "", "", {255, 255, 255})
+    local skillHotKey3 = Text:new(skill_1.w/2 + skill_2.w*2 , hauteur - skill_1.h -20, 0, 0,"E", mainFont, "", "", {255, 255, 255})
 
     --inventaire du joueur (icone du milieu pour l'instant)
     local offset = largeur / 2
@@ -713,7 +725,7 @@ function Hud:keypressedMainMenu(k)
         if self.mainMenu.elements["playKbButton"]:getSelected() then
             self.mainMenu:setVisible(false)
             self.player:setVisible(true)
-            self.questTexts.elements["tempText"]:setLifeSpan(4)
+            self.questTexts.elements["tuto"]:setLifeSpan(4)
 
 
         elseif self.mainMenu.elements["optionsKbButton"]:getSelected() then
