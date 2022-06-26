@@ -60,7 +60,6 @@ function love.load()
     G_player:init({}, 15, 1, "epee", Vector:new(152,80), Data.player_sc, Data.playerHF)
 
     G_hud = Hud:new()
-    -- print(G_hud.player[14]) debug A ne pas supprimer
 end
 
 function love.keypressed(k)
@@ -68,7 +67,7 @@ function love.keypressed(k)
 
     G_hud:keypressed(k)
     -- Attaque
-    if k == "space" and G_player.state ~= "special" then
+    if k == "space" and G_player.state ~= "special" and #G_player.inventory > 0 then
         G_player:changeState("attack")
 
     -- Potion
@@ -76,7 +75,7 @@ function love.keypressed(k)
         G_player:applyPotionEffect(3) -- TODO: This value should be linked to the potion .value attribute
 
     -- Compétence
-    elseif k == "e" and G_player.currentEnergy > 9.9 then
+    elseif k == "e" and G_player.currentEnergy > 9.9 and #G_player.inventory > 0 then
         G_player:changeState("special")
 
     elseif k == "v" then
@@ -182,6 +181,8 @@ local function killEntities()
         elseif tostring(v) == "Weapon" then deleteFromList(G_itemList, v)
         elseif tostring(v) == "Item" then deleteFromList(G_itemList, v)
         elseif tostring(v) == "Player" then delete(v)
+            G_hud.player:setVisible(false)
+            G_hud.defeat:setVisible(true)
         else print("Unknown Element: " .. tostring(v)) end
     end
     G_deadElements = {}
@@ -333,18 +334,25 @@ function love.update(dt)
                     G_hud.victory:setVisible(true)
                 else
                     --reset G_variables
-                    G_hitboxes = {G_player.hitboxes["hitbox"]}
-                    G_hurtboxes = {}
-                    G_monsterList = {}
-                    G_itemList = {}
-                    G_projectiles = {}
-                    G_room = nil
-                    G_deltaT = 0
-                    -- G_hud.player:setVisible(true)
-                    G_room = Room:new(index)
+                    G_resetGVariable(index)
                 end
             end
         end
+    end
+end
+
+function G_resetGVariable(roomIndex)
+    G_hitboxes = {G_player.hitboxes["hitbox"]}
+    G_hurtboxes = {}
+    G_monsterList = {}
+    G_itemList = {}
+    G_projectiles = {}
+    G_room = nil
+    G_deltaT = 0
+    -- G_hud.player:setVisible(true)
+    G_room = Room:new(roomIndex)
+    if roomIndex == 0 then -- new game
+        -- !!!!!!! reset player !!!!!!! -- health, hitbox, potions ...
     end
 end
 
@@ -353,7 +361,7 @@ function love.draw()
     if G_deltaT ~= 0 then
         love.graphics.setColor(255/255, 255/255, 255/255)
 
-    elseif not G_hud.mainMenu.visible then --menu de départ => jeu non affiché
+    elseif G_hud.player.visible or G_hud.parameter.visible or G_hud.characterSheet.visible then --menu de départ => jeu non affiché
         love.graphics.setColor(255/255, 255/255, 255/255)
         if G_PONG then
             love.graphics.scale(1, 1)

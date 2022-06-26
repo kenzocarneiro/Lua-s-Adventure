@@ -1,6 +1,21 @@
 
 local D = require("data")
 
+local damagePotion = Consumable:new()
+damagePotion:init("damage", 1, "potion of damage", Vector:new(48, 24), D.yellowPotionSc)
+
+local goldCoin = Coin:new()
+goldCoin:init(3, "coin of gold", Vector:new(32, 134), D.coinSc)
+
+local goldCoin2 = Coin:new()
+goldCoin2:init(3, "coin of gold", Vector:new(260, 140), D.coinSc)
+
+local goldCoin3 = Coin:new()
+goldCoin3:init(3, "coin of gold", Vector:new(280, 140), D.coinSc)
+
+local simple_staff = Weapon:new()
+simple_staff:init(1, "The simple staff", Vector:new(190, 120), D.simple_staff_sc, D.simple_staffHF)
+
 local troll = Monster:new()
 troll:init({{0.1, "gold_staff", D.gold_staff_sc, D.gold_staffHF}, {0.5, "simple_staff", D.simple_staff_sc, D.simple_staffHF},
 {0.8, "coin", D.coinSc}},
