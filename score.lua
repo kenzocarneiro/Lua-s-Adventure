@@ -22,7 +22,7 @@ local function newScore()
         ["pickupDamagePotion"]=10,
         ["pickupSpeedPotion"]=15,
         ["pickupOther"]=30,
-        ["wasHurt"]=-5,
+        ["wasHurt"]=-1,
         ["roomFinished"]=500
     }
 
