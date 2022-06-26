@@ -359,18 +359,25 @@ function love.update(dt)
                     G_hud.victory:setVisible(true)
                 else
                     --reset G_variables
-                    G_hitboxes = {G_player.hitboxes["hitbox"]}
-                    G_hurtboxes = {}
-                    G_monsterList = {}
-                    G_itemList = {}
-                    G_projectiles = {}
-                    G_room = nil
-                    G_deltaT = 0
-                    -- G_hud.player:setVisible(true)
-                    G_room = Room:new(index)
+                    G_resetGVariable(index)
                 end
             end
         end
+    end
+end
+
+function G_resetGVariable(roomIndex)
+    G_hitboxes = {G_player.hitboxes["hitbox"]}
+    G_hurtboxes = {}
+    G_monsterList = {}
+    G_itemList = {}
+    G_projectiles = {}
+    G_room = nil
+    G_deltaT = 0
+    -- G_hud.player:setVisible(true)
+    G_room = Room:new(roomIndex)
+    if roomIndex == 0 then -- new game
+        -- !!!!!!! reset player !!!!!!! -- health, hitbox, potions ...
     end
 end
 
