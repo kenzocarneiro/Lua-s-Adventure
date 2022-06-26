@@ -38,8 +38,8 @@ function Monster:init(lootTable, name, aggroRadius, typeOfMove, speed, weapon, p
     if name == "lua" then
         IA = require("bossIA")
         self.ia = IA:new()
-        self.currentHealth = 200
-        self.damage = 10
+        self.currentHealth = 800
+        self.damage = 15
     elseif name == "troll" then
         self.currentHealth = 30
         self.damage = 20
