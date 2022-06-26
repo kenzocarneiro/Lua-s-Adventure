@@ -14,7 +14,7 @@ function Monster:new() return Entity.new(self) end
 
 
 --- Initializes the monster.
---- @param lootTable table
+--- @param lootTable LootTable
 --- @param name string
 --- @param aggroRadius number
 --- @param typeOfMove string
