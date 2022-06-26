@@ -1,22 +1,10 @@
 --addind everything we want on map (monsters and items)
 
-
---HITBOXES
-local rhinoHF = HitboxFactory:new(
-  {name="hitbox", layers={enemy=true}, width=4, height=7, offset=Vector:new(-3, 1)},
-  {name="hurtbox", layers={player=true}, width=6, height=9, offset=Vector:new(-4, 0)}
-)
-
-
---SPRITES COLLECTIONS
-local rhino_sc = SpriteCollection:new("rhino")
-  rhino_sc:init({Sprite:new("img/rhino_idle-Sheet.png", true, "idle", 16, 16, Vector:new(7, 6)),
-  Sprite:new("img/rhino_run-Sheet.png", true, "run", 16, 16, Vector:new(7, 6))})
-
+D = require("data")
 
 --INITIALISATION OF MONSTERS AND ITEMS
 -- local rhino = Monster:new()
--- rhino:init("rhino", 50, "simple", 0.5, 0.5, "epee", Vector:new(88, 40), rhino_sc, rhinoHF)
+-- rhino:init("rhino", 50, "simple", 0.5, 0.5, "epee", Vector:new(88, 40), D.rhino_sc, D.rhinoHF)
 
 return {
   version = "1.5",
