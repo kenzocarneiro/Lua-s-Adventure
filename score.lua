@@ -93,14 +93,14 @@ local function newScore()
 end
 
 -- Testing the security of the Score class
-local s = newScore()
-s.test = 5
-print(s.test)
-s.addScore = 100
-print(s.addScore)
-print(s.getScore)
-local s2 = newScore()
-s2.addScore("killedTroll")
-print(s2.getScore())
+-- local s = newScore()
+-- s.test = 5
+-- print(s.test)
+-- s.addScore = 100
+-- print(s.addScore)
+-- print(s.getScore)
+-- local s2 = newScore()
+-- s2.addScore("killedTroll")
+-- print(s2.getScore())
 
 return newScore
