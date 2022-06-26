@@ -44,13 +44,13 @@ function love.load()
     G_soundOn = true
     G_soundEffectsOn = true
 
-    G_room = Room:new(0, true)
+    G_room = Room:new(4, true)
     G_deltaT = 0
 
     --- @type Element[]
     G_deadElements = {}
 
-    G_nbRooms = 3
+    G_nbRooms = 4
 
     -- G_player because player is a global variable
     G_player = Player:new()

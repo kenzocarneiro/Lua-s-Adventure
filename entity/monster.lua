@@ -38,6 +38,8 @@ function Monster:init(lootTable, name, aggroRadius, typeOfMove, speed, weapon, p
     if name == "lua" then
         IA = require("bossIA")
         self.ia = IA:new()
+        self.currentHealth = 200
+        self.damage = 10
     elseif name == "troll" then
         self.currentHealth = 30
         self.damage = 20
@@ -68,7 +70,7 @@ function Monster:update(dt, player)
             self:betterMove(self.goal)
         elseif self.ia then
             local type, move = self.ia:update(dt, self, player)
-            print(move)
+            -- print(move)
             if move then self.pos = move end
         else
             self:move(self.goal)

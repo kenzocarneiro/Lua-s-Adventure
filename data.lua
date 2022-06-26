@@ -32,6 +32,7 @@ data.playerHF = HitboxFactory:new(
 data.fireballSC = SpriteCollection:new("fireball")
 data.fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
 data.fireballHF = HitboxFactory:new({"hurtbox", {enemy=true}, 3, 3, Vector:new(-2, -2)})
+data.enemyFireBallHF = HitboxFactory:new({"hurtbox", {player=true}, 3, 3, Vector:new(-2, -2)})
 
 -- MONSTERS
 data.trollSC = SpriteCollection:new("troll")

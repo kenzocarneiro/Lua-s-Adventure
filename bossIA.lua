@@ -1,4 +1,6 @@
 
+local Data = require("data")
+
 --- Class representing the IA of the boss (state machine IA)
 --- @class bossIA
 --- @field state string
@@ -44,6 +46,8 @@ end
 
 
 --- @param dt number
+--- @param boss Monster
+--- @param player Player
 function bossIA:attackUpdate(dt, boss, player)
     local hasFinished = self.timer:update(dt)
     local subHasFinished = false
@@ -56,7 +60,7 @@ function bossIA:attackUpdate(dt, boss, player)
         if self.state == "attackAngry" then direction_step = 30 else direction_step = 45 end
         for i=0, 360 - direction_step, direction_step do
                 local p = Projectile:new()
-                p:init(i, 5, "bullet", boss.pos + Vector:new(0, 0), G_fireballSC, G_enemyFireBallHF)
+                p:init(boss.damage, i, 5, "bullet", boss.pos + Vector:new(0, 0), Data.fireballSC, Data.G_enemyFireBallHF)
         end
         self.subLaunched = false
         -- if self.substate == "moveBL" then
@@ -107,7 +111,7 @@ function bossIA:attackUpdate(dt, boss, player)
             --     return "pos", Vector:new(270, 50) -- top right
             -- end
             self.subState = stateTab[randmove]
-            print(moveTranslation[self.subState])
+            print("moveTranslation", moveTranslation[self.subState])
             return "pos", moveTranslation[self.subState]
         end
     end

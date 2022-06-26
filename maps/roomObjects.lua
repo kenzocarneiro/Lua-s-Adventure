@@ -185,6 +185,29 @@ function RoomObjects.createObjects(roomNbr)
         local rhino2 = Monster:new()
         rhino2:init({{0.1, "gold_staff", D.gold_staffSC, D.gold_staffHF}, {1, "healthPotion", D.redPotionSC}},
         "rhino", 50, "simple", 0.5, "epee", Vector:new(264, 80), D.rhinoSC, D.rhinoHF)
+
+
+
+    --- Room 4 (boss) ---
+    elseif roomNbr == 4 then
+        local cool_staff = Weapon:new()
+        cool_staff:init(2, "The cooler staff", Vector:new(200, 80), D.cool_staffSC, D.cool_staffHF)
+
+        local luaSC = SpriteCollection:new("lua")
+        luaSC:init({Sprite:new("img/lua.png", false, "idle", 55, 55, Vector:new(28, 28)),
+        Sprite:new("img/lua.png", false, "run", 55, 55, Vector:new(28, 28))})
+
+        local luaHF = HitboxFactory:new(
+            {name="hitbox", layers={enemy=true}, width=10, height=10, offset=Vector:new(10, -12), shape="circle"},
+            {name="hurtbox", layers={player=true}, width=30, height=30, offset=Vector:new(0, 0), shape="circle"}
+        )
+
+        local luaBoss = Monster:new()
+        luaBoss:init({}, "lua", 1000, "special", 0.5, "lua", Vector:new(50, 130), luaSC, luaHF)
+        -- Vector:new(50, 50) top left
+        -- Vector:new(270, 50) top right
+        -- Vector:new(270, 130) bottom right
+        -- Vector:new(50, 130) bottom left
     end
 end
 
