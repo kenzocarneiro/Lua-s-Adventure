@@ -46,6 +46,7 @@ function Monster:update(dt, player)
         self.goal = player.pos
     else
         self.goal = nil
+        self.state = "idle"
     end
 
     if self.goal then
