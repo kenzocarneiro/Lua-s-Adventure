@@ -37,8 +37,10 @@ function Monster:init(lootTable, name, aggroRadius, typeOfMove, speed, weapon, p
 
     if name == "troll" then
         self.currentHealth = 30
+        self.damage = 20
     elseif name == "rhino" then
         self.currentHealth = 10
+        self.damage = 10
     end
 
     Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)

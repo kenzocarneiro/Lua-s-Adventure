@@ -15,7 +15,7 @@ Timer = require("timer")
 --- @field flipH number
 --- @field flipV number
 --- @field angle number
-Element = {currentHealth = 1, damage = 1, state = "idle", invulnTime=0.5}
+Element = {currentHealth = 1, damage = 10, state = "idle", invulnTime=0.5}
 
 --- Constructor of Element.
 --- @return Element
