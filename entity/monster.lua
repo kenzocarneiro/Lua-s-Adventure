@@ -1,7 +1,7 @@
 Entity = require("entity/entity")
-Item = require("item")
+Item = require("item/item")
 Timer = require("timer")
-LootTable = require("lootTable")
+LootTable = require("item/lootTable")
 --IA = require("AI")
 
 --- Class representing the Monster.
@@ -14,7 +14,8 @@ function Monster:new() return Entity.new(self) end
 
 
 --- Initializes the monster.
---- @param lootTable table
+--- @param lootTable LootTable
+--- @param name string
 --- @param aggroRadius number
 --- @param typeOfMove string
 --- @param speed number
@@ -37,6 +38,12 @@ function Monster:init(lootTable, name, aggroRadius, typeOfMove, speed, weapon, p
     if name == "lua" then
         IA = require("bossIA")
         self.ia = IA:new()
+    elseif name == "troll" then
+        self.currentHealth = 30
+        self.damage = 20
+    elseif name == "rhino" then
+        self.currentHealth = 10
+        self.damage = 10
     end
 
     Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)
@@ -51,6 +58,7 @@ function Monster:update(dt, player)
         self.goal = player.pos
     else
         self.goal = nil
+        self.state = "idle"
     end
 
     if self.goal then
@@ -74,13 +82,13 @@ end
 -- --- The monster drops an item
 -- --- @return Item -- ir nil if doesnt drop
 -- function Monster:drop()
---     local item_sc = SpriteCollection:new("item")
---     item_sc:init({Sprite:new("img/axe.png", false, "idle", 16, 16, Vector:new(7, 6))})
+--     local itemSC = SpriteCollection:new("item")
+--     itemSC:init({Sprite:new("img/axe.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
 --     local itemHF = HitboxFactory:new({"hitbox", {items=true}, 4, 7, Vector:new(-5, -5)})
 
 --     local i = Item:new()
---     i:init("AXE !", Vector:new(self.pos.x, self.pos.y), item_sc, itemHF)
+--     i:init("AXE !", Vector:new(self.pos.x, self.pos.y), itemSC, itemHF)
 
 --     if math.random() <= self.chanceOfDrop then
 --         return i

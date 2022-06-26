@@ -4,7 +4,7 @@ local Panel = {}
 
 
 -- Classe fille Panel qui hérite d'Element
-function Panel:new(pX, pY, pW, pH, pColorOut)
+function Panel:new(pX, pY, pW, pH, pColorOut, pNotBackground)
     self.__index = self
     setmetatable(self, {__index = Element}) --heritage
 
@@ -16,6 +16,7 @@ function Panel:new(pX, pY, pW, pH, pColorOut)
     myPanel.h = pH or 10
     myPanel.colorOut = pColorOut or {255, 255, 255}
     myPanel.image = nil
+    myPanel.notBackground = pNotBackground or false
     myPanel.isHover = false
     myPanel.lstEvents = {}
 
@@ -68,12 +69,14 @@ function Panel:draw()
     else
         love.graphics.setColor(255/255,255/255,255/255)
     end
-    if self.image == nil then
-        love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
-    else
+    if not self.notBackground then
+        if self.image == nil then
+            love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+        else
 
-        love.graphics.setColor(255/255,255/255,255/255)
-        love.graphics.draw(self.image, self.x, self.y, 0, self.scale)
+            love.graphics.setColor(255/255,255/255,255/255)
+            love.graphics.draw(self.image, self.x, self.y, 0, self.scale)
+        end
     end
 end
 

@@ -1,13 +1,3 @@
-local cool_staff_sc = SpriteCollection:new("item")
-cool_staff_sc:init({Sprite:new("img/magic_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
-
-local cool_staffHF = HitboxFactory:new(
-    {"hitbox", {item=true}, 3, 14, Vector:new(-5, -5)}
-)
-
-local cool_staff = Weapon:new()
-cool_staff:init(2, "The cooler staff", Vector:new(200, 80), cool_staff_sc, cool_staffHF)
-
 return {
   version = "1.5",
   luaversion = "5.1",

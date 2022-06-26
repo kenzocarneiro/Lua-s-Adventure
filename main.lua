@@ -5,12 +5,7 @@ if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
 rawset = nil -- Disable rawset
 rawget = nil -- Disable rawget
 
--- Pour notre magnifique HUD
-local Hud = require("hud/hud")
-G_eltCounter = 0
-
-
-local mainFont = love.graphics.newFont("sprites/hud/kenvector_future_thin.ttf", 15)
+local mainFont = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 15)
 love.graphics.setFont(mainFont)
 
 
@@ -19,23 +14,15 @@ function love.load()
     math.randomseed(os.time())
     love.graphics.setBackgroundColor(0, 0, 0)
     love.graphics.setDefaultFilter("nearest", "nearest")
+    -- Pour notre magnifique HUD
+    local Hud = require("hud/hud")
+    G_eltCounter = 0
+
     local Player = require("entity/player")
-    local Monster = require("entity/monster")
-    local Room = require("Room")
-    local Item = require("item")
+    local Room = require("room")
     local Vector = require("vector")
-    local Sprite = require("sprite/sprite")
-    local SpriteCollection = require("sprite/spriteC")
-    local Consumable = require("consumable")
-    local Coin = require("coin")
-    local Weapon = require("weapon")
-    local HitboxFactory = require("hitboxF")
+    local Data = require("data")
 
-    G_fireballSC = SpriteCollection:new("fireball")
-    G_fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
-
-    G_fireballHF = HitboxFactory:new({"hurtbox", {enemy=true}, 3, 3, Vector:new(-2, -2)})
-    G_enemyFireBallHF = HitboxFactory:new({"hurtbox", {player=true}, 3, 3, Vector:new(-2, -2)})
     G_blackoutOnPlayer = false
     G_blackoutCurrentFrame = 250
     G_blackoutSFX = false
@@ -57,36 +44,21 @@ function love.load()
     G_soundOn = true
     G_soundEffectsOn = true
 
-    G_room = Room:new(0)
-    G_room.objectsGrid[G_room.entrance["row"]][G_room.entrance["col"]].data = 0
+    G_room = Room:new(0, true)
     G_deltaT = 0
 
     --- @type Element[]
     G_deadElements = {}
 
-    G_nb_rooms = 3
-
-    --initialize sprite collections for monster player and item
-    local player_sc = SpriteCollection:new("player")
-    player_sc:init({Sprite:new("img/wizard_idle-Sheet0.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
-        Sprite:new("img/wizard_run-Sheet0.png", true, "run", 18, 18, Vector:new(7, 9), false),
-        Sprite:new("img/wizard_run-Sheet0.png", true, "attack", 18, 18, Vector:new(7, 9)),
-        Sprite:new("img/wizard_run-Sheet0.png", true, "special", 18, 18, Vector:new(7, 9), false, {0.5, 0.05, 0.25, 0.25, 0.25, 0.25, 0.06, 0.1, 0.1, 0.1})
-    })
-
-    local playerHF = HitboxFactory:new(
-        -- {"hurtbox", {enemy=true}, 5, 5, Vector:new(-5, -5)},
-        {"hitbox", {player=true}, 4, 10, Vector:new(-2, -2)}
-    )
+    G_nbRooms = 3
 
     -- G_player because player is a global variable
     G_player = Player:new()
     -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
     -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
-    G_player:init({}, 15, 1, "epee", Vector:new(152,80), player_sc, playerHF)
+    G_player:init({}, 15, 1, "epee", Vector:new(152,80), Data.playerSC, Data.playerHF)
 
     G_hud = Hud:new()
-    -- print(G_hud.player[14]) debug A ne pas supprimer
 end
 
 function love.keypressed(k)
@@ -94,7 +66,7 @@ function love.keypressed(k)
 
     G_hud:keypressed(k)
     -- Attaque
-    if k == "space" and G_player.state ~= "special" then
+    if k == "space" and G_player.state ~= "special" and #G_player.inventory > 0 then
         G_player:changeState("attack")
 
     -- Potion
@@ -208,6 +180,15 @@ local function killEntities()
         elseif tostring(v) == "Weapon" then deleteFromList(G_itemList, v)
         elseif tostring(v) == "Item" then deleteFromList(G_itemList, v)
         elseif tostring(v) == "Player" then delete(v)
+            if G_soundEffectsOn then
+                local sound=love.audio.newSource("sound/soundeffects/death.wav","static")
+                sound:setVolume(0.4)
+                sound:play()
+            end
+            G_player:changeState("idle")
+            G_hud.player:setVisible(false)
+            G_hud.defeat:setVisible(true)
+            G_room.music:pause()
         else print("Unknown Element: " .. tostring(v)) end
     end
     G_deadElements = {}
@@ -320,25 +301,25 @@ function love.update(dt)
                 end
             end
 
+
             -- make the exit of the room appear
             if #G_monsterList == 0 then
                 G_room.objectsGrid[G_room.exit["row"]][G_room.exit["col"]].data=7
                 if G_room.number ~= 0 and G_hud.questTexts.elements["level_end"].enabled then
                     G_hud.questTexts.elements["level_end"]:setLifeSpan(4)
                 end
-                if G_player.pos.x > G_room.exit["col"]*G_room.tileSize and G_player.pos.x < (G_room.exit["col"]+1)*G_room.tileSize then
-                    if G_player.pos.y > G_room.exit["row"]*G_room.tileSize and G_player.pos.y < (G_room.exit["row"]+1)*G_room.tileSize then
-                        G_room.isFinished = true
-                        if G_deltaT == 0 then
-                            G_player.score.addScore("roomFinished", G_room.number)
-                            G_deltaT = love.timer.getTime()
-                            -- G_hud.player:setVisible(false)
-                            G_room.music:pause()
-                            if G_soundOn then
-                                local won = love.audio.newSource("sound/soundeffects/change_room.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
-                                won:setVolume(0.5)
-                                won:play()
-                            end
+                local exitPos = Vector:new(G_room.exit["col"], G_room.exit["row"])*G_room.tileSize
+                if ((G_player.pos.x-exitPos.x)^2 + (G_player.pos.y - exitPos.y)^2) <= G_room.tileSize^2 then
+                    G_room.isFinished = true
+                    if G_deltaT == 0 then
+                        G_player.score.addScore("roomFinished", G_room.number)
+                        G_deltaT = love.timer.getTime()
+                        -- G_hud.player:setVisible(false)
+                        G_room.music:pause()
+                        if G_soundOn then
+                            local won = love.audio.newSource("sound/soundeffects/change_room.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
+                            won:setVolume(0.5)
+                            won:play()
                         end
                     end
                 end
@@ -353,24 +334,57 @@ function love.update(dt)
 
             if love.timer.getTime() - G_deltaT > 1 then
                 local index = G_room.number+1
-                if index > G_nb_rooms then
-                    print("Victory")
+                if G_room.number == 0 then
+                    G_hud.questTexts.elements["tempText"]:setLifeSpan(4)
+                    G_hud.questTexts.elements["tuto"]:setVisible(false)
+                    G_hud.questTexts.elements["tuto"].forceOff = true
+                    G_hud.questTexts.elements["tutoEnd"].forceOff = true
+                    G_hud.questTexts.elements["tir"].forceOff = true
+
+                end
+                if G_room.number == 2 then
+                    G_hud.questTexts.elements["tempText"]:reset()
+                    G_hud.questTexts.elements["level_end"]:reset()
+                elseif G_room.number == 1 or G_room.number == 3 then
+                    G_hud.questTexts.elements["level_end"]:reset()
+                    G_hud.questTexts.elements["tempText"]:reset(4)
+                end
+
+                if index > G_nbRooms then
+                    -- print("Victory")
                     G_hud.player:setVisible(false)
                     G_hud.victory:setVisible(true)
                 else
                     --reset G_variables
-                    G_hitboxes = {G_player.hitboxes["hitbox"]}
-                    G_hurtboxes = {}
-                    G_monsterList = {}
-                    G_itemList = {}
-                    G_projectiles = {}
-                    G_room = nil
-                    G_deltaT = 0
-                    -- G_hud.player:setVisible(true)
-                    G_room = Room:new(index)
+                    G_resetGVariable(index)
                 end
             end
         end
+    end
+end
+
+function G_resetGVariable(roomIndex)
+    local Data = require("data")
+    G_hurtboxes = {}
+    G_monsterList = {}
+    G_itemList = {}
+    G_projectiles = {}
+    G_room = nil
+    G_deltaT = 0
+    G_blackoutOnPlayer = false
+    G_blackoutCurrentFrame = 250
+
+    -- G_hud.player:setVisible(true)
+    if roomIndex == 0 then -- new game
+        G_hitboxes = {}
+        G_room = Room:new(roomIndex, true)
+        -- TODO: !!!!!!! reset player !!!!!!! -- health, hitbox, potions ...
+        G_player:init({}, 15, 1, "epee", Vector:new(152,80), Data.playerSC, Data.playerHF)
+        G_player:changeState("idle")
+    else
+        G_hitboxes = {G_player.hitboxes["hitbox"]}
+        G_player:changeState("idle")
+        G_room = Room:new(roomIndex)
     end
 end
 
@@ -379,7 +393,7 @@ function love.draw()
     if G_deltaT ~= 0 then
         love.graphics.setColor(255/255, 255/255, 255/255)
 
-    elseif not G_hud.mainMenu.visible then --menu de départ => jeu non affiché
+    elseif G_hud.player.visible or G_hud.parameter.visible or G_hud.characterSheet.visible then --menu de départ => jeu non affiché
         love.graphics.setColor(255/255, 255/255, 255/255)
         if G_PONG then
             love.graphics.scale(1, 1)

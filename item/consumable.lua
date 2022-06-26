@@ -1,4 +1,4 @@
-Item = require("item")
+Item = require("item/item")
 
 --- Class representing Consumable in the game
 --- @class Consumable:Item Consumable is a subclass of Item

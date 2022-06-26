@@ -15,7 +15,7 @@ Timer = require("timer")
 --- @field flipH number
 --- @field flipV number
 --- @field angle number
-Element = {currentHealth = 1, damage = 1, state = "idle", invulnTimer=0.5}
+Element = {currentHealth = 1, damage = 10, state = "idle", invulnTime=0.5}
 
 --- Constructor of Element.
 --- @return Element
@@ -23,10 +23,6 @@ function Element:new()
     local e = {}
     setmetatable(e, self)
     self.__index = self
-
-    G_eltCounter = G_eltCounter + 1
-    e.id = G_eltCounter
-
     return e
 end
 
@@ -35,6 +31,9 @@ end
 --- @param spriteCollection SpriteCollection
 --- @param hitboxFactory HitboxFactory|nil
 function Element:init(pos, spriteCollection, hitboxFactory, flipH, flipV, angle)
+    G_eltCounter = G_eltCounter + 1
+    self.id = G_eltCounter
+
     self.pos = pos or Vector:new(0, 0)
 
     self.spriteCollection = spriteCollection
@@ -50,8 +49,10 @@ function Element:init(pos, spriteCollection, hitboxFactory, flipH, flipV, angle)
     self.flipH = flipH or 1
     self.flipV = flipV or 1
     self.angle = angle or 0
-    self.invulnTimer = Timer:new(self.invulnTimer)
-    self.invulnAnimTimer = Timer:new()
+
+    self.invulnTimer = Timer:new(self.invulnTime)
+    self.invulnAnimTimer = Timer:new(0.1)
+    self.invulnWhite = false
     self.invulnerable = false
 
     if self.hitboxes["hitbox"] then G_hitboxes[#G_hitboxes+1] = self.hitboxes["hitbox"] end
@@ -69,15 +70,25 @@ function Element:update(dt, scAlreadyUpdated)
     if self.hitboxes["hurtbox"] then self.hitboxes["hurtbox"]:move(self.pos) end
     if self.invulnerable then
         self.invulnerable = not self.invulnTimer:update(dt)
+        local change = self.invulnAnimTimer:update(dt)
+        if change then
+            self.invulnWhite = not self.invulnWhite
+        end
         if not self.invulnerable then
             self.invulnAnimTimer:reset()
+            self.invulnWhite = false
         end
     end
 end
 
 --- Draw the element.
-function Element:draw()
-    self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), self.flipH, self.flipV, self.angle)
+--- @param customState string|nil to set manually which state is drawn
+function Element:draw(customState)
+    local state = customState or self.state
+    local previous_r, previous_g, previous_b, previous_a = love.graphics.getColor()
+    if self.invulnWhite then love.graphics.setColor(255/255, 0, 0) end
+    self.spriteCollection:draw(state, self.pos, self.spriteTimer:getCurrentFrame(), self.flipH, self.flipV, self.angle)
+    if self.invulnWhite then love.graphics.setColor(previous_r, previous_g, previous_b, previous_a) end
 end
 
 --- Change the Element state and its corresponding sprite

@@ -3,20 +3,20 @@ local Panel = require("hud/panel")
 local KbButton = {}
 
 
--- Classe fille Bar qui hérite de Panel
+-- Classe fille Button qui hérite de Panel
 function KbButton:new(pX, pY, pW, pH)
     self.__index = self
     setmetatable(self, {__index = Panel}) --heritage
 
-    local myBar = Panel.new(self, pX, pY, pW, pH) --appel constructeur de la classe mère
-    setmetatable(myBar, self)
+    local myButton = Panel.new(self, pX, pY, pW, pH) --appel constructeur de la classe mère
+    setmetatable(myButton, self)
 
     -- initialisation
-    myBar.selected = false
-    myBar.imgSelected = nil
-    myBar.imgDefault = nil
+    myButton.selected = false
+    myButton.imgSelected = nil
+    myButton.imgDefault = nil
 
-    return myBar
+    return myButton
 end
 
 function KbButton:setImages(pImageDefault, pImageSelected, pScale)

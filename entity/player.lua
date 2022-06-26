@@ -1,6 +1,7 @@
-Entity = require("entity/entity")
-Projectile = require("entity/projectile")
-Score = require("score")
+local Entity = require("entity/entity")
+local Projectile = require("entity/projectile")
+local Score = require("score")
+local Data = require("data")
 
 --- Class representing the Player.
 --- @class Player:Entity Player is a subclass of Entity.
@@ -20,7 +21,6 @@ function Player:init(inventory, collectRadius, ...)
     self.currentEnergy = 0
    -- self.skillAngleCd = 0 or 0
     self.energyTimer = Timer:new(0.1)
-    self.damage = 4
     self.maxHealth = 100
     self.targetHealth = 100
     self.currentHealth = self.maxHealth
@@ -37,6 +37,11 @@ function Player:init(inventory, collectRadius, ...)
     self.timer1 = nil
     self.timer2 = nil
     self.buffs = {0, 0}  --damage and speed
+
+    --speed potion animation
+    self.trail1 = nil
+    self.trail2 = nil
+    self.trailTimer = Timer:new(0.1)
 
 
     Entity.init(self, ...)
@@ -93,53 +98,69 @@ function Player:update(dt)
     -- attack handling
     if #self.inventory > 0 then
         if self.state == "attack" then
-
             if currentFrame == 4 and not self.hasShoot then
                 if G_soundEffectsOn then
                     local sound = love.audio.newSource("sound/soundeffects/player_attack.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
-                    if G_soundEffectsOn then
-                        sound:setVolume(0.5)
-                        sound:play()
-                    end
+                    sound:setVolume(0.5)
+                    sound:play()
                 end
                 self.hasShoot = true
                 local p = Projectile:new()
                 local direction = Vector:new(self.flipH, 0)
 
                 if self.flipH == 1 then
-                    p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), G_fireballSC, G_fireballHF)
+                    p:init(self.damage, direction, 5, "bullet", self.pos + Vector:new(9, 5), Data.fireballSC, Data.fireballHF)
                 elseif self.flipH == -1 then
-                    p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), G_fireballSC, G_fireballHF)
+                    p:init(self.damage, direction, 5, "bullet", self.pos + Vector:new(-9, 5), Data.fireballSC, Data.fireballHF)
                 end
 
             elseif animationFinished then
                 self.state = "idle"
                 self.hasShoot = false
             end
+
+
         elseif self.state == "special" then
             G_blackoutCurrentFrame = 250 - (currentFrame - 1)*25
             if animationFinished then
                 self.state = "idle"
                 self.hasShoot = false
-            elseif G_gandalf and currentFrame == 1 and not G_blackoutSFX then
+            elseif currentFrame == 2 and not G_blackoutSFX then
                 if G_soundEffectsOn then
-                    local sound = love.audio.newSource("ysnp.mp3", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
-                    sound:setVolume(1)
+                    local sound
+                    if G_gandalf then
+                        sound = love.audio.newSource("ysnp.mp3", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+                        sound:setVolume(1)
+                    else
+                        sound = love.audio.newSource("sound/soundeffects/special_attack_cling.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+                        sound:setVolume(0.4)
+                    end
                     sound:play()
                 end
                 G_blackoutSFX = true
-            elseif currentFrame == 2 then -- Not 1 because when the animation is finished it is in frame 1
+            elseif currentFrame == 3 then -- Not 1 because when the animation is finished it is in frame 1
                 G_blackoutOnPlayer = true
                 G_blackoutSFX = false
             elseif currentFrame == 7 then
-                self.hasShoot = true
                 self:castSpell()
+                self.hasShoot = true
                 G_blackoutCurrentFrame = 250 - (currentFrame - 2)*25
             elseif currentFrame == 8 then
                 G_blackoutCurrentFrame = 250 - (currentFrame - 3)*25
             elseif currentFrame == 9 then
                 G_blackoutOnPlayer = false
             end
+        end
+    end
+
+    if self.buffs[2] > 0 then
+        if self.state == "idle" then
+            self.trail2 = self.pos
+            self.trail1 = self.pos
+        end
+        if (self.state == "run" or self.state == "attack") and self.trailTimer:update(dt) then
+            self.trail2 = self.trail1
+            self.trail1 = self.pos
         end
     end
 
@@ -154,7 +175,28 @@ function Player:draw()
         love.graphics.circle("line", self.pos.x, self.pos.y, self.collectRadius)
     end
 
-    Entity.draw(self)
+    if #self.inventory == 0 then
+        if self.state == "idle" then
+            Entity.draw(self, "idleEmpty")
+        elseif self.state == "run" then
+            Entity.draw(self, "idleEmpty")
+        else
+            Entity.draw(self)
+        end
+    else
+        Entity.draw(self)
+
+        if self.buffs[2] > 0 and (self.state == "run" or self.state == "attack") then
+            local previous_r, previous_g, previous_b, previous_a = love.graphics.getColor()
+            love.graphics.setColor(previous_r, previous_g, previous_b, 0.5)
+            self.spriteCollection:draw(self.state, self.trail1, self.spriteTimer:getCurrentFrame(), self.flipH, self.flipV, self.angle)
+            love.graphics.setColor(previous_r, previous_g, previous_b, 0.25)
+            self.spriteCollection:draw(self.state, self.trail2, self.spriteTimer:getCurrentFrame(), self.flipH, self.flipV, self.angle)
+            love.graphics.setColor(previous_r, previous_g, previous_b, previous_a)
+        end
+    end
+
+    -- if self.buffs > 2
 end
 
 
@@ -199,15 +241,6 @@ local inventory_size = 5
 
         -- objet permanent
         else
-            if #self.inventory == 0 then
-                local player_sc = SpriteCollection:new("player")
-                player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
-                Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9), false),
-                Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9)),
-                Sprite:new("img/wizard_special-Sheet.png", true, "special", 18, 18, Vector:new(7, 9), false, {0.5, 0.05, 0.25, 0.25, 0.25, 0.25, 0.06, 0.1, 0.1, 0.1})
-                })
-                self.spriteCollection = player_sc
-            end
             self.score.addScore("pickupOther")
             if G_soundEffectsOn then
                 itemSound:setVolume(0.2)
@@ -233,6 +266,11 @@ function Player:applyPotionEffect(pAmount)
     if (self.potion_stock[self.currentPotion] == 0) then
         print(" t'as plus de potions frérot !")
     elseif self.currentPotion == 1 then
+        if G_soundEffectsOn then
+            local sound = love.audio.newSource("sound/soundeffects/potion_drink.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+            sound:setVolume(0.5)
+            sound:play()
+        end
         self.potion_stock[1] = self.potion_stock[1] - 1
         -- on s'assure qu'il ne peut pas regen plus que sa vie max
         if self.currentHealth +  pAmount > self.maxHealth then
@@ -241,8 +279,18 @@ function Player:applyPotionEffect(pAmount)
             self.targetHealth =self.targetHealth + pAmount
         end
     elseif self.currentPotion == 2 and not self.timer1 then
+        if G_soundEffectsOn then
+            local sound = love.audio.newSource("sound/soundeffects/potion_drink.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+            sound:setVolume(0.5)
+            sound:play()
+        end
         self:consume()
     elseif self.currentPotion == 3 and not self.timer2 then
+        if G_soundEffectsOn then
+            local sound = love.audio.newSource("sound/soundeffects/potion_drink.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+            sound:setVolume(0.5)
+            sound:play()
+        end
         self:consume()
     end
 
@@ -259,12 +307,17 @@ function Player:consume()
         self.buffs[2] = self.buffs[2] + 2
         self.speed = self.speed + self.buffs[2]
         self.timer2 = Timer:new(10)
+        self.trail1 = self.pos
+        self.trail2 = self.pos
     end
 
 end
 
 function Player:castSpell()
-    if self.currentEnergy > 9.9 and #self.inventory > 0 then
+    if self.currentEnergy > 9.9 and #self.inventory > 0 and not self.hasShoot then
+        local sound=love.audio.newSource("sound/soundeffects/special_attack.wav","static")
+        sound:setVolume(0.5)
+        sound:play()
         self.currentEnergy = 0
         self.energyTimer = Timer:new(0.1)
         local p = {}
@@ -273,9 +326,9 @@ function Player:castSpell()
         for i=0, 360 - direction_step, direction_step do
             p = Projectile:new()
             if self.flipH == 1 then
-                p:init(i, 5, "bullet", self.pos + Vector:new(4, -2), G_fireballSC, G_fireballHF)
+                p:init(self.damage, i, 5, "bullet", self.pos + Vector:new(4, -2), Data.fireballSC, Data.fireballHF)
             elseif self.flipH == -1 then
-                p:init(i, 5, "bullet", self.pos + Vector:new(-4, -2), G_fireballSC, G_fireballHF)
+                p:init(self.damage, i, 5, "bullet", self.pos + Vector:new(-4, -2), Data.fireballSC, Data.fireballHF)
             end
         end
     end
@@ -295,6 +348,7 @@ function Player:buffsUpdate(dt)
 end
 
 function Player:energyUpdate(dt)
+    -- TODO: Mettre une augmentation d'énergie plus faible
     if self.energyTimer and self.energyTimer:update(dt) then
         self.energyTimer = nil
         if self.currentEnergy < 9.9 then
