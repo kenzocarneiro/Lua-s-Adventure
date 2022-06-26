@@ -1,12 +1,19 @@
-local cool_staff_sc = SpriteCollection:new("item")
-cool_staff_sc:init({Sprite:new("img/magic_staff.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
-local cool_staffHF = HitboxFactory:new(
-    {"hitbox", {item=true}, 3, 14, Vector:new(-5, -5)}
+local luaSC = SpriteCollection:new("lua")
+luaSC:init({Sprite:new("img/lua.png", false, "idle", 55, 55, Vector:new(28, 28)),
+Sprite:new("img/lua.png", false, "run", 55, 55, Vector:new(28, 28))})
+
+local luaHF = HitboxFactory:new(
+    {name="hitbox", layers={enemy=true}, width=10, height=10, offset=Vector:new(10, -12), shape="circle"},
+    {name="hurtbox", layers={player=true}, width=30, height=30, offset=Vector:new(0, 0), shape="circle"}
 )
 
-local cool_staff = Weapon:new()
-cool_staff:init(2, "The cooler staff", Vector:new(200, 80), cool_staff_sc, cool_staffHF)
+local luaBoss = Monster:new()
+luaBoss:init({}, "lua", 1000, "special", 0.5, "lua", Vector:new(50, 130), luaSC, luaHF)
+-- Vector:new(50, 50) top left
+-- Vector:new(270, 50) top right
+-- Vector:new(270, 130) bottom right
+-- Vector:new(50, 130) bottom left
 
 return {
   version = "1.5",
