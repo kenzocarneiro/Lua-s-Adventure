@@ -74,7 +74,7 @@ function love.keypressed(k)
         G_player:applyPotionEffect(3) -- TODO: This value should be linked to the potion .value attribute
 
     -- Compétence
-    elseif k == "e" and G_player.currentEnergy > 9.9 and #G_player.inventory > 0 then
+    elseif k == "e" and G_player.currentEnergy > 990 and #G_player.inventory > 0 then
         G_player:changeState("special")
 
     elseif k == "v" then

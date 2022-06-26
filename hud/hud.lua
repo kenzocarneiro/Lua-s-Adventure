@@ -185,7 +185,7 @@ function Hud.setPlayer()
         manaCost:setImage(love.graphics.newImage("img/hud/mana_ball.png"),2.4)
         local manaCostText = Text:new(176 , hauteur - 19, 0, 0,"10", mainFont, "", "", {200, 0, 0})
         local HealthValueText = Text:new(85 , 11, 0, 0, G_player.currentHealth .. "/" .. G_player.maxHealth, mainFont, "", "", {255, 255, 255})
-        local ManaValueText = Text:new(90 , 51, 0, 0, G_player.currentEnergy .. "/" .. G_player.maxEnergy, mainFont, "", "", {255, 255, 255})
+        local ManaValueText = Text:new(90 , 51, 0, 0, G_player.currentEnergy/100 .. "/" .. G_player.maxEnergy/100, mainFont, "", "", {255, 255, 255})
 
     local scoreImg =  Panel:new(largeur - 100, 5)
     scoreImg:setImage(love.graphics.newImage("img/hud/Score.png"), 0.65)
@@ -947,7 +947,7 @@ end
 -- 156 : bar length
 function Hud:updateEnergyPlayer()
     self.player.elements["energyBar"]:setWidth((G_player.currentEnergy / G_player.maxEnergy) * 151)
-    self.player.elements["zEnergyValueText"]:edit(G_player.currentEnergy .. "/" .. G_player.maxEnergy)
+    self.player.elements["zEnergyValueText"]:edit(G_player.currentEnergy/100 .. "/" .. G_player.maxEnergy/100)
 end
 
 function Hud:updateInvSlot(pNumberSlot, pImage)

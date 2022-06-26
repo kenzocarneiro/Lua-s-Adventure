@@ -17,7 +17,7 @@ function Player:new() return Entity.new(self) end
 --- @param collectRadius number
 function Player:init(inventory, collectRadius, ...)
     self.inventory = inventory or {}
-    self.maxEnergy = 10
+    self.maxEnergy = 1000
     self.currentEnergy = 0
    -- self.skillAngleCd = 0 or 0
     self.energyTimer = Timer:new(0.1)
@@ -314,7 +314,7 @@ function Player:consume()
 end
 
 function Player:castSpell()
-    if self.currentEnergy > 9.9 and #self.inventory > 0 and not self.hasShoot then
+    if self.currentEnergy > 990 and #self.inventory > 0 and not self.hasShoot then
         local sound=love.audio.newSource("sound/soundeffects/special_attack.wav","static")
         sound:setVolume(0.5)
         sound:play()
@@ -351,9 +351,9 @@ function Player:energyUpdate(dt)
     -- TODO: Mettre une augmentation d'énergie plus faible
     if self.energyTimer and self.energyTimer:update(dt) then
         self.energyTimer = nil
-        if self.currentEnergy < 9.9 then
+        if self.currentEnergy < 1000 then
             -- self.currentEnergy = self.currentEnergy + 0.01
-            self.currentEnergy = self.currentEnergy + 0.1
+            self.currentEnergy = math.min(self.currentEnergy + 2, 1000)
            -- self.skillAngleCd  = self.skillAngleCd + 360/100
             self.energyTimer = Timer:new(0.01)
         end

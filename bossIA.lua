@@ -18,7 +18,7 @@ function bossIA:new()
     setmetatable(e, self)
     self.__index = self
 
-    e.state = "moveAngry"
+    e.state = "attackAngry"
     e.substate = "moveBL"
 
     e.timer = Timer:new(1)
@@ -60,7 +60,7 @@ function bossIA:attackUpdate(dt, boss, player)
         if self.state == "attackAngry" then direction_step = 30 else direction_step = 45 end
         for i=0, 360 - direction_step, direction_step do
                 local p = Projectile:new()
-                p:init(boss.damage, i, 5, "bullet", boss.pos + Vector:new(0, 0), Data.fireballSC, Data.G_enemyFireBallHF)
+                p:init(boss.damage, i, 5, "bullet", boss.pos + Vector:new(0, 0), Data.fireballSC, Data.enemyFireBallHF)
         end
         self.subLaunched = false
         -- if self.substate == "moveBL" then
@@ -111,7 +111,7 @@ function bossIA:attackUpdate(dt, boss, player)
             --     return "pos", Vector:new(270, 50) -- top right
             -- end
             self.subState = stateTab[randmove]
-            print("moveTranslation", moveTranslation[self.subState])
+            -- print("moveTranslation", moveTranslation[self.subState])
             return "pos", moveTranslation[self.subState]
         end
     end
