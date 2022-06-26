@@ -154,7 +154,17 @@ function Player:draw()
         love.graphics.circle("line", self.pos.x, self.pos.y, self.collectRadius)
     end
 
-    Entity.draw(self)
+    if #self.inventory == 0 then
+        if self.state == "idle" then
+            Entity.draw(self, "idleEmpty")
+        elseif self.state == "run" then
+            Entity.draw(self, "idleEmpty")
+        else
+            Entity.draw(self)
+        end
+    else
+        Entity.draw(self)
+    end
 end
 
 
@@ -199,15 +209,6 @@ local inventory_size = 5
 
         -- objet permanent
         else
-            if #self.inventory == 0 then
-                local player_sc = SpriteCollection:new("player")
-                player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
-                Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9), false),
-                Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9)),
-                Sprite:new("img/wizard_special-Sheet.png", true, "special", 18, 18, Vector:new(7, 9), false, {0.5, 0.05, 0.25, 0.25, 0.25, 0.25, 0.06, 0.1, 0.1, 0.1})
-                })
-                self.spriteCollection = player_sc
-            end
             self.score.addScore("pickupOther")
             if G_soundEffectsOn then
                 itemSound:setVolume(0.2)

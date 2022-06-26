@@ -76,8 +76,10 @@ function Element:update(dt, scAlreadyUpdated)
 end
 
 --- Draw the element.
-function Element:draw()
-    self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), self.flipH, self.flipV, self.angle)
+--- @param customState string|nil to set manually which state is drawn
+function Element:draw(customState)
+    local state = customState or self.state
+    self.spriteCollection:draw(state, self.pos, self.spriteTimer:getCurrentFrame(), self.flipH, self.flipV, self.angle)
 end
 
 --- Change the Element state and its corresponding sprite
