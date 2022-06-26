@@ -21,7 +21,6 @@ function Player:init(inventory, collectRadius, ...)
     self.currentEnergy = 0
    -- self.skillAngleCd = 0 or 0
     self.energyTimer = Timer:new(0.1)
-    self.damage = 4
     self.maxHealth = 100
     self.targetHealth = 100
     self.currentHealth = self.maxHealth
@@ -110,9 +109,9 @@ function Player:update(dt)
                 local direction = Vector:new(self.flipH, 0)
 
                 if self.flipH == 1 then
-                    p:init(direction, 5, "bullet", self.pos + Vector:new(9, 5), Data.fireballSC, Data.fireballHF)
+                    p:init(self.damage, direction, 5, "bullet", self.pos + Vector:new(9, 5), Data.fireballSC, Data.fireballHF)
                 elseif self.flipH == -1 then
-                    p:init(direction, 5, "bullet", self.pos + Vector:new(-9, 5), Data.fireballSC, Data.fireballHF)
+                    p:init(self.damage, direction, 5, "bullet", self.pos + Vector:new(-9, 5), Data.fireballSC, Data.fireballHF)
                 end
 
             elseif animationFinished then
@@ -327,9 +326,9 @@ function Player:castSpell()
         for i=0, 360 - direction_step, direction_step do
             p = Projectile:new()
             if self.flipH == 1 then
-                p:init(i, 5, "bullet", self.pos + Vector:new(4, -2), Data.fireballSC, Data.fireballHF)
+                p:init(self.damage, i, 5, "bullet", self.pos + Vector:new(4, -2), Data.fireballSC, Data.fireballHF)
             elseif self.flipH == -1 then
-                p:init(i, 5, "bullet", self.pos + Vector:new(-4, -2), Data.fireballSC, Data.fireballHF)
+                p:init(self.damage, i, 5, "bullet", self.pos + Vector:new(-4, -2), Data.fireballSC, Data.fireballHF)
             end
         end
     end
