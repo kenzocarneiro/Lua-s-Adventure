@@ -35,7 +35,8 @@ function Monster:init(lootTable, name, aggroRadius, typeOfMove, speed, weapon, p
     self.lootTable:init(lootTable)
 
     if name == "lua" then
-        self.ia = require("stateMachineIA")
+        IA = require("bossIA")
+        self.ia = IA:new()
     end
 
     Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)
@@ -46,7 +47,7 @@ end
 --- Update the monster (called every frames).
 --- @param dt number
 function Monster:update(dt, player)
-    if self:aggro(player) then
+    if self.typeOfMove == "special" or self:aggro(player) then
         self.goal = player.pos
     else
         self.goal = nil
@@ -57,7 +58,10 @@ function Monster:update(dt, player)
             self:move(self.goal)
         elseif self.typeOfMove == "advanced" then
             self:betterMove(self.goal)
-        elseif self.typeOfMove == "special" then
+        elseif self.ia then
+            local type, move = self.ia:update(dt, self, player)
+            print(move)
+            if move then self.pos = move end
         else
             self:move(self.goal)
         end

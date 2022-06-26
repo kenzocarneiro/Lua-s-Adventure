@@ -87,11 +87,6 @@ function Entity:move(move)
         finalMove = finalMove + move_V
     end
 
-    print(self.pos)
-    if collision_H or collision_V then
-        print("colliding", collision_H, collision_V, self.pos, finalMove, move)
-    end
-
     self.pos = self.pos + finalMove
 
     -- if collision_H or collision_V then
