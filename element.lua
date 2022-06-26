@@ -90,6 +90,7 @@ function Element:changeState(state)
     end
 end
 
+-- Not used anymore, the hurt method is now specific to entities.
 -- --- Hurt the Element and check if the Element is dead.
 -- --- @param damage number
 -- function Element:hurt(damage)

@@ -97,14 +97,15 @@ function Entity:move(move)
 
 end
 
---- Hurt the Entity and check if the Element is dead.
+--- Hurt the Entity and check if it is dead.
 --- @param damage number
 --- @param pos Vector|nil
 --- @return boolean isDead tells if the entity is dead
 function Entity:hurt(damage, pos)
     local isDead = false
     if not self.invulnerable then
-        -- print("PAF")
+
+        -- TODO: put in sub-class overwrited methods
         -- si c'est un joueur qui est blessé
         if tostring(self) == "Player" then
             self.targetHealth = self.targetHealth - damage
@@ -122,6 +123,11 @@ function Entity:hurt(damage, pos)
         end
 
         if pos then
+            if G_soundEffectsOn then
+                local hurt=love.audio.newSource("sound/soundeffects/fire_hit.wav","static")
+                hurt:setVolume(0.5)
+                hurt:play()
+            end
             local knockback = 5
             local newPos = self.pos - pos
             newPos = newPos:normalized()*knockback

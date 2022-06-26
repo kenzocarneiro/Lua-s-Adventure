@@ -2,6 +2,8 @@
 io.stdout:setvbuf('no')
 
 if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
+rawset = nil -- Disable rawset
+rawget = nil -- Disable rawget
 
 -- Pour notre magnifique HUD
 local Hud = require("hud/hud")
@@ -54,19 +56,21 @@ function love.load()
     G_soundOn = true
     G_soundEffectsOn = true
 
-    G_room = Room:new(1)
+    G_room = Room:new(0)
+    G_room.objectsGrid[G_room.entrance["row"]][G_room.entrance["col"]].data = 0
+    G_deltaT = 0
 
     --- @type Element[]
     G_deadElements = {}
 
-    G_nb_rooms = 2
+    G_nb_rooms = 3
 
     --initialize sprite collections for monster player and item
     local player_sc = SpriteCollection:new("player")
-    player_sc:init({Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
-        Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9), false),
-        Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9)),
-        Sprite:new("img/wizard_special-Sheet.png", true, "special", 18, 18, Vector:new(7, 9), false, {0.5, 0.05, 0.25, 0.25, 0.25, 0.25, 0.06, 0.1, 0.1, 0.1})
+    player_sc:init({Sprite:new("img/wizard_idle-Sheet0.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
+        Sprite:new("img/wizard_run-Sheet0.png", true, "run", 18, 18, Vector:new(7, 9), false),
+        Sprite:new("img/wizard_run-Sheet0.png", true, "attack", 18, 18, Vector:new(7, 9)),
+        Sprite:new("img/wizard_run-Sheet0.png", true, "special", 18, 18, Vector:new(7, 9), false, {0.5, 0.05, 0.25, 0.25, 0.25, 0.25, 0.06, 0.1, 0.1, 0.1})
     })
 
     local playerHF = HitboxFactory:new(
@@ -78,7 +82,7 @@ function love.load()
     G_player = Player:new()
     -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
     -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
-    G_player:init({}, 15, 1, "epee", Vector:new((G_room.entrance["col"]+0.5)*G_room.tileSize, (G_room.entrance["row"]-0.5)*G_room.tileSize), player_sc, playerHF)
+    G_player:init({}, 15, 1, "epee", Vector:new(152,80), player_sc, playerHF)
 
     G_hud = Hud:new()
 end
@@ -96,11 +100,11 @@ function love.keypressed(k)
         G_player:applyPotionEffect(3) -- TODO: This value should be linked to the potion .value attribute
 
     -- Compétence
-    elseif k == "e" and G_player.currentEnergy > 9.9 then
+    elseif k == "e" and G_player.currentEnergy > 9.9 and #G_player.inventory > 0 then
         G_player:changeState("special")
 
     elseif k == "v" then
-        print(G_player.score)
+        print(G_player.score.getScore())
 
     elseif k == "escape" then
         love.event.quit()
@@ -140,12 +144,11 @@ local function checkHurtHit()
                     local isDead = v2.associatedElement:hurt(v.associatedElement.damage, v.associatedElement.pos)
                     if isDead and v2.layers["enemy"] then
                         if v2.associatedElement.name == "troll" then
-                            G_player.score = G_player.score + 100
-                            v2.associatedElement.lootTable:loot(v2.associatedElement.pos)
+                            G_player.score.addScore("killedTroll")
                         elseif v2.associatedElement.name == "rhino" then
-                            G_player.score = G_player.score + 75
-                            v2.associatedElement.lootTable:loot(v2.associatedElement.pos)
+                            G_player.score.addScore("killedRhino")
                         end
+                        v2.associatedElement.lootTable:loot(v2.associatedElement.pos)
                     end
                     if tostring(v.associatedElement) == "Projectile" then v.associatedElement:hurt(1)
                 end
@@ -217,140 +220,155 @@ function love.update(dt)
     G_hud:update(dt) -- HUD
     if G_hud.player.visible then --jeu en cours
 
-        --INPUTS
-        --affichage des hitboxes
-        if love.keyboard.isDown("lshift") then
-            G_hitboxActivated = true
-        else
-            G_hitboxActivated = false
-        end
-
-        --affichage du radius de collect
-        if love.keyboard.isDown("lctrl") then
-            G_player.radiusDisplay = true
-        else
-            G_player.radiusDisplay = false
-        end
-
-        if love.keyboard.isDown("lalt") then
-            for i, v in pairs(G_monsterList) do
-                G_monsterList[i].radiusDisplay = true
+        if not G_room.isFinished then
+            --INPUTS
+            --affichage des hitboxes
+            if love.keyboard.isDown("lshift") then
+                G_hitboxActivated = true
+            else
+                G_hitboxActivated = false
             end
-        else
-            for i, v in pairs(G_monsterList) do
-                G_monsterList[i].radiusDisplay = false
+
+            --affichage du radius de collect
+            if love.keyboard.isDown("lctrl") then
+                G_player.radiusDisplay = true
+            else
+                G_player.radiusDisplay = false
             end
-        end
 
-        if love.keyboard.isDown("1") then
-            G_player.currentPotion = 1 --health
-        end
-        if love.keyboard.isDown("2") then
-            G_player.currentPotion = 2 --speed
-        end
-        if love.keyboard.isDown("3") then
-            G_player.currentPotion = 3 --damage
-        end
-
-
-        if G_PONG then
-            Pong.update(dt)
-            return
-        end
-
-        if love.keyboard.isDown("p") and love.keyboard.isDown("i") and love.keyboard.isDown("n") and love.keyboard.isDown("g") then
-            Pong = require("tests/pong/pong")
-            Pong.load()
-            G_PONG = true
-        end
-
-        -- player movements
-        G_player:update(dt)
-
-        for i, v in ipairs(G_projectiles) do
-            v:update(dt)
-        end
-
-        -- Monster updates
-        for i = 1,#G_monsterList do
-            if G_monsterList[i] then
-                G_monsterList[i].goal = G_player.pos
-                G_monsterList[i]:update(dt, G_player)
-            end
-        end
-
-        --updating all the items of the game
-        for i = 1,#G_itemList do
-            if G_itemList[i] then
-                G_itemList[i]:update(dt)
-            end
-        end
-
-        --trying to pick up item
-        for i = 1,#G_itemList do
-            if G_itemList[i] then
-                if G_player:pickup(G_itemList[i]) then
-                    if tostring(G_itemList[i]) == "Coin" then
-                        G_player:add_gold(G_itemList[i].value)
-                        local coin=love.audio.newSource("sound/soundeffects/coin.wav","static")
-                        coin:setVolume(0.2)
-                        coin:play()
-                    else
-                        local item=love.audio.newSource("sound/soundeffects/pickup.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
-                        item:setVolume(0.2)
-                        item:play()
-                    end
-
-                    for j = 1,#G_hitboxes do
-                        if G_hitboxes[j] == G_itemList[i].hitboxes["hitbox"] then
-                            table.remove(G_hitboxes, j)
-                            break
-                        end
-                    end
-                    table.remove(G_itemList, i)
-                    break
+            if love.keyboard.isDown("lalt") then
+                for i, v in pairs(G_monsterList) do
+                    G_monsterList[i].radiusDisplay = true
+                end
+            else
+                for i, v in pairs(G_monsterList) do
+                    G_monsterList[i].radiusDisplay = false
                 end
             end
-        end
 
-        -- make the exit of the room appear
-        if #G_monsterList == 0 then
-            G_room.objectsGrid[G_room.exit["row"]][G_room.exit["col"]].data=7
-            if G_hud.questTexts.elements["level_end"].enabled then
-                G_hud.questTexts.elements["level_end"]:setLifeSpan(4)
+            if love.keyboard.isDown("1") then
+                G_player.currentPotion = 1 --health
             end
-        end
-
-        -- if the player is on the exit,
-        if G_player.pos.x > G_room.exit["col"]*G_room.tileSize and G_player.pos.x < (G_room.exit["col"]+1)*G_room.tileSize then
-            if G_player.pos.y > G_room.exit["row"]*G_room.tileSize and G_player.pos.y < (G_room.exit["row"]+1)*G_room.tileSize then
-                G_room.isFinished = true
+            if love.keyboard.isDown("2") then
+                G_player.currentPotion = 2 --speed
             end
-        end
+            if love.keyboard.isDown("3") then
+                G_player.currentPotion = 3 --damage
+            end
 
-        checkHurtHit()
 
-        killEntities()
+            if G_PONG then
+                Pong.update(dt)
+                return
+            end
+
+            if love.keyboard.isDown("p") and love.keyboard.isDown("i") and love.keyboard.isDown("n") and love.keyboard.isDown("g") then
+                Pong = require("tests/pong/pong")
+                Pong.load()
+                G_PONG = true
+            end
+
+            -- player movements
+            G_player:update(dt)
+
+            for i, v in ipairs(G_projectiles) do
+                v:update(dt)
+            end
+
+            -- Monster updates
+            for i = 1,#G_monsterList do
+                if G_monsterList[i] then
+                    G_monsterList[i].goal = G_player.pos
+                    G_monsterList[i]:update(dt, G_player)
+                end
+            end
+
+            --updating all the items of the game
+            for i = 1,#G_itemList do
+                if G_itemList[i] then
+                    G_itemList[i]:update(dt)
+                end
+            end
+
+            --trying to pick up item
+            for i = 1,#G_itemList do
+                if G_itemList[i] then
+                    if G_player:pickup(G_itemList[i]) then
+                        if tostring(G_itemList[i]) == "Coin" then
+                            if G_soundEffectsOn then
+                                local coin=love.audio.newSource("sound/soundeffects/coin.wav","static")
+                                coin:setVolume(0.2)
+                                coin:play()
+                            end
+                        else
+                            if G_soundEffectsOn then
+                                local item=love.audio.newSource("sound/soundeffects/pickup.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
+                                item:setVolume(0.2)
+                                item:play()
+                            end
+                        end
+
+                        for j = 1,#G_hitboxes do
+                            if G_hitboxes[j] == G_itemList[i].hitboxes["hitbox"] then
+                                table.remove(G_hitboxes, j)
+                                break
+                            end
+                        end
+                        table.remove(G_itemList, i)
+                        break
+                    end
+                end
+            end
+
+            -- make the exit of the room appear
+            if #G_monsterList == 0 then
+                G_room.objectsGrid[G_room.exit["row"]][G_room.exit["col"]].data=7
+                if G_room.number ~= 0 and G_hud.questTexts.elements["level_end"].enabled then
+                    G_hud.questTexts.elements["level_end"]:setLifeSpan(4)
+                end
+                if G_player.pos.x > G_room.exit["col"]*G_room.tileSize and G_player.pos.x < (G_room.exit["col"]+1)*G_room.tileSize then
+                    if G_player.pos.y > G_room.exit["row"]*G_room.tileSize and G_player.pos.y < (G_room.exit["row"]+1)*G_room.tileSize then
+                        G_room.isFinished = true
+                        if G_deltaT == 0 then
+                            G_player.score.addScore("roomFinished", G_room.number)
+                            G_deltaT = love.timer.getTime()
+                            -- G_hud.player:setVisible(false)
+                            G_room.music:pause()
+                            if G_soundOn then
+                                local won = love.audio.newSource("sound/soundeffects/change_room.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
+                                won:setVolume(0.5)
+                                won:play()
+                            end
+                        end
+                    end
+                end
+            end
+
+            checkHurtHit()
+
+            killEntities()
 
         --to change room if room is finished
-        if G_room.isFinished then
-            local index = G_room.number+1
+        else
 
-            if index > G_nb_rooms then
-                print("Victory")
-                G_hud.player:setVisible(false)
-                G_hud.victory:setVisible(true)
-            else
-
-                --reset G_variables
-                G_hitboxes = {G_player.hitboxes["hitbox"]}
-                G_hurtboxes = {}
-                G_monsterList = {}
-                G_itemList = {}
-                G_projectiles = {}
-                G_room.music:pause()
-                G_room = nil
-                G_room = Room:new(index)
+            if love.timer.getTime() - G_deltaT > 1 then
+                local index = G_room.number+1
+                if index > G_nb_rooms then
+                    print("Victory")
+                    G_hud.player:setVisible(false)
+                    G_hud.victory:setVisible(true)
+                else
+                    --reset G_variables
+                    G_hitboxes = {G_player.hitboxes["hitbox"]}
+                    G_hurtboxes = {}
+                    G_monsterList = {}
+                    G_itemList = {}
+                    G_projectiles = {}
+                    G_room = nil
+                    G_deltaT = 0
+                    -- G_hud.player:setVisible(true)
+                    G_room = Room:new(index)
+                end
             end
         end
     end
@@ -358,7 +376,10 @@ end
 
 --- Draw the game (called every frames)
 function love.draw()
-    if G_hud.player.visible or G_hud.parameter.visible or G_hud.characterSheet.visible then --menu de départ => jeu non affiché
+    if G_deltaT ~= 0 then
+        love.graphics.setColor(255/255, 255/255, 255/255)
+
+    elseif G_hud.player.visible or G_hud.parameter.visible or G_hud.characterSheet.visible then --menu de départ => jeu non affiché
         love.graphics.setColor(255/255, 255/255, 255/255)
         if G_PONG then
             love.graphics.scale(1, 1)
@@ -370,11 +391,11 @@ function love.draw()
         if G_blackoutOnPlayer then
             love.graphics.setColor(G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255)
         end
-    
+
         if G_blackoutOnPlayer then
             love.graphics.setColor(255/255, 255/255, 255/255)
         end
-    
+
         if G_blackoutOnPlayer then
             love.graphics.setColor(G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255, G_blackoutCurrentFrame/255)
         end
@@ -408,7 +429,7 @@ function love.draw()
                 v:draw({255, 255, 0})
             end
         end
-        
+
         love.graphics.scale(1/4, 1/4)
     end
   --  love.graphics.setColor(255/255, 255/255, 255/255)
