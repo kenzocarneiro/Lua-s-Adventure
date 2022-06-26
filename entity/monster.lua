@@ -15,6 +15,7 @@ function Monster:new() return Entity.new(self) end
 
 --- Initializes the monster.
 --- @param lootTable table
+--- @param name string
 --- @param aggroRadius number
 --- @param typeOfMove string
 --- @param speed number
@@ -33,6 +34,12 @@ function Monster:init(lootTable, name, aggroRadius, typeOfMove, speed, weapon, p
 
     self.lootTable = LootTable:new()
     self.lootTable:init(lootTable)
+
+    if name == "troll" then
+        self.currentHealth = 30
+    elseif name == "rhino" then
+        self.currentHealth = 10
+    end
 
     Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)
     G_monsterList[#G_monsterList+1] = self

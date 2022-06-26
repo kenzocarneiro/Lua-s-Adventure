@@ -349,7 +349,7 @@ function love.update(dt)
                 end
 
                 if index > G_nbRooms then
-                    print("Victory")
+                    -- print("Victory")
                     G_hud.player:setVisible(false)
                     G_hud.victory:setVisible(true)
                 else
