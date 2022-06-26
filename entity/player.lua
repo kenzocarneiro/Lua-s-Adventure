@@ -98,10 +98,8 @@ function Player:update(dt)
             if currentFrame == 4 and not self.hasShoot then
                 if G_soundEffectsOn then
                     local sound = love.audio.newSource("sound/soundeffects/player_attack.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
-                    if G_soundEffectsOn then
-                        sound:setVolume(0.5)
-                        sound:play()
-                    end
+                    sound:setVolume(0.5)
+                    sound:play()
                 end
                 self.hasShoot = true
                 local p = Projectile:new()
@@ -235,6 +233,11 @@ function Player:applyPotionEffect(pAmount)
     if (self.potion_stock[self.currentPotion] == 0) then
         print(" t'as plus de potions frérot !")
     elseif self.currentPotion == 1 then
+        if G_soundEffectsOn then
+            local sound = love.audio.newSource("sound/soundeffects/potion_drink.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+            sound:setVolume(0.5)
+            sound:play()
+        end
         self.potion_stock[1] = self.potion_stock[1] - 1
         -- on s'assure qu'il ne peut pas regen plus que sa vie max
         if self.currentHealth +  pAmount > self.maxHealth then
@@ -243,8 +246,18 @@ function Player:applyPotionEffect(pAmount)
             self.targetHealth =self.targetHealth + pAmount
         end
     elseif self.currentPotion == 2 and not self.timer1 then
+        if G_soundEffectsOn then
+            local sound = love.audio.newSource("sound/soundeffects/potion_drink.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+            sound:setVolume(0.5)
+            sound:play()
+        end
         self:consume()
     elseif self.currentPotion == 3 and not self.timer2 then
+        if G_soundEffectsOn then
+            local sound = love.audio.newSource("sound/soundeffects/potion_drink.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+            sound:setVolume(0.5)
+            sound:play()
+        end
         self:consume()
     end
 
