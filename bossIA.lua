@@ -3,6 +3,7 @@ local Data = require("data")
 
 --- Class representing the IA of the boss (state machine IA)
 --- @class bossIA
+--- @field mood string
 --- @field state string
 --- @field substate string
 --- @field timer Timer
@@ -18,7 +19,8 @@ function bossIA:new()
     setmetatable(e, self)
     self.__index = self
 
-    e.state = "attackAngry"
+    e.mood = "normal"
+    e.state = "attack"
     e.substate = "moveBL"
 
     e.timer = Timer:new(1)
@@ -57,28 +59,19 @@ function bossIA:attackUpdate(dt, boss, player)
 
     if subHasFinished then
         local direction_step
-        if self.state == "attackAngry" then direction_step = 30 else direction_step = 45 end
+        if self.mood == "angry" then direction_step = 15 else direction_step = 45 end
         for i=0, 360 - direction_step, direction_step do
                 local p = Projectile:new()
-                p:init(boss.damage, i, 5, "bullet", boss.pos + Vector:new(0, 0), Data.fireballSC, Data.enemyFireBallHF)
+                p:init(boss.damage, i, 3, "bullet", boss.pos + Vector:new(0, 0), Data.fireballSC, Data.enemyFireBallHF)
         end
         self.subLaunched = false
-        -- if self.substate == "moveBL" then
-
-        -- elseif self.substate == "moveBR" then
-
-        -- elseif self.substate == "moveTL" then
-
-        -- elseif self.substate == "moveTR" then
-
-        -- end
     end
 
 
     if hasFinished then
         local randstate = math.random(1, 6)
         if randstate == 1 then
-            if self.state == "attackAngry" then self.state = "moveAngry" else self.state = "move" end
+            self.state = "move"
             self.timer:reset()
             self.subTimer:reset()
         else
@@ -121,25 +114,31 @@ end
 -- Vector:new(270, 130) bottom right
 -- Vector:new(50, 130) bottom left
 
+--- @param dt number
+--- @param boss Monster
+--- @param player Player
 function bossIA:updateMove(dt, boss, player)
     Monster.move(boss, player.pos)
     local hasFinished = self.moveTimer:update(dt)
     if hasFinished then
-        if self.state == "moveAngry" then self.state = "attackAngry" else self.state = "attack" end
+        self.state = "attack"
         self.moveTimer:reset()
     end
 end
 
 --- Update the entity (called every frames).
 --- @param dt number
+--- @param boss Monster
+--- @param player Player
 function bossIA:update(dt, boss, player)
-    if self.state == "attack" or self.state == "attackAngry" then
+    if boss.currentHealth < boss.maxHealth / 2 then
+        self.mood = "angry"
+    end
+
+    if self.state == "attack" then
         return self:attackUpdate(dt, boss, player)
     elseif self.state == "move" then
-        boss.speed = 0.5
-        self:updateMove(dt, boss, player)
-    elseif self.state == "moveAngry" then
-        boss.speed = 0.7
+        if self.mood == "angry" then boss.speed = 0.7 else boss.speed = 0.5 end
         self:updateMove(dt, boss, player)
     end
 end
