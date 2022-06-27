@@ -10,6 +10,7 @@ local myGUI = require("GCGUI")
 
 local textColor = {0, 0, 0}
 local textColorSelected = {255, 255, 0}
+local textOtherColor = {0, 255, 255}
 
 local Hud = {}
 
@@ -556,13 +557,13 @@ function Hud.setCredits()
 
     local titleText = Text:new(0, 20, screenWidth, 0, "Lua's Adventure", titleFont, "center", "", {255, 255, 255})
     local devText = Text:new(50, 100, 0, 0, "Developed by:", mainFontMenu, "", "", {255, 255, 255})
-    local devName = Text:new(50, 140, 0, 0, "\tLucien Audebert\n\tNicolas Bédrunes\n\tKenzo Carneiro\n\tTristan Claudé\n\tRose Thieullet", mainFontMenu, "", "", textColorSelected)
+    local devName = Text:new(50, 140, 0, 0, "\tLucien Audebert\n\tNicolas Bédrunes\n\tKenzo Carneiro\n\tTristan Claudé\n\tRose Thieullet", mainFontMenu, "", "", textOtherColor)
 
     local thanksText = Text:new(50, 400, 0, 0, "Special thanks to:", mainFontMenu, "", "", {255, 255, 255})
-    local thanksName = Text:new(50, 440, 0, 0, "\tXavier BULTEL\n\tAhmad Abdallah\n\tPascal Berthomé", mainFontMenu, "", "", textColorSelected)
+    local thanksName = Text:new(50, 440, 0, 0, "\tXavier BULTEL\n\tAhmad Abdallah\n\tPascal Berthomé", mainFontMenu, "", "", textOtherColor)
 
     local assetsText = Text:new(500, 100, 0, 0, "Assets taken from:", mainFontMenu, "", "", {255, 255, 255})
-    local assetsName = Text:new(500, 140, 0, 0, "\tµFantasy Tileset - 0x72\n\tTiny GUI Pack - vryell\n\tRoguelike/RPG Icons - JoeCreates\n\tCrown - DK_Happy\n\tUI 8Bit Retro SOUNDPACK - HoneyPhonic\n\tKenVector Future - Kenney\n\t8-bit Game Sound Effects Collection\n- harvey656\n\tRetro Sounds - Dagurasu", mainFontMenu, "", "", textColorSelected)
+    local assetsName = Text:new(500, 140, 0, 0, "[Sprites]\n\tµFantasy Tileset - 0x72\n\tTiny GUI Pack - vryell\n\tRoguelike/RPG Icons - JoeCreates\n\tCrown - DK_Happy\n[SFX]\n\tUI 8Bit Retro SOUNDPACK - HoneyPhonic\n\tKenVector Future - Kenney\n\t8-bit Game Sound Effects Collection\n- harvey656\n\tRetro Sounds - Dagurasu\n\t200 Free SFX - Kronbits\n[Musics]\n\tToohoo Project - Team Shanghai Alice", mainFontMenu, "", "", textColorSelected)
 
     local menuKbButton = TextButton:new(imgPanel.x + 10, screenHeight/2 + 2*7*16, 0, 0, "Menu", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         menuKbButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"),6)
