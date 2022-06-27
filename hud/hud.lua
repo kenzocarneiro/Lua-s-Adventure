@@ -175,6 +175,13 @@ function Hud.setPlayer()
 
     local transitionBar = Panel:new(160,11, 0, 20,{200,30,30})
 
+      --barre de vie boss
+      local healthHeartBoss = Panel:new(largeur - 700, 0)
+      healthHeartBoss:setImage(love.graphics.newImage("img/hud/boss_health.png"), 5)
+    local healthBarBoss = Panel:new(largeur - 648,10, 278, 30, {139,0,0})
+
+    local transitionBarBoss = Panel:new(largeur - 648,8, 0, 30,{200,200,30})
+
     -- barre d'energie
     local energyBarImg = Panel:new(0, 40)
         energyBarImg:setImage(love.graphics.newImage("img/hud/mana.png"), 0.1)
@@ -299,11 +306,17 @@ function Hud.setPlayer()
     group:addElement(scoreImg, "scoreImg")
     group:addElement(scoreText, "scoreText")
 
+    
+    group:addElement(healthBarBoss, "healthBarBoss")
+    group:addElement(healthHeartBoss, "healthHeartBoss")
+   -- group:addElement(transitionBarBoss, "transitionBarBoss")
+
     -- BOSS
     local luaLife = G_bossLife or 0
     local luaMaxLife = G_bossMaxLife or 1
-    local bossText = Text:new(largeur - 700, 8, 0, 0, "Lua's life: " .. luaLife .. " / " .. luaMaxLife, mainFont, "", "", {255, 0, 0})
-    group:addElement(bossText, "bossText")
+    local bossText = Text:new(largeur - 600, 14, 0, 0, luaLife .. " / " .. luaMaxLife, mainFont, "", "", {255, 255, 255})
+    bossText:setVisible(false)
+    group:addElement(bossText, "z_bossText")
 
     return group
 end
@@ -916,8 +929,20 @@ function Hud:update(dt)
     -- BOSS
     local luaLife = G_bossLife or 0
     local luaMaxLife = G_bossMaxLife or 1
-    self.player.elements["bossText"]:edit("Lua's life: " .. luaLife .. " / " .. luaMaxLife)
+    if luaLife ~= 0 then
+        self.player.elements["healthBarBoss"]:setWidth((luaLife / luaMaxLife) * 278)
+        self.player.elements["healthBarBoss"]:setVisible(true)
+        self.player.elements["healthHeartBoss"]:setVisible(true)
+        self.player.elements["z_bossText"]:setVisible(true)
 
+
+    else
+        self.player.elements["healthHeartBoss"]:setVisible(false)
+        self.player.elements["healthBarBoss"]:setVisible(false)
+        self.player.elements["z_bossText"]:setVisible(false)
+    end
+    self.player.elements["z_bossText"]:edit(luaLife .. " / " .. luaMaxLife)
+    
 
 
     for key, value in pairs(self) do
