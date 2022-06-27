@@ -100,6 +100,10 @@ end
 function Hud.setMainMenu()
     local mainFontMenu = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 40)
     love.graphics.setFont(mainFontMenu)
+    local titleFont = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 50)
+    love.graphics.setFont(mainFontMenu)
+
+
 
     local screenWidth = love.graphics.getWidth()
     local screenHeight = love.graphics.getHeight()
@@ -109,25 +113,33 @@ function Hud.setMainMenu()
     local coeffX, coeffW = 1.06, 6
     local imgZoom = 7
 
-    local playKbButton = TextButton:new(0, screenHeight/2 - 2*(imgZoom+1)*16, nil, nil, "Play", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW) --16px * (zoom+espace) * decalage
+    local titleTextMain = Text:new(0, 20, screenWidth, 0, "Lua's Adventure", titleFont, "center", "", {255, 255, 255})
+
+    local luaShadow =  Panel:new(-300, 100)
+    luaShadow:setImage(love.graphics.newImage("img/hud/luaShadow.png"), 0.5)
+
+    local playerFighting =  Panel:new(900, 300)
+    playerFighting:setImage(love.graphics.newImage("img/hud/playerFighting.png"), 1)
+
+    local playKbButton = TextButton:new(0, screenHeight/2 - 2*(imgZoom+1)*16 - 15, nil, nil, "Play", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW) --16px * (zoom+espace) * decalage
         playKbButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"), imgZoom)
         playKbButton.x = screenWidth/2 - 3.5*playKbButton.w --2*inventory.w pour que le bouton soit centré (*4 pour le zoom et /2 pour le décalage)
         playKbButton:modifySelected()
         -- local playText = Text:new(playKbButton.x + playKbButton.w/2, playKbButton.y + playKbButton.h/2, 0, 0, "Play", mainFontMenu, "", "", {0, 0, 0})
 
-    local optionsKbButton = TextButton:new(playKbButton.x, screenHeight/2 - 1*(imgZoom+1)*16, 0, 0, "Options", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+    local optionsKbButton = TextButton:new(playKbButton.x, screenHeight/2 - 1*(imgZoom+1)*16 - 15, 0, 0, "Options", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         optionsKbButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"),imgZoom)
         -- local optionsText = Text:new(optionsKbButton.x + optionsKbButton.w/2, optionsKbButton.y + optionsKbButton.h/2, 0, 0, "Options", mainFontMenu, "", "", {0, 0, 0})
 
-    local leaderKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 0*(imgZoom+1)*16, 0, 0, "LeaderBoard", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+    local leaderKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 0*(imgZoom+1)*16 - 15, 0, 0, "LeaderBoard", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
     leaderKbButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"),imgZoom)
         -- local leaderText = Text:new(leaderKbButton.x + leaderKbButton.w/2, leaderKbButton.y + leaderKbButton.h/2, 0, 0, "LeaderBoard", mainFontMenu, "", "", {0, 0, 0})
 
-    local creditsKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 1*(imgZoom+1)*16, 0, 0, "Credits", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+    local creditsKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 1*(imgZoom+1)*16 - 15, 0, 0, "Credits", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         creditsKbButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"),imgZoom)
         -- local creditsText = Text:new(creditsKbButton.x + creditsKbButton.w/2, creditsKbButton.y + creditsKbButton.h/2, 0, 0, "Credits", mainFontMenu, "", "", {0, 0, 0})
 
-    local exitKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 2*(imgZoom+1)*16, 0, 0, "Exit", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+    local exitKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 2*(imgZoom+1)*16 - 15, 0, 0, "Exit", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         exitKbButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"),imgZoom)
         -- local exitText = Text:new(exitKbButton.x + exitKbButton.w/2, exitKbButton.y + exitKbButton.h/2, 0, 0, "Exit", mainFontMenu, "", "", {0, 0, 0})
 
@@ -138,6 +150,11 @@ function Hud.setMainMenu()
         buttonParam:setImage(love.graphics.newImage("img/hud/gear.png"))
     local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , screenHeight - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {255, 255, 255})
 
+    group:addElement(luaShadow, "luaShadow")
+
+    group:addElement(playerFighting, "playerFighting")
+
+    group:addElement(titleTextMain, "titleText")
 
     group:addElement(playKbButton, "playKbButton")
     -- group:addElement(playText, "playText")
@@ -524,6 +541,7 @@ end
 
 function Hud.setCredits()
     local mainFontMenu = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 30)
+    local titleFont = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 50)
     love.graphics.setFont(mainFontMenu)
 
     local screenWidth = love.graphics.getWidth()
@@ -536,14 +554,17 @@ function Hud.setCredits()
     local imgPanel = Panel:new(0, 0)
         -- imgPanel:setImage(love.graphics.newImage("img/hud/Victory2.png"), 0.8)
 
-    local titleText = Text:new(0, 0, screenWidth, 0, "Lua 's Adventure", mainFontMenu, "center", "", {255, 255, 255})
-    local devText = Text:new(50, 200, 0, 0, "Developed by :", mainFontMenu, "", "", {255, 255, 255})
-    local devName = Text:new(50, 250, 0, 0, "\tLucien Audebert\n\tNicolas Bédrunes\n\tKenzo Carneiro\n\tTristan Claudé\n\tRose Thieullet", mainFontMenu, "", "", textColorSelected)
+    local titleText = Text:new(0, 20, screenWidth, 0, "Lua's Adventure", titleFont, "center", "", {255, 255, 255})
+    local devText = Text:new(50, 100, 0, 0, "Developed by:", mainFontMenu, "", "", {255, 255, 255})
+    local devName = Text:new(50, 140, 0, 0, "\tLucien Audebert\n\tNicolas Bédrunes\n\tKenzo Carneiro\n\tTristan Claudé\n\tRose Thieullet", mainFontMenu, "", "", textColorSelected)
 
-    local assetsText = Text:new(500, 200, 0, 0, "Assets taken from:", mainFontMenu, "", "", {255, 255, 255})
-    local assetsName = Text:new(500, 250, 0, 0, "\tµFantasy Tileset - 0x72\n\tTiny GUI Pack - vryell\n\tRoguelike/RPG Icons - JoeCreates\n\tCrown - DK_Happy\n\tUI 8Bit Retro SOUNDPACK - HoneyPhonic\n\tKenVector Future - Kenney", mainFontMenu, "", "", textColorSelected)
+    local thanksText = Text:new(50, 400, 0, 0, "Special thanks to:", mainFontMenu, "", "", {255, 255, 255})
+    local thanksName = Text:new(50, 440, 0, 0, "\tXavier BULTEL\n\tAhmad Abdallah\n\tPascal Berthomé", mainFontMenu, "", "", textColorSelected)
 
-    local menuKbButton = TextButton:new(imgPanel.x, screenHeight/2 + 2*7*16, 0, 0, "Menu", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+    local assetsText = Text:new(500, 100, 0, 0, "Assets taken from:", mainFontMenu, "", "", {255, 255, 255})
+    local assetsName = Text:new(500, 140, 0, 0, "\tµFantasy Tileset - 0x72\n\tTiny GUI Pack - vryell\n\tRoguelike/RPG Icons - JoeCreates\n\tCrown - DK_Happy\n\tUI 8Bit Retro SOUNDPACK - HoneyPhonic\n\tKenVector Future - Kenney\n\t8-bit Game Sound Effects Collection\n- harvey656\n\tRetro Sounds - Dagurasu", mainFontMenu, "", "", textColorSelected)
+
+    local menuKbButton = TextButton:new(imgPanel.x + 10, screenHeight/2 + 2*7*16, 0, 0, "Menu", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         menuKbButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"),6)
         menuKbButton:modifySelected()
         -- local menuText = Text:new(menuKbButton.x + menuKbButton.w/2, menuKbButton.y + menuKbButton.h/2, 0, 0, "Menu", mainFontMenu, "", "", {0, 0, 0})
@@ -553,6 +574,8 @@ function Hud.setCredits()
     group:addElement(titleText, "titleText")
     group:addElement(devText, "devText")
     group:addElement(devName, "devName")
+    group:addElement(thanksText, "thanksText")
+    group:addElement(thanksName, "thanksName")
     group:addElement(assetsText, "assetsText")
     group:addElement(assetsName, "assetsName")
 
