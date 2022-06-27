@@ -563,7 +563,7 @@ function Hud.setCredits()
     local thanksName = Text:new(50, 440, 0, 0, "\tXavier BULTEL\n\tAhmad Abdallah\n\tPascal Berthomé", mainFontMenu, "", "", textOtherColor)
 
     local assetsText = Text:new(500, 100, 0, 0, "Assets taken from:", mainFontMenu, "", "", {255, 255, 255})
-    local assetsName = Text:new(500, 140, 0, 0, "[Sprites]\n\tµFantasy Tileset - 0x72\n\tTiny GUI Pack - vryell\n\tRoguelike/RPG Icons - JoeCreates\n\tCrown - DK_Happy\n[SFX]\n\tUI 8Bit Retro SOUNDPACK - HoneyPhonic\n\tKenVector Future - Kenney\n\t8-bit Game Sound Effects Collection\n- harvey656\n\tRetro Sounds - Dagurasu\n\t200 Free SFX - Kronbits\n[Musics]\n\tToohoo Project - Team Shanghai Alice", mainFontMenu, "", "", textColorSelected)
+    local assetsName = Text:new(500, 140, 0, 0, "[Sprites]\n\tµFantasy Tileset - 0x72\n\tTiny GUI Pack - vryell\n\tRoguelike/RPG Icons - @JoeCreates\n\tCrown - DK_Happy\n[SFX]\n\tUI 8Bit Retro SOUNDPACK - HoneyPhonic\n\tKenVector Future - Kenney\n\t8-bit Game Sound Effects Collection\n- harvey656\n\tRetro Sounds - Dagurasu\n\t200 Free SFX - Kronbits\n[Musics]\n\tToohoo Project - Team Shanghai Alice", mainFontMenu, "", "", textColorSelected)
 
     local menuKbButton = TextButton:new(imgPanel.x + 10, screenHeight/2 + 2*7*16, 0, 0, "Menu", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         menuKbButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"),6)
