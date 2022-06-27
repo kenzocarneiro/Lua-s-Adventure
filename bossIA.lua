@@ -62,7 +62,7 @@ function bossIA:attackUpdate(dt, boss, player)
         if self.mood == "angry" then direction_step = 15 else direction_step = 45 end
         for i=0, 360 - direction_step, direction_step do
                 local p = Projectile:new()
-                p:init(boss.damage, i, 3, "bullet", boss.pos + Vector:new(0, 0), Data.fireballSC, Data.enemyFireBallHF)
+                p:init(boss.damage, i, 2, "bullet", boss.pos + Vector:new(0, 0), Data.fireballSC, Data.enemyFireBallHF)
         end
         self.subLaunched = false
     end
@@ -131,6 +131,8 @@ end
 --- @param boss Monster
 --- @param player Player
 function bossIA:update(dt, boss, player)
+    G_bossLife = boss.currentHealth
+    G_bossMaxLife = boss.maxHealth
     if boss.currentHealth < boss.maxHealth / 2 then
         self.mood = "angry"
     end

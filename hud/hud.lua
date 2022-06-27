@@ -299,6 +299,12 @@ function Hud.setPlayer()
     group:addElement(scoreImg, "scoreImg")
     group:addElement(scoreText, "scoreText")
 
+    -- BOSS
+    local luaLife = G_bossLife or 0
+    local luaMaxLife = G_bossMaxLife or 1
+    local bossText = Text:new(largeur - 700, 8, 0, 0, "Lua's life: " .. luaLife .. " / " .. luaMaxLife, mainFont, "", "", {255, 0, 0})
+    group:addElement(bossText, "bossText")
+
     return group
 end
 
@@ -906,6 +912,11 @@ function Hud:update(dt)
     self:updateManaCosts()
     self:updateCharacterSheet()
     self:updateHealthPlayerBetter(1)
+
+    -- BOSS
+    local luaLife = G_bossLife or 0
+    local luaMaxLife = G_bossMaxLife or 1
+    self.player.elements["bossText"]:edit("Lua's life: " .. luaLife .. " / " .. luaMaxLife)
 
 
 

@@ -23,6 +23,8 @@ function love.load()
     local Vector = require("vector")
     local Data = require("data")
 
+    G_bossLife = nil
+    G_bossMaxLife = nil
     G_blackoutOnPlayer = false
     G_blackoutCurrentFrame = 250
     G_blackoutSFX = false
