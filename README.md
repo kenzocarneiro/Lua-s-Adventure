@@ -1,6 +1,17 @@
 # Lua-s-Adventure
-Lua's adventure is an action-RPG made with the LÖVE library of the Lua language.
+Lua's adventure is an action-RPG made with the LÖVE library in Lua.
 
+Made by:
+- Lucien Audebert
+- Nicolas Bédrunes
+- Kenzo Carneiro
+- Tristan Claudé
+- Rose Thieullet.
+
+Special thanks to:
+- Our teacher and tutor for this project, M. Xavier Bultel.
+- Our reviewer, M. Ahmad Abdallah.
+- M. Pascal Berthomé for approving the subject of this project.
 
 ## How to install the game
 In order to play the game, you have to:
@@ -20,21 +31,21 @@ More information is available here: https://love2d.org/wiki/Getting_Started
 
 ## Keybindings
 
-*moving*
+*Moving:*
 - z : go up
 - s : go down
 - q : go left
 - d : go right
 - (For now, the arrows are still supported. But it may be deleted in a future version)
 
-*shooting*
+*Shooting:*
 - SPACE : shoot
 
-*items*
+*Items:*
 - a : consume potion
 - i : inventory (not yet implemented)
 
-*miscellanenous*
+*Miscellanenous:*
 - p : parameters
 - l : lose life
 - m : regain life
