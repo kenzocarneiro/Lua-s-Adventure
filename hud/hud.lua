@@ -10,6 +10,7 @@ local myGUI = require("GCGUI")
 
 local textColor = {0, 0, 0}
 local textColorSelected = {255, 255, 0}
+local textOtherColor = {0, 255, 255}
 
 local Hud = {}
 
@@ -100,6 +101,10 @@ end
 function Hud.setMainMenu()
     local mainFontMenu = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 40)
     love.graphics.setFont(mainFontMenu)
+    local titleFont = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 50)
+    love.graphics.setFont(mainFontMenu)
+
+
 
     local screenWidth = love.graphics.getWidth()
     local screenHeight = love.graphics.getHeight()
@@ -109,35 +114,48 @@ function Hud.setMainMenu()
     local coeffX, coeffW = 1.06, 6
     local imgZoom = 7
 
-    local playKbButton = TextButton:new(0, screenHeight/2 - 2*(imgZoom+1)*16, nil, nil, "Play", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW) --16px * (zoom+espace) * decalage
+    local titleTextMain = Text:new(0, 20, screenWidth, 0, "Lua's Adventure", titleFont, "center", "", {255, 255, 255})
+
+    local luaShadow =  Panel:new(-300, 100)
+    luaShadow:setImage(love.graphics.newImage("img/hud/luaShadow.png"), 0.5)
+
+    local playerFighting =  Panel:new(900, 300)
+    playerFighting:setImage(love.graphics.newImage("img/hud/playerFighting.png"), 1)
+
+    local playKbButton = TextButton:new(0, screenHeight/2 - 2*(imgZoom+1)*16 - 15, nil, nil, "Play", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW) --16px * (zoom+espace) * decalage
         playKbButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"), imgZoom)
         playKbButton.x = screenWidth/2 - 3.5*playKbButton.w --2*inventory.w pour que le bouton soit centré (*4 pour le zoom et /2 pour le décalage)
         playKbButton:modifySelected()
         -- local playText = Text:new(playKbButton.x + playKbButton.w/2, playKbButton.y + playKbButton.h/2, 0, 0, "Play", mainFontMenu, "", "", {0, 0, 0})
 
-    local optionsKbButton = TextButton:new(playKbButton.x, screenHeight/2 - 1*(imgZoom+1)*16, 0, 0, "Options", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+    local optionsKbButton = TextButton:new(playKbButton.x, screenHeight/2 - 1*(imgZoom+1)*16 - 15, 0, 0, "Options", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         optionsKbButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"),imgZoom)
         -- local optionsText = Text:new(optionsKbButton.x + optionsKbButton.w/2, optionsKbButton.y + optionsKbButton.h/2, 0, 0, "Options", mainFontMenu, "", "", {0, 0, 0})
 
-    local leaderKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 0*(imgZoom+1)*16, 0, 0, "LeaderBoard", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+    local leaderKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 0*(imgZoom+1)*16 - 15, 0, 0, "LeaderBoard", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
     leaderKbButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"),imgZoom)
         -- local leaderText = Text:new(leaderKbButton.x + leaderKbButton.w/2, leaderKbButton.y + leaderKbButton.h/2, 0, 0, "LeaderBoard", mainFontMenu, "", "", {0, 0, 0})
 
-    local creditsKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 1*(imgZoom+1)*16, 0, 0, "Credits", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+    local creditsKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 1*(imgZoom+1)*16 - 15, 0, 0, "Credits", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         creditsKbButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"),imgZoom)
         -- local creditsText = Text:new(creditsKbButton.x + creditsKbButton.w/2, creditsKbButton.y + creditsKbButton.h/2, 0, 0, "Credits", mainFontMenu, "", "", {0, 0, 0})
 
-    local exitKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 2*(imgZoom+1)*16, 0, 0, "Exit", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+    local exitKbButton = TextButton:new(playKbButton.x, screenHeight/2 + 2*(imgZoom+1)*16 - 15, 0, 0, "Exit", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         exitKbButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"),imgZoom)
         -- local exitText = Text:new(exitKbButton.x + exitKbButton.w/2, exitKbButton.y + exitKbButton.h/2, 0, 0, "Exit", mainFontMenu, "", "", {0, 0, 0})
 
     --parameters du joueur (en bas à droite)
     local mainFont = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 15)
     love.graphics.setFont(mainFont)
-    local buttonParam = Panel:new(screenWidth - 60 , screenHeight - 70, 40, 40)
+    local buttonParam = Panel:new(screenWidth - 70 , screenHeight - 70, 40, 40)
         buttonParam:setImage(love.graphics.newImage("img/hud/gear.png"))
     local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , screenHeight - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {255, 255, 255})
 
+    group:addElement(luaShadow, "luaShadow")
+
+    group:addElement(playerFighting, "playerFighting")
+
+    group:addElement(titleTextMain, "titleText")
 
     group:addElement(playKbButton, "playKbButton")
     -- group:addElement(playText, "playText")
@@ -209,7 +227,7 @@ function Hud.setPlayer()
     --raccourci en vert
     local skillHotkey1 = Text:new(skill_1.w/2 , hauteur - skill_1.h -20, 0, 0,"A", mainFont, "", "", {255, 255, 255})
     -- nombre en doré
-    local skilChargesNum1 = Text:new(skill_1.w -15 , hauteur -23, 0, 0,G_player.potion_stock[G_player.currentPotion], mainFont, "", "", {238, 226, 123})
+    local skilChargesNum1 = Text:new(skill_1.w -20 , hauteur -25, 0, 0,G_player.potion_stock[G_player.currentPotion], mainFont, "", "", {255, 255, 255})
 
     local skillHotkey2 = Text:new(skill_1.w/2 + skill_2.w , hauteur - skill_1.h -20, 0, 0,"", mainFont, "", "", {255, 255, 255})
 
@@ -220,22 +238,22 @@ function Hud.setPlayer()
     local distanceBetweenInvSlot = 65
 
     local inventory_slot_1 = Panel:new(offset - distanceBetweenInvSlot * 2, hauteur - 60, 40, 40)
-        inventory_slot_1:setImage(love.graphics.newImage("img/hud/blank_slot.png"))
+        inventory_slot_1:setImage(love.graphics.newImage("img/hud/itemFrame.png"))
 
     local inventory_slot_2 = Panel:new(offset - distanceBetweenInvSlot, hauteur - 60, 40, 40)
-        inventory_slot_2:setImage(love.graphics.newImage("img/hud/blank_slot.png"))
+        inventory_slot_2:setImage(love.graphics.newImage("img/hud/itemFrame.png"))
 
     local inventory_slot_3 = Panel:new(offset, hauteur - 64, 40, 40)
-        inventory_slot_3:setImage(love.graphics.newImage("img/hud/blank_slot.png"))
+        inventory_slot_3:setImage(love.graphics.newImage("img/hud/itemFrame.png"))
 
     local inventory_slot_4 = Panel:new(offset +distanceBetweenInvSlot, hauteur - 64, 40, 40)
-        inventory_slot_4:setImage(love.graphics.newImage("img/hud/blank_slot.png"))
+        inventory_slot_4:setImage(love.graphics.newImage("img/hud/itemFrame.png"))
 
     local inventory_slot_5 = Panel:new(offset +distanceBetweenInvSlot *2, hauteur - 64, 40, 40)
-        inventory_slot_5:setImage(love.graphics.newImage("img/hud/blank_slot.png"))
+        inventory_slot_5:setImage(love.graphics.newImage("img/hud/itemFrame.png"))
 
     --parameters du joueur (en bas à droite)
-    local buttonParam = Panel:new(largeur - 60 , hauteur - 70, 40, 40)
+    local buttonParam = Panel:new(largeur - 70 , hauteur - 70, 40, 40)
         buttonParam:setImage(love.graphics.newImage("img/hud/gear.png"))
     local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , hauteur - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {255, 255, 255})
 
@@ -306,7 +324,7 @@ function Hud.setPlayer()
     group:addElement(scoreImg, "scoreImg")
     group:addElement(scoreText, "scoreText")
 
-    
+
     group:addElement(healthBarBoss, "healthBarBoss")
     group:addElement(healthHeartBoss, "healthHeartBoss")
    -- group:addElement(transitionBarBoss, "transitionBarBoss")
@@ -438,7 +456,7 @@ function Hud.setParameter()
     --parameters du joueur (en bas à droite)
     local mainFont = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 15)
     love.graphics.setFont(mainFont)
-    local buttonParam = Panel:new(screenWidth - 60 , screenHeight - 70, 40, 40)
+    local buttonParam = Panel:new(screenWidth - 70 , screenHeight - 70, 40, 40)
         buttonParam:setImage(love.graphics.newImage("img/hud/gear.png"))
     local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , screenHeight - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {255, 255, 255})
 
@@ -523,7 +541,8 @@ function Hud.setCharacterSheet()
 end
 
 function Hud.setCredits()
-    local mainFontMenu = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 40)
+    local mainFontMenu = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 30)
+    local titleFont = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 50)
     love.graphics.setFont(mainFontMenu)
 
     local screenWidth = love.graphics.getWidth()
@@ -534,12 +553,19 @@ function Hud.setCredits()
     local coeffX, coeffW = 1.05, 5
 
     local imgPanel = Panel:new(0, 0)
-        imgPanel:setImage(love.graphics.newImage("img/hud/Victory2.png"), 0.8)
+        -- imgPanel:setImage(love.graphics.newImage("img/hud/Victory2.png"), 0.8)
 
-    local titleText = Text:new(0, 0, screenWidth, 0, "Lua 's Adventure", mainFontMenu, "center", "", {255, 255, 255})
-    local devText = Text:new(0, 200, 0, 0, "Developed by : us", mainFontMenu, "", "", {255, 255, 255})
+    local titleText = Text:new(0, 20, screenWidth, 0, "Lua's Adventure", titleFont, "center", "", {255, 255, 255})
+    local devText = Text:new(50, 100, 0, 0, "Developed by:", mainFontMenu, "", "", {255, 255, 255})
+    local devName = Text:new(50, 140, 0, 0, "\tLucien Audebert\n\tNicolas Bédrunes\n\tKenzo Carneiro\n\tTristan Claudé\n\tRose Thieullet", mainFontMenu, "", "", textOtherColor)
 
-    local menuKbButton = TextButton:new(imgPanel.x, screenHeight/2 + 2*7*16, 0, 0, "Menu", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+    local thanksText = Text:new(50, 400, 0, 0, "Special thanks to:", mainFontMenu, "", "", {255, 255, 255})
+    local thanksName = Text:new(50, 440, 0, 0, "\tXavier BULTEL\n\tAhmad Abdallah\n\tPascal Berthomé", mainFontMenu, "", "", textOtherColor)
+
+    local assetsText = Text:new(500, 100, 0, 0, "Assets taken from:", mainFontMenu, "", "", {255, 255, 255})
+    local assetsName = Text:new(500, 140, 0, 0, "[Sprites]\n\tµFantasy Tileset - 0x72\n\tTiny GUI Pack - vryell\n\tRoguelike/RPG Icons - @JoeCreates\n\tCrown - DK_Happy\n[SFX]\n\tUI 8Bit Retro SOUNDPACK - HoneyPhonic\n\tKenVector Future - Kenney\n\t8-bit Game Sound Effects Collection\n- harvey656\n\tRetro Sounds - Dagurasu\n\t200 Free SFX - Kronbits\n[Musics]\n\tToohoo Project - Team Shanghai Alice", mainFontMenu, "", "", textColorSelected)
+
+    local menuKbButton = TextButton:new(imgPanel.x + 10, screenHeight/2 + 2*7*16, 0, 0, "Menu", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         menuKbButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"),6)
         menuKbButton:modifySelected()
         -- local menuText = Text:new(menuKbButton.x + menuKbButton.w/2, menuKbButton.y + menuKbButton.h/2, 0, 0, "Menu", mainFontMenu, "", "", {0, 0, 0})
@@ -548,6 +574,11 @@ function Hud.setCredits()
 
     group:addElement(titleText, "titleText")
     group:addElement(devText, "devText")
+    group:addElement(devName, "devName")
+    group:addElement(thanksText, "thanksText")
+    group:addElement(thanksName, "thanksName")
+    group:addElement(assetsText, "assetsText")
+    group:addElement(assetsName, "assetsName")
 
     group:addElement(menuKbButton, "menuKbButton")
     -- group:addElement(menuText, "menuText")
@@ -942,7 +973,7 @@ function Hud:update(dt)
         self.player.elements["z_bossText"]:setVisible(false)
     end
     self.player.elements["z_bossText"]:edit(luaLife .. " / " .. luaMaxLife)
-    
+
 
 
     for key, value in pairs(self) do
