@@ -8,6 +8,7 @@ Vector = require("vector")
 --- @field width number
 --- @field height number
 --- @field offset Vector
+--- @field shape string
 --- @field associatedElement Element|Entity|Monster|Player TODO: should be replace with a global ID system
 Hitbox = {width=0, height=0}
 
@@ -18,9 +19,10 @@ Hitbox = {width=0, height=0}
 --- @param width number
 --- @param height number
 --- @param offset Vector
+--- @param shape string
 --- @param associatedE Element
 --- @return Hitbox
-function Hitbox:new(pos, name, layers, width, height, offset, associatedE)
+function Hitbox:new(pos, name, layers, width, height, offset, shape, associatedE)
     -- offset n'est utile que si on change height et width pour avoir une hitbox personnalisée
     -- (sinon mettre la taille de l'image et pas d'offset)
     local h = {}
@@ -37,8 +39,9 @@ function Hitbox:new(pos, name, layers, width, height, offset, associatedE)
         h.pos = h.pos + offset
     end
 
-    h.width=width - 1 or self.width
-    h.height=height - 1 or self.height
+    h.width = width - 1 or self.width
+    h.height = height - 1 or self.height
+    h.shape = shape or "rectangle"
 
     h.associatedElement = associatedE
 
@@ -78,20 +81,42 @@ end
 --- Tests if the Hitbox is overlapping with another Hitbox h right now, or after a move m if m is given.
 --- @param h Hitbox
 --- @param m Vector|nil
---- @return boolean
+--- @return boolean hasCollided
 function Hitbox:collide(h, m)
     local temp_pos = self.pos
     if m then
         temp_pos = self.pos + m
     end
-    -- Top left : (pos.x, pos.y)
-    -- Bottom Right : (pos.x+width, pos.y+height)
-    if temp_pos.x > (h.pos.x + h.width) or (temp_pos.x + self.width) < h.pos.x then
+
+    if self.shape == "rectangle" and h.shape == "rectangle" then
+        -- Top left : (pos.x, pos.y)
+        -- Bottom Right : (pos.x+width, pos.y+height)
+        if temp_pos.x > (h.pos.x + h.width) or (temp_pos.x + self.width) < h.pos.x then
+            return false
+        elseif (temp_pos.y + self.height) < h.pos.y or temp_pos.y > (h.pos.y + h.height) then
+            return false
+        else
+            return true
+        end
+    elseif self.shape == "circle" and h.shape == "rectangle" then
+
+        local corners = {Vector:new(h.pos.x, h.pos.y), Vector:new(h.pos.x + h.width, h.pos.y), Vector:new(h.pos.x + h.width, h.pos.y + h.height), Vector:new(h.pos.x, h.pos.y + h.height)}
+
+        for i, v in ipairs(corners) do
+            if ((v.x-temp_pos.x)^2 + (v.y - temp_pos.y)^2) < (self.width^2) then
+                return true
+            end
+        end
         return false
-    elseif (temp_pos.y + self.height) < h.pos.y or temp_pos.y > (h.pos.y + h.height) then
+    elseif self.shape == "rectangle" and h.shape == "circle" then
+        local corners = {Vector:new(temp_pos.x, temp_pos.y), Vector:new(temp_pos.x + self.width, temp_pos.y), Vector:new(temp_pos.x + self.width, temp_pos.y + self.height), Vector:new(temp_pos.x, temp_pos.y + self.height)}
+
+        for i, v in ipairs(corners) do
+            if ((v.x-h.pos.x)^2 + (v.y - h.pos.y)^2) < (h.width^2) then
+                return true
+            end
+        end
         return false
-    else
-        return true
     end
 end
 
@@ -108,18 +133,23 @@ end
 --- Draws the hitbox (used for debugging).
 --- @param color number[]|nil (optional) 3 numbers must be given: RGB
 function Hitbox:draw(color)
-
-    -- Hitbox rectangles
-    love.graphics.setLineWidth(1)
     if color == nil then love.graphics.setColor(0/255, 255/255, 255/255, 100/255)
     else love.graphics.setColor(color[1], color[2], color[3], 100/255) end
-    love.graphics.rectangle("line", self.pos.x + 0.5, self.pos.y + 0.5, self.width, self.height)
 
-    -- -- Hitbox corners
-    -- love.graphics.setPointSize(4)
-    -- love.graphics.setColor(255/255, 0/255, 9/255, 255/255)
-    -- love.graphics.points(self.pos.x + 0.5, self.pos.y + 0.5, self.pos.x + self.width + 0.5, self.pos.y + 0.5, self.pos.x + self.width + 0.5, self.pos.y + self.height + 0.5, self.pos.x + 0.5, self.pos.y + self.height + 0.5)
+    if self.shape == "rectangle" then
+        -- Hitbox rectangles
+        love.graphics.setLineWidth(1)
+        love.graphics.rectangle("line", self.pos.x + 0.5, self.pos.y + 0.5, self.width, self.height)
 
+        -- -- Hitbox corners
+        -- love.graphics.setPointSize(4)
+        -- love.graphics.setColor(255/255, 0/255, 9/255, 255/255)
+        -- love.graphics.points(self.pos.x + 0.5, self.pos.y + 0.5, self.pos.x + self.width + 0.5, self.pos.y + 0.5, self.pos.x + self.width + 0.5, self.pos.y + self.height + 0.5, self.pos.x + 0.5, self.pos.y + self.height + 0.5)
+
+    elseif self.shape == "circle" then
+        love.graphics.setLineWidth(1)
+        love.graphics.circle("line", self.pos.x, self.pos.y, self.width)
+    end
     -- Restore default values
     love.graphics.setColor(255/255, 255/255, 255/255, 255/255)
 end

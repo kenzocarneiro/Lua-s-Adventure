@@ -85,6 +85,7 @@ function Entity:move(move)
     if not collision_V then
         finalMove = finalMove + move_V
     end
+
     self.pos = self.pos + finalMove
 
     -- if collision_H or collision_V then
