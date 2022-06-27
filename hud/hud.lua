@@ -175,6 +175,13 @@ function Hud.setPlayer()
 
     local transitionBar = Panel:new(160,11, 0, 20,{200,30,30})
 
+      --barre de vie boss
+      local healthHeartBoss = Panel:new(350, 100)
+      healthHeartBoss:setImage(love.graphics.newImage("img/hud/boss_health.png"), 5)
+    local healthBarBoss = Panel:new(402,111, 278, 30, {200,30,30})
+
+    local transitionBarBoss = Panel:new(680,111, 20, 30,{200,200,30})
+
     -- barre d'energie
     local energyBarImg = Panel:new(0, 40)
         energyBarImg:setImage(love.graphics.newImage("img/hud/mana.png"), 0.1)
@@ -298,6 +305,12 @@ function Hud.setPlayer()
     group:addElement(transitionBar, "transitionBar")
     group:addElement(scoreImg, "scoreImg")
     group:addElement(scoreText, "scoreText")
+
+    
+    group:addElement(healthBarBoss, "healthBarBoss")
+    group:addElement(healthHeartBoss, "healthHeartBoss")
+    group:addElement(transitionBarBoss, "transitionBarBoss")
+
 
     return group
 end
