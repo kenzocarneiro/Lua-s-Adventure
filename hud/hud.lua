@@ -134,7 +134,7 @@ function Hud.setMainMenu()
     --parameters du joueur (en bas à droite)
     local mainFont = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 15)
     love.graphics.setFont(mainFont)
-    local buttonParam = Panel:new(screenWidth - 60 , screenHeight - 70, 40, 40)
+    local buttonParam = Panel:new(screenWidth - 70 , screenHeight - 70, 40, 40)
         buttonParam:setImage(love.graphics.newImage("img/hud/gear.png"))
     local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , screenHeight - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {255, 255, 255})
 
@@ -209,7 +209,7 @@ function Hud.setPlayer()
     --raccourci en vert
     local skillHotkey1 = Text:new(skill_1.w/2 , hauteur - skill_1.h -20, 0, 0,"A", mainFont, "", "", {255, 255, 255})
     -- nombre en doré
-    local skilChargesNum1 = Text:new(skill_1.w -15 , hauteur -23, 0, 0,G_player.potion_stock[G_player.currentPotion], mainFont, "", "", {238, 226, 123})
+    local skilChargesNum1 = Text:new(skill_1.w -20 , hauteur -25, 0, 0,G_player.potion_stock[G_player.currentPotion], mainFont, "", "", {255, 255, 255})
 
     local skillHotkey2 = Text:new(skill_1.w/2 + skill_2.w , hauteur - skill_1.h -20, 0, 0,"", mainFont, "", "", {255, 255, 255})
 
@@ -220,22 +220,22 @@ function Hud.setPlayer()
     local distanceBetweenInvSlot = 65
 
     local inventory_slot_1 = Panel:new(offset - distanceBetweenInvSlot * 2, hauteur - 60, 40, 40)
-        inventory_slot_1:setImage(love.graphics.newImage("img/hud/blank_slot.png"))
+        inventory_slot_1:setImage(love.graphics.newImage("img/hud/itemFrame.png"))
 
     local inventory_slot_2 = Panel:new(offset - distanceBetweenInvSlot, hauteur - 60, 40, 40)
-        inventory_slot_2:setImage(love.graphics.newImage("img/hud/blank_slot.png"))
+        inventory_slot_2:setImage(love.graphics.newImage("img/hud/itemFrame.png"))
 
     local inventory_slot_3 = Panel:new(offset, hauteur - 64, 40, 40)
-        inventory_slot_3:setImage(love.graphics.newImage("img/hud/blank_slot.png"))
+        inventory_slot_3:setImage(love.graphics.newImage("img/hud/itemFrame.png"))
 
     local inventory_slot_4 = Panel:new(offset +distanceBetweenInvSlot, hauteur - 64, 40, 40)
-        inventory_slot_4:setImage(love.graphics.newImage("img/hud/blank_slot.png"))
+        inventory_slot_4:setImage(love.graphics.newImage("img/hud/itemFrame.png"))
 
     local inventory_slot_5 = Panel:new(offset +distanceBetweenInvSlot *2, hauteur - 64, 40, 40)
-        inventory_slot_5:setImage(love.graphics.newImage("img/hud/blank_slot.png"))
+        inventory_slot_5:setImage(love.graphics.newImage("img/hud/itemFrame.png"))
 
     --parameters du joueur (en bas à droite)
-    local buttonParam = Panel:new(largeur - 60 , hauteur - 70, 40, 40)
+    local buttonParam = Panel:new(largeur - 70 , hauteur - 70, 40, 40)
         buttonParam:setImage(love.graphics.newImage("img/hud/gear.png"))
     local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , hauteur - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {255, 255, 255})
 
@@ -306,7 +306,7 @@ function Hud.setPlayer()
     group:addElement(scoreImg, "scoreImg")
     group:addElement(scoreText, "scoreText")
 
-    
+
     group:addElement(healthBarBoss, "healthBarBoss")
     group:addElement(healthHeartBoss, "healthHeartBoss")
    -- group:addElement(transitionBarBoss, "transitionBarBoss")
@@ -438,7 +438,7 @@ function Hud.setParameter()
     --parameters du joueur (en bas à droite)
     local mainFont = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 15)
     love.graphics.setFont(mainFont)
-    local buttonParam = Panel:new(screenWidth - 60 , screenHeight - 70, 40, 40)
+    local buttonParam = Panel:new(screenWidth - 70 , screenHeight - 70, 40, 40)
         buttonParam:setImage(love.graphics.newImage("img/hud/gear.png"))
     local paramHotKey = Text:new(buttonParam.x + buttonParam.w/2 , screenHeight - buttonParam.h - 20, 0, 0,"P", mainFont, "", "", {255, 255, 255})
 
@@ -523,7 +523,7 @@ function Hud.setCharacterSheet()
 end
 
 function Hud.setCredits()
-    local mainFontMenu = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 40)
+    local mainFontMenu = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 30)
     love.graphics.setFont(mainFontMenu)
 
     local screenWidth = love.graphics.getWidth()
@@ -534,10 +534,14 @@ function Hud.setCredits()
     local coeffX, coeffW = 1.05, 5
 
     local imgPanel = Panel:new(0, 0)
-        imgPanel:setImage(love.graphics.newImage("img/hud/Victory2.png"), 0.8)
+        -- imgPanel:setImage(love.graphics.newImage("img/hud/Victory2.png"), 0.8)
 
     local titleText = Text:new(0, 0, screenWidth, 0, "Lua 's Adventure", mainFontMenu, "center", "", {255, 255, 255})
-    local devText = Text:new(0, 200, 0, 0, "Developed by : us", mainFontMenu, "", "", {255, 255, 255})
+    local devText = Text:new(50, 200, 0, 0, "Developed by :", mainFontMenu, "", "", {255, 255, 255})
+    local devName = Text:new(50, 250, 0, 0, "\tLucien Audebert\n\tNicolas Bédrunes\n\tKenzo Carneiro\n\tTristan Claudé\n\tRose Thieullet", mainFontMenu, "", "", textColorSelected)
+
+    local assetsText = Text:new(500, 200, 0, 0, "Assets taken from:", mainFontMenu, "", "", {255, 255, 255})
+    local assetsName = Text:new(500, 250, 0, 0, "\tµFantasy Tileset - 0x72\n\tTiny GUI Pack - vryell\n\tRoguelike/RPG Icons - JoeCreates\n\tCrown - DK_Happy\n\tUI 8Bit Retro SOUNDPACK - HoneyPhonic\n\tKenVector Future - Kenney", mainFontMenu, "", "", textColorSelected)
 
     local menuKbButton = TextButton:new(imgPanel.x, screenHeight/2 + 2*7*16, 0, 0, "Menu", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         menuKbButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"),6)
@@ -548,6 +552,9 @@ function Hud.setCredits()
 
     group:addElement(titleText, "titleText")
     group:addElement(devText, "devText")
+    group:addElement(devName, "devName")
+    group:addElement(assetsText, "assetsText")
+    group:addElement(assetsName, "assetsName")
 
     group:addElement(menuKbButton, "menuKbButton")
     -- group:addElement(menuText, "menuText")
@@ -942,7 +949,7 @@ function Hud:update(dt)
         self.player.elements["z_bossText"]:setVisible(false)
     end
     self.player.elements["z_bossText"]:edit(luaLife .. " / " .. luaMaxLife)
-    
+
 
 
     for key, value in pairs(self) do
