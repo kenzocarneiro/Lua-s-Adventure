@@ -129,7 +129,7 @@ function Player:update(dt)
                 if G_soundEffectsOn then
                     local sound
                     if G_gandalf then
-                        sound = love.audio.newSource("ysnp.mp3", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
+                        sound = love.audio.newSource("sound/soundeffects/ysnp.mp3", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
                         sound:setVolume(1)
                     else
                         sound = love.audio.newSource("sound/soundeffects/special_attack_cling.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
