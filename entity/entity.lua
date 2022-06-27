@@ -21,7 +21,6 @@ function Entity:init(speed, weapon, pos, spriteCollection, hitboxFactory)
     self.speed = speed or 1
     self.weapon = weapon or "epee"
     self.hasShoot = false
-    self.damage = 10
 
     Element.init(self, pos, spriteCollection, hitboxFactory)
 end
@@ -86,6 +85,7 @@ function Entity:move(move)
     if not collision_V then
         finalMove = finalMove + move_V
     end
+
     self.pos = self.pos + finalMove
 
     -- if collision_H or collision_V then

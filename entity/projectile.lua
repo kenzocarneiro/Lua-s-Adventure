@@ -8,13 +8,15 @@ Projectile = Entity:new()
 function Projectile:new() return Entity.new(self) end
 
 --- Initializes the Projectile.
+--- @param damage number
 --- @param direction Vector|number
 ---@param speed number
 ---@param weapon string
 ---@param pos Vector
 ---@param spriteCollection SpriteCollection
 ---@param hitboxFactory HitboxFactory
-function Projectile:init(direction, speed, weapon, pos, spriteCollection, hitboxFactory)
+function Projectile:init(damage, direction, speed, weapon, pos, spriteCollection, hitboxFactory)
+    self.damage = damage or 10
     self.direction = direction
 
     Entity.init(self, speed, weapon, pos, spriteCollection, hitboxFactory)

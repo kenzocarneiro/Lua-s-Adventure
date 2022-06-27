@@ -32,6 +32,7 @@ data.playerHF = HitboxFactory:new(
 data.fireballSC = SpriteCollection:new("fireball")
 data.fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
 data.fireballHF = HitboxFactory:new({"hurtbox", {enemy=true}, 3, 3, Vector:new(-2, -2)})
+data.enemyFireBallHF = HitboxFactory:new({"hurtbox", {player=true}, 3, 3, Vector:new(-2, -2)})
 
 -- MONSTERS
 data.trollSC = SpriteCollection:new("troll")
@@ -82,16 +83,16 @@ data.power_staffHF = HitboxFactory:new(
 )
 
 -- POTIONS
-data.bluePotionSc = SpriteCollection:new("consumable")
-data.bluePotionSc:init({Sprite:new("img/potion_blue.png", false, "idle", 16, 16, Vector:new(7, 6))})
+data.bluePotionSC = SpriteCollection:new("consumable")
+data.bluePotionSC:init({Sprite:new("img/potion_blue.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
-data.redPotionSc = SpriteCollection:new("consumable")
-data.redPotionSc:init({Sprite:new("img/potion_red.png", false, "idle", 16, 16, Vector:new(7, 6))})
+data.redPotionSC = SpriteCollection:new("consumable")
+data.redPotionSC:init({Sprite:new("img/potion_red.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
-data.yellowPotionSc = SpriteCollection:new("consumable")
-data.yellowPotionSc:init({Sprite:new("img/potion_yellow.png", false, "idle", 16, 16, Vector:new(7, 6))})
+data.yellowPotionSC = SpriteCollection:new("consumable")
+data.yellowPotionSC:init({Sprite:new("img/potion_yellow.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
-data.coinSc = SpriteCollection:new("coin")
-data.coinSc:init({Sprite:new("img/coin.png", false, "idle", 16, 16, Vector:new(7, 6))})
+data.coinSC = SpriteCollection:new("coin")
+data.coinSC:init({Sprite:new("img/coin.png", false, "idle", 16, 16, Vector:new(7, 6))})
 
 return data

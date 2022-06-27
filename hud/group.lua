@@ -6,7 +6,7 @@ function Group:new()
     self.__index = self
     local myGroup = {}
     setmetatable(myGroup, self)
-    
+
     -- initialisation
     myGroup.elements = {}
     myGroup.visible = true
@@ -32,7 +32,9 @@ end
 function Group:draw()
     love.graphics.push()
     for n,v in self.pairsByKeys(self.elements) do
-        v:draw()
+        if n ~= "bossText" or G_room.number == 4 then -- BOSS
+            v:draw()
+        end
     end
     love.graphics.pop()
 end

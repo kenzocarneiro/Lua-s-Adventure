@@ -176,11 +176,11 @@ function Hud.setPlayer()
     local transitionBar = Panel:new(160,11, 0, 20,{200,30,30})
 
       --barre de vie boss
-      local healthHeartBoss = Panel:new(350, 100)
+      local healthHeartBoss = Panel:new(largeur - 700, 0)
       healthHeartBoss:setImage(love.graphics.newImage("img/hud/boss_health.png"), 5)
-    local healthBarBoss = Panel:new(402,111, 278, 30, {200,30,30})
+    local healthBarBoss = Panel:new(largeur - 648,10, 278, 30, {139,0,0})
 
-    local transitionBarBoss = Panel:new(680,111, 20, 30,{200,200,30})
+    local transitionBarBoss = Panel:new(largeur - 648,8, 0, 30,{200,200,30})
 
     -- barre d'energie
     local energyBarImg = Panel:new(0, 40)
@@ -192,7 +192,7 @@ function Hud.setPlayer()
         manaCost:setImage(love.graphics.newImage("img/hud/mana_ball.png"),2.4)
         local manaCostText = Text:new(176 , hauteur - 19, 0, 0,"10", mainFont, "", "", {200, 0, 0})
         local HealthValueText = Text:new(85 , 11, 0, 0, G_player.currentHealth .. "/" .. G_player.maxHealth, mainFont, "", "", {255, 255, 255})
-        local ManaValueText = Text:new(90 , 51, 0, 0, G_player.currentEnergy .. "/" .. G_player.maxEnergy, mainFont, "", "", {255, 255, 255})
+        local ManaValueText = Text:new(90 , 51, 0, 0, G_player.currentEnergy/100 .. "/" .. G_player.maxEnergy/100, mainFont, "", "", {255, 255, 255})
 
     local scoreImg =  Panel:new(largeur - 100, 5)
     scoreImg:setImage(love.graphics.newImage("img/hud/Score.png"), 0.65)
@@ -309,8 +309,14 @@ function Hud.setPlayer()
     
     group:addElement(healthBarBoss, "healthBarBoss")
     group:addElement(healthHeartBoss, "healthHeartBoss")
-    group:addElement(transitionBarBoss, "transitionBarBoss")
+   -- group:addElement(transitionBarBoss, "transitionBarBoss")
 
+    -- BOSS
+    local luaLife = G_bossLife or 0
+    local luaMaxLife = G_bossMaxLife or 1
+    local bossText = Text:new(largeur - 600, 14, 0, 0, luaLife .. " / " .. luaMaxLife, mainFont, "", "", {255, 255, 255})
+    bossText:setVisible(false)
+    group:addElement(bossText, "z_bossText")
 
     return group
 end
@@ -920,6 +926,23 @@ function Hud:update(dt)
     self:updateCharacterSheet()
     self:updateHealthPlayerBetter(1)
 
+    -- BOSS
+    local luaLife = G_bossLife or 0
+    local luaMaxLife = G_bossMaxLife or 1
+    if luaLife ~= 0 then
+        self.player.elements["healthBarBoss"]:setWidth((luaLife / luaMaxLife) * 278)
+        self.player.elements["healthBarBoss"]:setVisible(true)
+        self.player.elements["healthHeartBoss"]:setVisible(true)
+        self.player.elements["z_bossText"]:setVisible(true)
+
+
+    else
+        self.player.elements["healthHeartBoss"]:setVisible(false)
+        self.player.elements["healthBarBoss"]:setVisible(false)
+        self.player.elements["z_bossText"]:setVisible(false)
+    end
+    self.player.elements["z_bossText"]:edit(luaLife .. " / " .. luaMaxLife)
+    
 
 
     for key, value in pairs(self) do
@@ -960,7 +983,7 @@ end
 -- 156 : bar length
 function Hud:updateEnergyPlayer()
     self.player.elements["energyBar"]:setWidth((G_player.currentEnergy / G_player.maxEnergy) * 151)
-    self.player.elements["zEnergyValueText"]:edit(G_player.currentEnergy .. "/" .. G_player.maxEnergy)
+    self.player.elements["zEnergyValueText"]:edit(G_player.currentEnergy/100 .. "/" .. G_player.maxEnergy/100)
 end
 
 function Hud:updateInvSlot(pNumberSlot, pImage)
