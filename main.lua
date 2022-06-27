@@ -194,6 +194,9 @@ local function killEntities()
             G_hud.player.elements["healthBarBoss"]:setVisible(false)
             G_hud.player.elements["z_bossText"]:setVisible(false)
             G_room.music:pause()
+            if G_room.music then
+                G_room.music:pause()
+            end
         else print("Unknown Element: " .. tostring(v)) end
     end
     G_deadElements = {}
@@ -202,6 +205,10 @@ end
 --- Update the game (called every frames)
 --- @param dt number the time elapsed since the last frame
 function love.update(dt)
+
+    if not G_soundOn and G_room.music then
+        G_room.music:pause()
+    end
 
     G_hud:update(dt) -- HUD
     if G_hud.player.visible then --jeu en cours
@@ -320,8 +327,10 @@ function love.update(dt)
                         G_player.score.addScore("roomFinished", G_room.number)
                         G_deltaT = love.timer.getTime()
                         -- G_hud.player:setVisible(false)
-                        G_room.music:pause()
                         if G_soundOn then
+                            G_room.music:pause()
+                        end
+                        if G_soundEffectsOn then
                             local won = love.audio.newSource("sound/soundeffects/change_room.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
                             won:setVolume(0.5)
                             won:play()
