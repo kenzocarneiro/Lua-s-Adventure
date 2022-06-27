@@ -131,6 +131,8 @@ end
 --- @param boss Monster
 --- @param player Player
 function bossIA:update(dt, boss, player)
+    G_bossLife = boss.currentHealth
+    G_bossMaxLife = boss.maxHealth
     if boss.currentHealth < boss.maxHealth / 2 then
         self.mood = "angry"
     end
