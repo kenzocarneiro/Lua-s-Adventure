@@ -79,8 +79,8 @@ function love.keypressed(k)
     elseif k == "e" and G_player.currentEnergy > 990 and #G_player.inventory > 0 then
         G_player:changeState("special")
 
-    elseif k == "v" then
-        print(G_player.score.getScore())
+    -- elseif k == "v" then
+    --     print(G_player.score.getScore())
 
     elseif k == "escape" then
         love.event.quit()

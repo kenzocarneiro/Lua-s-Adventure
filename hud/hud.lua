@@ -645,26 +645,26 @@ end
 
 function Hud:keypressed(k)
     --debug / cheat
-    if k == "m" and self.player.visible then
-        self:get_health(30)
-        if G_soundEffectsOn then
-            local health=love.audio.newSource("sound/soundeffects/recharge1.wav","static")
-            health:setVolume(0.2)
-            health:play()
-        end
-    elseif k == "l" and self.player.visible then
-        self:get_damage(30)
-        if G_soundEffectsOn then
-            local damage=love.audio.newSource("sound/soundeffects/fire_hit.wav","static")
-            damage:setVolume(0.2)
-            damage:play()
-        end
-        G_player.currentHealth =G_player.currentHealth - 5
-    elseif k == "t" and self.player.visible then
-        G_player.currentEnergy = G_player.currentEnergy + 1
+    -- if k == "m" and self.player.visible then
+    --     self:get_health(30)
+    --     if G_soundEffectsOn then
+    --         local health=love.audio.newSource("sound/soundeffects/recharge1.wav","static")
+    --         health:setVolume(0.2)
+    --         health:play()
+    --     end
+    -- elseif k == "l" and self.player.visible then
+    --     self:get_damage(30)
+    --     if G_soundEffectsOn then
+    --         local damage=love.audio.newSource("sound/soundeffects/fire_hit.wav","static")
+    --         damage:setVolume(0.2)
+    --         damage:play()
+    --     end
+    --     G_player.currentHealth =G_player.currentHealth - 5
+    -- elseif k == "t" and self.player.visible then
+    --     G_player.currentEnergy = G_player.currentEnergy + 1
 
     --button parameter
-    elseif k == "p" and (self.player.visible or self.parameter.visible) then
+    if k == "p" and (self.player.visible or self.parameter.visible) then
         if self.parameter.visible then
             self.player:setVisible(true)
             self.parameter:setVisible(false)
