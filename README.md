@@ -10,9 +10,9 @@ Made by:
 - Rose Thieullet
 
 Special thanks to:
-- Our teacher and tutor for this project, M. Xavier Bultel.
-- Our reviewer, M. Ahmad Abdallah.
-- M. Pascal Berthomé for approving the subject of this project.
+- Our teacher and tutor for this project, Mr. Xavier Bultel.
+- Our reviewer, Mr. Ahmad Abdallah.
+- Mr. Pascal Berthomé for approving the subject of this project.
 
 ## How to install the game
 In order to play the game, you have multiple solutions:
