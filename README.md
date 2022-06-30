@@ -1,5 +1,5 @@
 # Lua-s-Adventure
-Lua's adventure is an action-RPG made with the LÖVE library in Lua.
+Lua's Adventure is an action-RPG made with the LÖVE library in Lua.
 This is a school project carried out in our 3rd year of the Computer Security and Technologies section at INSA Centre Val de Loire.
 
 Made by:
