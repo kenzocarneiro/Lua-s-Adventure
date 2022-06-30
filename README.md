@@ -15,16 +15,29 @@ Special thanks to:
 - M. Pascal Berthomé for approving the subject of this project.
 
 ## How to install the game
-In order to play the game, you have to:
-- Clone this repository in a local folder
-- Install love: https://love2d.org/
-- Launch love in the game folder using this syntax:
+In order to play the game, you have multiple solutions:
+- If you're on Windows:
+  1) Download the .zip corresponding to your architecture (64 bits or 32 bits) here: https://github.com/kenzo6c/Lua-s-Adventure/releases
+  2) Launch the .exe file
+- If you're on another OS (or if your antivirus doesn't like the dll files):
+  1) Download and install love: https://love2d.org/
+  2) Put love in your PATH or note its location
+  3) Download the .love file from the latest release: https://github.com/kenzo6c/Lua-s-Adventure/releases
+  4) launch the .love file with love using this syntax in a terminal:
+```
+<love_executable_path> LuaAventure.love
+```
+If love is in your PATH, you can do:
+```
+love LuaAventure.love
+```
+
+- You can also:
+  1) Clone this repository in a local folder
+  2) Install love: https://love2d.org/
+  3) Launch love in the game folder using this syntax:
 ```
 <love_executable_path> <game_folder>
-```
-For example, if your game is in the "lua_game" folder, and love is in your PATH, you can do:
-```
-love lua_game
 ```
 
 More information is available here: https://love2d.org/wiki/Getting_Started
