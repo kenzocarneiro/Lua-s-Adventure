@@ -7,7 +7,7 @@ Made by:
 - Nicolas Bédrunes
 - Kenzo Carneiro
 - Tristan Claudé
-- Rose Thieullet.
+- Rose Thieullet
 
 Special thanks to:
 - Our teacher and tutor for this project, M. Xavier Bultel.
@@ -19,6 +19,7 @@ In order to play the game, you have multiple solutions:
 - If you're on Windows:
   1) Download the .zip corresponding to your architecture (64 bits or 32 bits) here: https://github.com/kenzo6c/Lua-s-Adventure/releases
   2) Launch the .exe file
+  3) Note: Your antivirus may have a problem with the dll files. These dll files come from the love installation, you can try with the dll from yours, or you can use the following method.
 - If you're on another OS (or if your antivirus doesn't like the dll files):
   1) Download and install love: https://love2d.org/
   2) Put love in your PATH or note its location
