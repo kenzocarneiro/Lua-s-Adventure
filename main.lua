@@ -252,7 +252,7 @@ function love.update(dt)
             end
 
             if love.keyboard.isDown("p") and love.keyboard.isDown("i") and love.keyboard.isDown("n") and love.keyboard.isDown("g") then
-                Pong = require("tests/pong/pong")
+                Pong = require("easteregg/Pong/pong")
                 Pong.load()
                 G_PONG = true
             end

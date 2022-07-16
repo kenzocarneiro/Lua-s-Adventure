@@ -2,8 +2,8 @@ local Field = {}
 
 --constructor
 function Field:new(x, y)
-    local img = love.graphics.newImage("tests/Pong/field.png")
-    
+    local img = love.graphics.newImage("easteregg/Pong/field.png")
+
     local screenWidth = love.graphics.getWidth()
     local screenHeight = love.graphics.getHeight()
 
@@ -13,7 +13,7 @@ function Field:new(x, y)
     -- local lineBottom = love.graphics.line(r.x, r.y + r.h, r.x + r.h, r.y + r.h)
     -- local lineLeft = love.graphics.line(r.x, r.y, r.x, r.y + r.h)
     -- local lineRight = love.graphics.line(r.x + r.w, r.y, r.x + r.h, r.y + r.h)
-    
+
     -- r.line = {lineTop, lineBottom, lineLeft, lineRight}
     self.__index = self
     setmetatable(r, self)

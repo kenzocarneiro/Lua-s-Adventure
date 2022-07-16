@@ -2,7 +2,7 @@ local Ball = {}
 
 --constructor
 function Ball:new(x, y)
-    local img = love.graphics.newImage("tests/Pong/ball.png")
+    local img = love.graphics.newImage("easteregg/Pong/ball.png")
     local r = {x=x, y=y, w=10, h=10, dx=5, dy=5, img=img} -- store the middle of the ball
     self.__index = self
     setmetatable(r, self)

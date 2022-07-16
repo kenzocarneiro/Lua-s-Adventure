@@ -1,8 +1,8 @@
 Pong = {}
 
-local Racket = require("tests/Pong/racket")
-local Ball = require("tests/Pong/ball")
-local Field = require("tests/Pong/field")
+local Racket = require("easteregg/Pong/racket")
+local Ball = require("easteregg/Pong/ball")
+local Field = require("easteregg/Pong/field")
 
 -- Load function (call one time)
 function Pong.load()
