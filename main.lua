@@ -43,7 +43,7 @@ function love.load()
     G_monsterList = {}
     G_hitboxActivated = true
 
-    G_soundOn = true
+    G_musicOn = true
     G_soundEffectsOn = true
 
     G_room = Room:new(0, true)
@@ -202,7 +202,7 @@ end
 --- @param dt number the time elapsed since the last frame
 function love.update(dt)
 
-    if not G_soundOn and G_room.music then
+    if not G_musicOn and G_room.music then
         G_room.music:pause()
     end
 
@@ -283,20 +283,6 @@ function love.update(dt)
             for i = 1,#G_itemList do
                 if G_itemList[i] then
                     if G_player:pickup(G_itemList[i]) then
-                        if tostring(G_itemList[i]) == "Coin" then
-                            if G_soundEffectsOn then
-                                local coin=love.audio.newSource("sound/soundeffects/coin.wav","static")
-                                coin:setVolume(0.2)
-                                coin:play()
-                            end
-                        else
-                            if G_soundEffectsOn then
-                                local item=love.audio.newSource("sound/soundeffects/pickup.wav", "static") -- the "stream" tells LÖVE to stream the file from disk, good for longer music tracks
-                                item:setVolume(0.2)
-                                item:play()
-                            end
-                        end
-
                         for j = 1,#G_hitboxes do
                             if G_hitboxes[j] == G_itemList[i].hitboxes["hitbox"] then
                                 table.remove(G_hitboxes, j)
@@ -323,7 +309,7 @@ function love.update(dt)
                         G_player.score.addScore("roomFinished", G_room.number)
                         G_deltaT = love.timer.getTime()
                         -- G_hud.player:setVisible(false)
-                        if G_soundOn then
+                        if G_musicOn then
                             G_room.music:pause()
                         end
                         if G_soundEffectsOn then

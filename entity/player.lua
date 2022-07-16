@@ -217,12 +217,14 @@ local inventory_size = 5
         if tostring(item) == "Coin" then
             self.gold = self.gold + item.value
             self.score.addScore("pickupCoin", item.value)
-            coinSound:setVolume(0.2)
-            coinSound:play()
+            if G_soundEffectsOn then
+                coinSound:setVolume(0.3)
+                coinSound:play()
+            end
         --potions
         elseif tostring(item)=="Consumable" then
             if G_soundEffectsOn then
-                itemSound:setVolume(0.2)
+                itemSound:setVolume(0.3)
                 itemSound:play()
             end
             --potion de vie
@@ -243,7 +245,7 @@ local inventory_size = 5
         else
             self.score.addScore("pickupOther")
             if G_soundEffectsOn then
-                itemSound:setVolume(0.2)
+                itemSound:setVolume(0.3)
                 itemSound:play()
             end
             -- si on a de la place
@@ -315,9 +317,11 @@ end
 
 function Player:castSpell()
     if self.currentEnergy > 990 and #self.inventory > 0 and not self.hasShoot then
-        local sound=love.audio.newSource("sound/soundeffects/special_attack.wav","static")
-        sound:setVolume(0.5)
-        sound:play()
+        if G_soundEffectsOn then
+            local sound=love.audio.newSource("sound/soundeffects/special_attack.wav","static")
+            sound:setVolume(0.5)
+            sound:play()
+        end
         self.currentEnergy = 0
         self.energyTimer = Timer:new(0.1)
         local p = {}

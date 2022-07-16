@@ -353,9 +353,9 @@ function Hud.setOptions()
     local coeffX, coeffW = 1.05, 3
     local imgZoom = 4
 
-    -- G_soundOn = true
+    -- G_musicOn = true
     -- G_soundEffectsOn = true
-    local soundText = TextButton:new(xLeft, screenHeight/2 - 3*(imgZoom+1)*16, 0, 0, "Sound", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+    local soundText = TextButton:new(xLeft, screenHeight/2 - 3*(imgZoom+1)*16, 0, 0, "Music", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         soundText:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"), imgZoom)
         local soundTextButton = TextButton:new(xRight, soundText.y, nil, nil, "on", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         soundTextButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"), imgZoom)
@@ -366,7 +366,7 @@ function Hud.setOptions()
         local soundEffectsTextButton = TextButton:new(xRight, soundEffectsText.y, nil, nil, "on", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         soundEffectsTextButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"), imgZoom)
 
-    local upText = TextButton:new(xLeft, screenHeight/2 - 1*(imgZoom+1)*16, 0, 0, "Up", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+    local upText = TextButton:new(xLeft, screenHeight/2 - 1*(imgZoom+1)*16, 0, 0, "Do nothing", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         upText:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"), imgZoom)
         local upTextButton = TextButton:new(xRight, upText.y, nil, nil, "on", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         upTextButton:setImages(love.graphics.newImage("img/hud/button_blue_default.png"), love.graphics.newImage("img/hud/button_blue_pressed.png"), imgZoom)
@@ -905,11 +905,11 @@ function Hud:keypressedOptions(k)
         end
 
     elseif k == "return" then
-        -- G_soundOn = true
+        -- G_musicOn = true
         -- G_soundEffectsOn = true
         if self.optionsMenu.elements["soundTextButton"]:getSelected() then
-            G_soundOn = not G_soundOn
-            self.optionsMenu.elements["soundTextButton"].text = G_soundOn and "On" or "Off"
+            G_musicOn = not G_musicOn
+            self.optionsMenu.elements["soundTextButton"].text = G_musicOn and "On" or "Off"
 
         elseif self.optionsMenu.elements["soundEffectsTextButton"]:getSelected() then
             G_soundEffectsOn = not G_soundEffectsOn
