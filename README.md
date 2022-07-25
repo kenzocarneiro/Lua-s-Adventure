@@ -4,7 +4,7 @@ This is a school project carried out in our 3rd year of the Computer Security an
 
 ![Lua's Adventure - Header Image](https://user-images.githubusercontent.com/90707620/180852841-b63e48f1-4cd0-4a42-b9c7-26b3178d78f0.png)
 
-Presentation video - Trailer (in French): https://www.youtube.com/watch?v=_Kj-pnStFts
+Video presentation - Trailer (in French): https://www.youtube.com/watch?v=_Kj-pnStFts
 
 Made by:
 - Lucien Audebert
