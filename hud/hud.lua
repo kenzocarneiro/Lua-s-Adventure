@@ -664,7 +664,7 @@ function Hud:keypressed(k)
     --     G_player.currentEnergy = G_player.currentEnergy + 1
 
     --button parameter
-    if k == "p" and (self.player.visible or self.parameter.visible) then
+    if k == G_key["parameters"] and (self.player.visible or self.parameter.visible) then
         if self.parameter.visible then
             self.player:setVisible(true)
             self.parameter:setVisible(false)
@@ -674,15 +674,15 @@ function Hud:keypressed(k)
         end
 
     --inventory
-    elseif k ==  "i" and (self.player.visible or self.characterSheet.visible) then
+    elseif k ==  G_key["inventory"] and (self.player.visible or self.characterSheet.visible) then
         self:displayCharacterSheet()
-    elseif k == "return" and self.characterSheet.visible then
+    elseif k == G_key["select"] and self.characterSheet.visible then
         self.characterSheet:setVisible(false)
         self.parameter:setVisible(true)
     end
 
-    -- when a menu is displayed
-    if k == "return" and (self.victory.visible or self.defeat.visible) then
+    -- when victory or defeat menus are displayed
+    if k == G_key["select"] and (self.victory.visible or self.defeat.visible) then
         G_resetGVariable(0)
     end
 
@@ -692,7 +692,7 @@ function Hud:keypressed(k)
         self:keypressedMainMenu(k)
     elseif self.optionsMenu.visible then
         self:keypressedOptions(k)
-    elseif k == "return" and (self.leader.visible or self.credits.visible or self.victory.visible or self.defeat.visible) then
+    elseif k == G_key["select"] and (self.leader.visible or self.credits.visible or self.victory.visible or self.defeat.visible) then
         for _, value in pairs(self) do
             value:setVisible(false)
         end
@@ -766,7 +766,7 @@ function Hud:keypressedMainMenu(k)
             self.mainMenu.elements["playKbButton"]:modifySelected()
         end
 
-    elseif k == "return" then
+    elseif k == G_key["select"] then
         if G_soundEffectsOn then
             local arrow=love.audio.newSource("sound/soundeffects/select1.wav","static")
             arrow:setVolume(1)
@@ -843,7 +843,7 @@ function Hud:keypressedParameter(k)
             self.parameter.elements["inventoryKbButton"]:modifySelected()
         end
 
-    elseif k == "return" then
+    elseif k == G_key["select"] then
         if G_soundEffectsOn then
             local arrow=love.audio.newSource("sound/soundeffects/select1.wav","static")
             arrow:setVolume(1)
@@ -904,7 +904,7 @@ function Hud:keypressedOptions(k)
             self.optionsMenu.elements["soundTextButton"]:modifySelected()
         end
 
-    elseif k == "return" then
+    elseif k == G_key["select"] then
         -- G_musicOn = true
         -- G_soundEffectsOn = true
         if self.optionsMenu.elements["soundTextButton"]:getSelected() then
@@ -1080,7 +1080,7 @@ function Hud:updateParameter(k)
             self.parameter.elements["inventoryKbButton"]:modifySelected()
         end
 
-    elseif k == "return" then
+    elseif k == G_key["select"] then
 
     end
 end

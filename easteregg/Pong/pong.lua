@@ -18,10 +18,10 @@ end
 function Pong.update(dt)
     -- keypress
     --racketLeft
-    if love.keyboard.isDown("z") then
+    if love.keyboard.isDown(G_key["up"]) then
         G_racketLeft:moveY(-5)
     end
-    if love.keyboard.isDown("s") then
+    if love.keyboard.isDown(G_key["down"]) then
         G_racketLeft:moveY(5)
     end
     --racketRight

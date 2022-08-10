@@ -46,6 +46,8 @@ function love.load()
     G_musicOn = true
     G_soundEffectsOn = true
 
+    G_key = {up = "z", down = "s", left = "q", right = "d", attack = "space", megaAttack = "e", potion = "a", parameters = "p", inventory = "i", select = "return", quit = "escape"}
+
     G_room = Room:new(0, true)
     G_deltaT = 0
 
@@ -64,25 +66,25 @@ function love.load()
 end
 
 function love.keypressed(k)
-    if G_PONG then if k == "escape" then love.event.quit() else return end end
+    if G_PONG then if k == G_key["quit"] then love.event.quit() else return end end
 
     G_hud:keypressed(k)
     -- Attaque
-    if k == "space" and G_player.state ~= "special" and #G_player.inventory > 0 then
+    if k == G_key["attack"] and G_player.state ~= "special" and #G_player.inventory > 0 then
         G_player:changeState("attack")
 
     -- Potion
-    elseif k == "a" then
+    elseif k == G_key["potion"] then
         G_player:applyPotionEffect(3) -- TODO: This value should be linked to the potion .value attribute
 
     -- Compétence
-    elseif k == "e" and G_player.currentEnergy > 990 and #G_player.inventory > 0 then
+    elseif k == G_key["megaAttack"] and G_player.currentEnergy > 990 and #G_player.inventory > 0 then
         G_player:changeState("special")
 
     -- elseif k == "v" then
     --     print(G_player.score.getScore())
 
-    elseif k == "escape" then
+    elseif k == G_key["quit"] then
         love.event.quit()
     end
 end

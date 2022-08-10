@@ -69,18 +69,18 @@ function Player:update(dt)
     --moving
     if self.state ~= "special" then
         local move = Vector:new(0, 0)
-        if love.keyboard.isDown("right", "d") then
+        if love.keyboard.isDown("right", G_key["right"]) then
             move = move + Vector:new(1, 0)
             self.flipH = 1
         end
-        if love.keyboard.isDown("left", "q") then
+        if love.keyboard.isDown("left", G_key["left"]) then
             move = move + Vector:new(-1, 0)
             self.flipH = -1
         end
-        if love.keyboard.isDown("up", "z") then
+        if love.keyboard.isDown("up", G_key["up"]) then
             move = move + Vector:new(0, -1)
         end
-        if love.keyboard.isDown("down", "s") then
+        if love.keyboard.isDown("down", G_key["down"]) then
             move = move + Vector:new(0, 1)
         end
 
