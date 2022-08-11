@@ -8,12 +8,14 @@ local KbButton = require("hud/kbbutton")
 local TextButton = require("hud/textbutton")
 local myGUI = require("GCGUI")
 
-local textColor = {0, 0, 0}
-local textColorSelected = {255, 255, 0}
-local textOtherColor = {0, 255, 255}
+local textColor = {0, 0, 0} --white
+local textColorSelected = {255, 255, 0} --yellow
+local textOtherColor = {0, 255, 255} --cyan
 
 local imgButtonBlueDefault = love.graphics.newImage("img/hud/button_blue_default.png")
 local imgButtonBluePressed = love.graphics.newImage("img/hud/button_blue_pressed.png")
+
+local isChangingKey = false 
 
 local Hud = {}
 
@@ -369,13 +371,27 @@ function Hud.setOptions()
         local soundEffectsTextButton = TextButton:new(xRight, soundEffectsText.y, nil, nil, "on", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         soundEffectsTextButton:setImages(imgButtonBlueDefault, imgButtonBluePressed, imgZoom)
 
-    local upText = TextButton:new(xLeft, screenHeight/2 - 1*(imgZoom+1)*16, 0, 0, "Do nothing", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+    local upText = TextButton:new(xLeft, screenHeight/2 - 1*(imgZoom+1)*16, 0, 0, "Up", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         upText:setImages(imgButtonBlueDefault, imgButtonBluePressed, imgZoom)
-        local upTextButton = TextButton:new(xRight, upText.y, nil, nil, "on", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        local upTextButton = TextButton:new(xRight, upText.y, nil, nil, G_key["up"], mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         upTextButton:setImages(imgButtonBlueDefault, imgButtonBluePressed, imgZoom)
+    
+    local downText = TextButton:new(xLeft, screenHeight/2 + 0*(imgZoom+1)*16, 0, 0, "Down", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        downText:setImages(imgButtonBlueDefault, imgButtonBluePressed, imgZoom)
+        local downTextButton = TextButton:new(xRight, downText.y, nil, nil, G_key["down"], mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        downTextButton:setImages(imgButtonBlueDefault, imgButtonBluePressed, imgZoom)
 
+    local leftText = TextButton:new(xLeft, screenHeight/2 + 1*(imgZoom+1)*16, 0, 0, "Left", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        leftText:setImages(imgButtonBlueDefault, imgButtonBluePressed, imgZoom)
+        local leftTextButton = TextButton:new(xRight, leftText.y, nil, nil, G_key["left"], mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        leftTextButton:setImages(imgButtonBlueDefault, imgButtonBluePressed, imgZoom)
+    
+    local rightText = TextButton:new(xLeft, screenHeight/2 + 2*(imgZoom+1)*16, 0, 0, "Right", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        rightText:setImages(imgButtonBlueDefault, imgButtonBluePressed, imgZoom)
+        local rightTextButton = TextButton:new(xRight, rightText.y, nil, nil, G_key["right"], mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+        rightTextButton:setImages(imgButtonBlueDefault, imgButtonBluePressed, imgZoom)
 
-    local menuTextButton = TextButton:new(0, screenHeight/2 + 1*(imgZoom+1)*16, 0, 0, "Menu", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
+    local menuTextButton = TextButton:new(0, screenHeight/2 + 4*(imgZoom+1)*16, 0, 0, "Menu", mainFontMenu, "center", "center", textColor, textColorSelected, coeffX, coeffW)
         menuTextButton:setImages(imgButtonBlueDefault, imgButtonBluePressed,imgZoom)
         menuTextButton.x = screenWidth/2 - 3*menuTextButton.w --centré
 
@@ -387,6 +403,15 @@ function Hud.setOptions()
 
     group:addElement(upText, "upText")
     group:addElement(upTextButton, "upTextButton")
+
+    group:addElement(downText, "downText")
+    group:addElement(downTextButton, "downTextButton")
+
+    group:addElement(leftText, "leftText")
+    group:addElement(leftTextButton, "leftTextButton")
+
+    group:addElement(rightText, "rightText")
+    group:addElement(rightTextButton, "rightTextButton")
 
     group:addElement(menuTextButton, "menuTextButton")
 
@@ -871,41 +896,79 @@ end
 
 
 function Hud:keypressedOptions(k)
-    if k == "up" then
-        if self.optionsMenu.elements["soundTextButton"]:getSelected() then
-            self.optionsMenu.elements["soundTextButton"]:modifySelected()
-            self.optionsMenu.elements["menuTextButton"]:modifySelected()
+    local list = {"soundTextButton", "soundEffectsTextButton", "upTextButton", "downTextButton", "leftTextButton", "rightTextButton", "menuTextButton"} --menu button need to be the last
 
-        elseif self.optionsMenu.elements["soundEffectsTextButton"]:getSelected() then
-            self.optionsMenu.elements["soundEffectsTextButton"]:modifySelected()
-            self.optionsMenu.elements["soundTextButton"]:modifySelected()
-
-        elseif self.optionsMenu.elements["upTextButton"]:getSelected() then
-            self.optionsMenu.elements["upTextButton"]:modifySelected()
-            self.optionsMenu.elements["soundEffectsTextButton"]:modifySelected()
-
-        elseif self.optionsMenu.elements["menuTextButton"]:getSelected() then
-            self.optionsMenu.elements["menuTextButton"]:modifySelected()
-            self.optionsMenu.elements["upTextButton"]:modifySelected()
+    if isChangingKey then
+        for index = 1, #list-1 , 1 do --not the last, which is the menu button
+            if self.optionsMenu.elements[list[index]]:getSelected() then
+                G_key[list[index]:gsub("TextButton", "")] = k
+                Text.setText(self.optionsMenu.elements[list[index]], k)
+                Text.setColor(self.optionsMenu.elements[list[index]], textColorSelected) 
+            end
         end
+        isChangingKey = false
+        return
+    end
+    
+    if k == "up" then
+        for index = #list, 1, -1 do --reverse order
+            local value = list[index]
+            if self.optionsMenu.elements[value]:getSelected() then
+                self.optionsMenu.elements[value]:modifySelected()
+                if index == 1 then --the first of the list
+                    self.optionsMenu.elements[list[#list]]:modifySelected()
+                else
+                    self.optionsMenu.elements[list[index - 1]]:modifySelected()
+                end
+                break
+            end
+        end
+        
+        -- if self.optionsMenu.elements["soundTextButton"]:getSelected() then
+        --     self.optionsMenu.elements["soundTextButton"]:modifySelected()
+        --     self.optionsMenu.elements["menuTextButton"]:modifySelected()
+
+        -- elseif self.optionsMenu.elements["soundEffectsTextButton"]:getSelected() then
+        --     self.optionsMenu.elements["soundEffectsTextButton"]:modifySelected()
+        --     self.optionsMenu.elements["soundTextButton"]:modifySelected()
+
+        -- elseif self.optionsMenu.elements["upTextButton"]:getSelected() then
+        --     self.optionsMenu.elements["upTextButton"]:modifySelected()
+        --     self.optionsMenu.elements["soundEffectsTextButton"]:modifySelected()
+
+        -- elseif self.optionsMenu.elements["menuTextButton"]:getSelected() then
+        --     self.optionsMenu.elements["menuTextButton"]:modifySelected()
+        --     self.optionsMenu.elements["upTextButton"]:modifySelected()
+        -- end
 
     elseif k == "down" then
-        if self.optionsMenu.elements["soundTextButton"]:getSelected() then
-            self.optionsMenu.elements["soundTextButton"]:modifySelected()
-            self.optionsMenu.elements["soundEffectsTextButton"]:modifySelected()
-
-        elseif self.optionsMenu.elements["soundEffectsTextButton"]:getSelected() then
-            self.optionsMenu.elements["soundEffectsTextButton"]:modifySelected()
-            self.optionsMenu.elements["upTextButton"]:modifySelected()
-
-        elseif self.optionsMenu.elements["upTextButton"]:getSelected() then
-            self.optionsMenu.elements["upTextButton"]:modifySelected()
-            self.optionsMenu.elements["menuTextButton"]:modifySelected()
-
-        elseif self.optionsMenu.elements["menuTextButton"]:getSelected() then
-            self.optionsMenu.elements["menuTextButton"]:modifySelected()
-            self.optionsMenu.elements["soundTextButton"]:modifySelected()
+        for index, value in ipairs(list) do
+            if self.optionsMenu.elements[value]:getSelected() then
+                self.optionsMenu.elements[value]:modifySelected()
+                if index == #list then --the last of the list
+                    self.optionsMenu.elements[list[1]]:modifySelected()
+                else
+                    self.optionsMenu.elements[list[index + 1]]:modifySelected()
+                end
+                break
+            end
         end
+        -- if self.optionsMenu.elements["soundTextButton"]:getSelected() then
+        --     self.optionsMenu.elements["soundTextButton"]:modifySelected()
+        --     self.optionsMenu.elements["soundEffectsTextButton"]:modifySelected()
+
+        -- elseif self.optionsMenu.elements["soundEffectsTextButton"]:getSelected() then
+        --     self.optionsMenu.elements["soundEffectsTextButton"]:modifySelected()
+        --     self.optionsMenu.elements["upTextButton"]:modifySelected()
+
+        -- elseif self.optionsMenu.elements["upTextButton"]:getSelected() then
+        --     self.optionsMenu.elements["upTextButton"]:modifySelected()
+        --     self.optionsMenu.elements["menuTextButton"]:modifySelected()
+
+        -- elseif self.optionsMenu.elements["menuTextButton"]:getSelected() then
+        --     self.optionsMenu.elements["menuTextButton"]:modifySelected()
+        --     self.optionsMenu.elements["soundTextButton"]:modifySelected()
+        -- end
 
     elseif k == G_key["select"] then
         -- G_musicOn = true
@@ -918,12 +981,18 @@ function Hud:keypressedOptions(k)
             G_soundEffectsOn = not G_soundEffectsOn
             self.optionsMenu.elements["soundEffectsTextButton"].text = G_soundEffectsOn and "On" or "Off"
 
-        elseif self.optionsMenu.elements["upTextButton"]:getSelected() then
-
-
         elseif self.optionsMenu.elements["menuTextButton"]:getSelected() then
             self.optionsMenu:setVisible(false)
             self.mainMenu:setVisible(true)
+        
+        else
+            for index = 1, #list-1 , 1 do --not the last which is the menu
+                if self.optionsMenu.elements[list[index]]:getSelected() then
+                    print(index, list[index])
+                    Text.setColor(self.optionsMenu.elements[list[index]], textOtherColor)
+                end
+            end
+            isChangingKey = true
         end
     end
 end
