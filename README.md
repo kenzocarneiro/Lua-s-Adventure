@@ -2,6 +2,10 @@
 Lua's Adventure is an action-RPG made with the LÖVE library in Lua.
 This is a school project carried out in our 3rd year of the Computer Security and Technologies section at INSA Centre Val de Loire.
 
+![Lua's Adventure - Header Image](https://user-images.githubusercontent.com/90707620/180852841-b63e48f1-4cd0-4a42-b9c7-26b3178d78f0.png)
+
+Video presentation - Trailer (in French): https://www.youtube.com/watch?v=_Kj-pnStFts
+
 Made by:
 - Lucien Audebert
 - Nicolas Bédrunes
