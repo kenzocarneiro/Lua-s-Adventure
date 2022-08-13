@@ -5,7 +5,7 @@ Element = require("element")
 --- Class representing entities in the game: anything that is alive.
 --- @class Entity:Element Entity is a subclass of Element
 --- @field speed number
---- @field weapon number
+--- @field weapon string
 Entity = Element:new()
 --- Constructor of Entity.
 --- @return Entity

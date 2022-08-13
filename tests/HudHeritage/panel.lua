@@ -1,4 +1,4 @@
-local Element = require("element")
+local Element = require("hudelement")
 
 local Panel = {}
 
@@ -8,10 +8,10 @@ function Panel:new(pX, pY, pW, pH)
 
     local myPanel = Element.new(self, pX, pY) --appel constructeur de la classe mère
     setmetatable(myPanel, self)
-    
+
     myPanel.W = pW
     myPanel.H = pH
-    
+
     return myPanel
 end
 

@@ -52,16 +52,34 @@ function Account:new()
 end
 
 
--- III.2) Inheritance
+-- III.2) Inheritance with inherited constructor
 
 --- Class representing VIP accounts.
 --- @class VIPAccount:Account VIPAccount is a subclass of Account.
+--- @field new fun(): VIPAccount
 VIPAccount = Account:new()
 
---- Constructor of VIPAccount.
---- @return VIPAccount
-function VIPAccount:new() return Account:new() end
--- The line above is necessary in order to have instanced variables documented with the right type: VIPAccount.
+local vip = VIPAccount:new()
+-- vip is automatically VIPAccount, as you can see here.
 
-local s = VIPAccount:new()
--- s is automatically VIPAccount, as you can see here.
+
+
+
+-- III.3) Inheritance with redefined constructor
+
+--- Class representing VIP accounts.
+--- @class SuperAccount:Account SuperAccount is a subclass of Account.
+SuperAccount = Account:new()
+
+--- Constructor of SuperAccount. (v1)
+--- @return SuperAccount
+function SuperAccount:new()
+    local vip = Account:new()
+    vip.special_val = 5
+    --- @cast vip SuperAccount
+    -- The line above is necessary in order to have instanced variables documented with the right type: SuperAccount.
+    return vip
+end
+
+local s = SuperAccount:new()
+-- s is automatically SuperAccount, as you can see here.

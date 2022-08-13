@@ -2,6 +2,12 @@
 --- @class Vector
 --- @field x number
 --- @field y number
+--- @operator len(Vector): number
+--- @operator add(Vector): Vector
+--- @operator sub(Vector): Vector
+--- @operator mul(Vector|number): Vector
+--- @operator div(number): Vector
+--- @operator unm(Vector): Vector
 Vector = {x = 0; y = 0}
 
 --- Constructor of Vector.

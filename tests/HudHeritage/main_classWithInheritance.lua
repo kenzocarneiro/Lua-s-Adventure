@@ -1,9 +1,9 @@
 if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
 
 --bof
-local classWithInheritance = require("classWithInheritance") 
+local classWithInheritance = require("classWithInheritance")
 --mieux
-local Element = require("element")
+local Element = require("hudelement")
 local Panel = require("panel")
 
 local element = classWithInheritance.newElement(100, 200)

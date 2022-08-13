@@ -79,8 +79,6 @@ end
 
 VIPAccount = Account:new()
 
-function VIPAccount:new() return Account.new(self) end
-
 local s = VIPAccount:new()
 
 VIPAccount.type = "VIP"

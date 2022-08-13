@@ -1,6 +1,6 @@
-local Element = {}
+local HUDElement = {}
 
-function Element:new(pX, pY)
+function HUDElement:new(pX, pY)
     self.__index = self
     local myElement = {}
     setmetatable(myElement, self)
@@ -12,14 +12,14 @@ function Element:new(pX, pY)
     return myElement
 end
 
-function Element:draw()
+function HUDElement:draw()
     print("Element draw at " .. self.X .. "," .. self.Y)
 end
-function Element:update(dt)
+function HUDElement:update(dt)
     --print("newElement / update / Not implemented")
 end
-function Element:setVisible(pVisible)
+function HUDElement:setVisible(pVisible)
     self.Visible = pVisible
 end
 
-return Element
+return HUDElement
