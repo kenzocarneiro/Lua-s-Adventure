@@ -20,7 +20,7 @@ Hitbox = {width=0, height=0}
 --- @param height number
 --- @param offset Vector
 --- @param shape string
---- @param associatedE Element
+--- @param associatedE Element|number
 --- @return Hitbox
 function Hitbox:new(pos, name, layers, width, height, offset, shape, associatedE)
     -- offset n'est utile que si on change height et width pour avoir une hitbox personnalisée
@@ -107,7 +107,6 @@ function Hitbox:collide(h, m)
                 return true
             end
         end
-        return false
     elseif self.shape == "rectangle" and h.shape == "circle" then
         local corners = {Vector:new(temp_pos.x, temp_pos.y), Vector:new(temp_pos.x + self.width, temp_pos.y), Vector:new(temp_pos.x + self.width, temp_pos.y + self.height), Vector:new(temp_pos.x, temp_pos.y + self.height)}
 
@@ -116,8 +115,8 @@ function Hitbox:collide(h, m)
                 return true
             end
         end
-        return false
     end
+    return false
 end
 
 --- Update the coordinates of the Hitbox (use this after we move, or at each frame).

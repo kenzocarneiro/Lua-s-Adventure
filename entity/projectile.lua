@@ -2,10 +2,8 @@ Entity = require("entity/entity")
 
 --- Class representing a Projectile.
 --- @class Projectile:Entity Projectile is a subclass of Entity.
+--- @field new fun(self: Projectile): Projectile
 Projectile = Entity:new()
---- Constructor of Projectile.
---- @return Projectile
-function Projectile:new() return Entity.new(self) end
 
 --- Initializes the Projectile.
 --- @param damage number
@@ -29,6 +27,7 @@ function Projectile:update(dt)
     -- convert angle to vector
     local move
     if type(self.direction) == "number" then
+        ---@diagnostic disable-next-line: param-type-mismatch
         move = G_cylToCart(math.rad(self.direction))
     else
         move = self.direction:cpy()
@@ -45,6 +44,7 @@ function Projectile:draw()
         if self.direction.x < 0 then flip_H = -1 end
         self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), flip_H)
     else
+        ---@diagnostic disable-next-line: param-type-mismatch
         self.spriteCollection:draw(self.state, self.pos, self.spriteTimer:getCurrentFrame(), 1, 1, self.direction)
     end
 end

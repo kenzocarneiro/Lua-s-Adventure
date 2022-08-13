@@ -1121,6 +1121,7 @@ function Hud:updateHealthPlayerBetter(pAmount)
     -- on a gagné de la vie
     if G_player.currentHealth < G_player.targetHealth then
         G_player.currentHealth = G_player.currentHealth + healthChangeSpeed
+        ---@diagnostic disable-next-line: cast-local-type
         transition_width = tonumber((G_player.targetHealth - G_player.currentHealth) / healthRatio)
         transition_color = {0,255,0}
     end
@@ -1128,6 +1129,7 @@ function Hud:updateHealthPlayerBetter(pAmount)
     -- on a perdu de la vie
     if G_player.currentHealth > G_player.targetHealth then
         G_player.currentHealth = G_player.currentHealth - healthChangeSpeed
+        ---@diagnostic disable-next-line: cast-local-type
         transition_width = tonumber((G_player.targetHealth - G_player.currentHealth) / healthRatio)
         transition_color = {255,255,0}
     end

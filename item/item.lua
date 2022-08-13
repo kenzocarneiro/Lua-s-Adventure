@@ -2,13 +2,9 @@ Element = require("element")
 
 --- Class representing Items in the game:
 --- @class Item:Element Item is a subclass of Entity
+--- @field new fun(item: Item): Item
 --- @field description string
 Item = Element:new()
-
---- Constructor of Item.
---- @return Item
-function Item:new() return Element.new(self) end
-
 
 --- Initializes the item.
 --- @param description string

@@ -2,7 +2,9 @@
 io.stdout:setvbuf('no')
 
 if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
+---@diagnostic disable-next-line: assign-type-mismatch
 rawset = nil -- Disable rawset
+---@diagnostic disable-next-line: assign-type-mismatch
 rawget = nil -- Disable rawget
 
 local mainFont = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 15)

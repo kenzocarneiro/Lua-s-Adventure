@@ -74,7 +74,8 @@ function IA:shortestPathFinder()
         elseif collision then
 
             -- The description of a collision zone : four directions, which are the extreme points of the zone
-            local collisionZone = {top=nil,bottom=nil,left=nil,right=nil}
+            local tempVector = Vector:new(0, 0)
+            local collisionZone = {top=tempVector,bottom=tempVector,left=tempVector,right=tempVector}
 
             -- We initialisize each direction
             for direction=1,4 do

@@ -2,13 +2,9 @@ Item = require("item/item")
 
 --- Class representing Consumable in the game
 --- @class Coin:Item Consumable is a subclass of Item
+--- @field new fun(self: Coin): Coin
 --- @field value number  -- the value added/substratcted from the target
 Coin = Item:new()
-
---- Constructor of Consumable.
---- @return Coin
-function Coin:new() return Item.new(self) end
-
 
 --- Initializes the Coin.
 --- @param value number  -- the value added/substratcted from the target
