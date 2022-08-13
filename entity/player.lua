@@ -5,12 +5,10 @@ local Data = require("data")
 
 --- Class representing the Player.
 --- @class Player:Entity Player is a subclass of Entity.
+--- @field new fun(self:Player): Player
 --- @field inventory table
 --- @field collectRadius number
 Player = Entity:new()
---- Constructor of Player.
---- @return Player
-function Player:new() return Entity.new(self) end
 
 --- Initializes the item.
 --- @param inventory Item[]|Weapon[]|Consumable[]|Coin[]

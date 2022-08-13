@@ -56,7 +56,7 @@ end
 
 --- Class representing VIP accounts.
 --- @class VIPAccount:Account VIPAccount is a subclass of Account.
---- @field new fun(): VIPAccount
+--- @field new fun(self:VIPAccount): VIPAccount
 VIPAccount = Account:new()
 
 local vip = VIPAccount:new()

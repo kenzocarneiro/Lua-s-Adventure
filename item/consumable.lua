@@ -2,13 +2,10 @@ Item = require("item/item")
 
 --- Class representing Consumable in the game
 --- @class Consumable:Item Consumable is a subclass of Item
+--- @field new fun(self:Consumable): Consumable
 --- @field target string -- target the health or speed for example
 --- @field value number  -- the value added/substratcted from the target
 Consumable = Item:new()
-
---- Constructor of Consumable.
---- @return Consumable
-function Consumable:new() return Item.new(self) end
 
 
 --- Initializes the Consumable.

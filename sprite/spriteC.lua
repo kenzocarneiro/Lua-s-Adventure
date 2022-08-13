@@ -3,7 +3,7 @@
 --- @class SpriteCollection
 --- @field sprites table<string, Sprite>
 --- @field frames number
-SpriteCollection = {sprites = nil}
+SpriteCollection = {}
 
 --- Constructor of SpriteCollection.
 --- @param el string The name of the corresponding Element.
@@ -31,7 +31,7 @@ end
 
 --- Draw function of SpriteCollection.
 --- @param state string
---- @param pos number
+--- @param pos Vector
 --- @param frameNumber number
 --- @param flipH number|nil
 --- @param flipV number|nil
@@ -63,7 +63,7 @@ end
 
 --- Get number of sprites in spriteCollection for the given state.
 --- @param state string
---- @return Sprite sprite
+--- @return number numberOfSprites
 function SpriteCollection:getNumberOfSprites(state)
     return #self.sprites[state].frames
 end

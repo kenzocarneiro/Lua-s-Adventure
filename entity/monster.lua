@@ -6,11 +6,9 @@ LootTable = require("item/lootTable")
 
 --- Class representing the Monster.
 --- @class Monster:Entity Monster is a subclass of Entity.
+--- @field new fun(self:Monster): Monster
 --- @field chanceOfDrop number
 Monster = Entity:new()
---- Constructor of Monster.
---- @return Monster
-function Monster:new() return Entity.new(self) end
 
 
 --- Initializes the monster.
@@ -36,8 +34,8 @@ function Monster:init(lootTable, name, aggroRadius, typeOfMove, speed, weapon, p
     self.lootTable:init(lootTable)
 
     if name == "lua" then
-        IA = require("bossIA")
-        self.ia = IA:new()
+        local bossIA = require("bossIA")
+        self.ia = bossIA:new()
         self.currentHealth = 600
         self.maxHealth = 600
         self.damage = 15
