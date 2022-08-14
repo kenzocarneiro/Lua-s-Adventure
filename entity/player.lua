@@ -139,14 +139,15 @@ function Player:update(dt)
             elseif currentFrame == 3 then -- Not 1 because when the animation is finished it is in frame 1
                 G_blackoutOnPlayer = true
                 G_blackoutSFX = false
-            elseif currentFrame >= 7 and not self.hasShoot then
-                self:castSpell()
-                self.hasShoot = true
-                G_blackoutCurrentFrame = 250 - (currentFrame - 2)*25
-            elseif currentFrame == 8 then
-                G_blackoutCurrentFrame = 250 - (currentFrame - 3)*25
-            elseif currentFrame == 9 then
-                G_blackoutOnPlayer = false
+            elseif currentFrame >= 7 then
+                G_blackoutCurrentFrame = 125
+                if not self.hasShoot then
+                    self:castSpell()
+                    self.hasShoot = true
+                end
+                if currentFrame >= 9 then
+                    G_blackoutOnPlayer = false
+                end
             end
         end
     end
