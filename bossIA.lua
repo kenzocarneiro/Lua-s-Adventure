@@ -59,10 +59,18 @@ function bossIA:attackUpdate(dt, boss, player)
 
     if subHasFinished then
         local direction_step
-        if self.mood == "angry" then direction_step = 15 else direction_step = 45 end
+        local currentSC
+        if self.mood == "angry" then
+            currentSC = Data.bluefireballSC
+            direction_step = 15
+        else
+            currentSC = Data.fireballSC
+            direction_step = 45
+        end
+
         for i=0, 360 - direction_step, direction_step do
                 local p = Projectile:new()
-                p:init(boss.damage, i, 2, "bullet", boss.pos + Vector:new(0, 0), Data.fireballSC, Data.enemyFireBallHF)
+                p:init(boss.damage, i, 2, "bullet", boss.pos + Vector:new(0, 0), currentSC, Data.enemyFireBallHF)
         end
         self.subLaunched = false
     end

@@ -303,7 +303,7 @@ function Player:consume()
     if self.currentPotion == 2 then
         self.buffs[1] = self.buffs[1] + 5
         self.damage = self.damage + self.buffs[1]
-        self.timer1 = Timer:new(10)
+        self.timer1 = Timer:new(15)
     elseif self.currentPotion == 3 then
         self.buffs[2] = self.buffs[2] + 2
         self.speed = self.speed + self.buffs[2]
@@ -324,14 +324,14 @@ function Player:castSpell()
         self.currentEnergy = 0
         self.energyTimer = Timer:new(0.1)
         local p = {}
-        local direction_step = 10
+        local direction_step = 5
 
         for i=0, 360 - direction_step, direction_step do
             p = Projectile:new()
             if self.flipH == 1 then
-                p:init(self.damage, i, 5, "bullet", self.pos + Vector:new(4, -2), Data.fireballSC, Data.fireballHF)
+                p:init(math.floor(self.damage * 1.5), i, 5, "bullet", self.pos + Vector:new(4, -2), Data.bluefireballSC, Data.fireballHF)
             elseif self.flipH == -1 then
-                p:init(self.damage, i, 5, "bullet", self.pos + Vector:new(-4, -2), Data.fireballSC, Data.fireballHF)
+                p:init(math.floor(self.damage * 1.5), i, 5, "bullet", self.pos + Vector:new(-4, -2), Data.bluefireballSC, Data.fireballHF)
             end
         end
     end

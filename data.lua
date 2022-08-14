@@ -20,7 +20,7 @@ data.playerSC:init({Sprite:new("img/wizard_idle-Sheet0.png", true, "idleEmpty", 
     Sprite:new("img/wizard_idle-Sheet.png", true, "idle", 18, 18, Vector:new(7, 9), false, {0.5, 0.1, 0.06, 0.1, 0.1, 0.1}),
     Sprite:new("img/wizard_run-Sheet.png", true, "run", 18, 18, Vector:new(7, 9), false),
     Sprite:new("img/wizard_attack-Sheet.png", true, "attack", 18, 18, Vector:new(7, 9)),
-    Sprite:new("img/wizard_special-Sheet.png", true, "special", 18, 18, Vector:new(7, 9), false, {0.5, 0.05, 0.25, 0.25, 0.25, 0.25, 0.06, 0.1, 0.1, 0.1})
+    Sprite:new("img/wizard_special-Sheet.png", true, "special", 18, 18, Vector:new(7, 9), false, {0.05, 0.05, 0.25, 0.25, 0.25, 0.25, 0.06, 0.1, 0.1, 0.1})
 })
 
 data.playerHF = HitboxFactory:new(
@@ -31,6 +31,8 @@ data.playerHF = HitboxFactory:new(
 -- OTHERS
 data.fireballSC = SpriteCollection:new("fireball")
 data.fireballSC:init({Sprite:new("img/fireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
+data.bluefireballSC = SpriteCollection:new("bluefireball")
+data.bluefireballSC:init({Sprite:new("img/bluefireball-Sheet.png", true, "idle", 10, 7, Vector:new(8, 4))})
 data.fireballHF = HitboxFactory:new({"hurtbox", {enemy=true}, 3, 3, Vector:new(-2, -2)})
 data.enemyFireBallHF = HitboxFactory:new({"hurtbox", {player=true}, 3, 3, Vector:new(-2, -2)})
 
