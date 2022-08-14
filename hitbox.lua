@@ -122,11 +122,7 @@ end
 --- Update the coordinates of the Hitbox (use this after we move, or at each frame).
 --- @param pos Vector
 function Hitbox:move(pos)
-    if self.offset then
-        self.pos = pos + self.offset
-    end
-    self.pos.x = self.pos.x
-    self.pos.y = self.pos.y
+    self.pos = pos + self.offset
 end
 
 --- Draws the hitbox (used for debugging).
