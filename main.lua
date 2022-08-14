@@ -208,6 +208,9 @@ end
 --- @param dt number the time elapsed since the last frame
 function love.update(dt)
     dt = math.min(1/30, dt) -- Limits FPS independence to 30 FPS minimum so that collisions still work properly.
+    -- 1/30 ≃ 0.033333333333333
+    -- 1/60 ≃ 0.016666666666667
+    -- WARNING: Creating a Timer with a maxTime below 0.034 is discouraged. (Or more specifically, below : O.333333333...4)
 
     if not G_musicOn and G_room.music then
         G_room.music:pause()
