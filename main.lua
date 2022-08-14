@@ -74,7 +74,7 @@ function love.keypressed(k)
 
     G_hud:keypressed(k)
     -- Attaque
-    if k == "space" and G_player.state ~= "special" and #G_player.inventory > 0 then
+    if k == "space" and G_player.state ~= "special" and #G_player.inventory > 0 and not G_player.hasShoot then
         G_player:changeState("attack")
 
     -- Potion
@@ -82,7 +82,7 @@ function love.keypressed(k)
         G_player:applyPotionEffect(3) -- TODO: This value should be linked to the potion .value attribute
 
     -- Compétence
-    elseif k == "e" and G_player.currentEnergy > 990 and #G_player.inventory > 0 then
+    elseif k == "e" and G_player.currentEnergy > 990 and #G_player.inventory > 0 and not G_player.hasShoot then
         G_player:changeState("special")
 
     -- elseif k == "v" then
@@ -207,7 +207,7 @@ end
 --- Update the game (called every frames)
 --- @param dt number the time elapsed since the last frame
 function love.update(dt)
-    -- dt = math.min(1/5, dt) -- FPS independence physics guard
+    dt = math.min(1/30, dt) -- Limits FPS independence to 30 FPS minimum so that collisions still work properly.
 
     if not G_musicOn and G_room.music then
         G_room.music:pause()
@@ -364,7 +364,7 @@ function love.update(dt)
             end
         end
     end
-    -- sleep(0.5) -- To test FPS independence.
+    -- sleep(1/30) -- To test FPS independence.
 end
 
 function G_resetGVariable(roomIndex)

@@ -28,8 +28,9 @@ function SpriteTimer:update(dt, framesInterval, maxFrames)
     end
     self.frameTimer = self.frameTimer + dt
     if self.frameTimer > currentFrameInterval then
+        self.currentFrame = self.currentFrame + math.floor(self.frameTimer / currentFrameInterval)
+        -- print(self.currentFrame, self.frameTimer, currentFrameInterval)
         self.frameTimer = 0
-        self.currentFrame = self.currentFrame + 1
         if self.currentFrame > maxFrames then
             self.currentFrame = 1
             return self.currentFrame, true

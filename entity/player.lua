@@ -95,7 +95,7 @@ function Player:update(dt)
     -- attack handling
     if #self.inventory > 0 then
         if self.state == "attack" then
-            if currentFrame == 4 and not self.hasShoot then
+            if currentFrame >= 4 and not self.hasShoot then
                 if G_soundEffectsOn then
                     local sound = love.audio.newSource("sound/soundeffects/player_attack.wav", "static") -- the "static" tells LÖVE to load the file into memory, good for short sound effects
                     sound:setVolume(0.5)
@@ -122,6 +122,7 @@ function Player:update(dt)
             if animationFinished then
                 self.state = "idle"
                 self.hasShoot = false
+                G_blackoutOnPlayer = false -- For safety, in case a frame is skipped.
             elseif currentFrame == 2 and not G_blackoutSFX then
                 if G_soundEffectsOn then
                     local sound
@@ -138,7 +139,7 @@ function Player:update(dt)
             elseif currentFrame == 3 then -- Not 1 because when the animation is finished it is in frame 1
                 G_blackoutOnPlayer = true
                 G_blackoutSFX = false
-            elseif currentFrame == 7 then
+            elseif currentFrame >= 7 and not self.hasShoot then
                 self:castSpell()
                 self.hasShoot = true
                 G_blackoutCurrentFrame = 250 - (currentFrame - 2)*25
