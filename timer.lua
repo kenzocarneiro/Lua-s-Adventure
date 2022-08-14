@@ -1,7 +1,7 @@
 
 --- @class Timer
 --- @field time number
---- @field maxtime number
+--- @field maxTime number
 --- @field oneshot boolean
 Timer = {maxTime=1}
 

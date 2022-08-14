@@ -33,7 +33,7 @@ function Projectile:update(dt)
         move = self.direction:cpy()
     end
 
-    self:move(move)
+    self:move(move, dt)
 
     Entity.update(self, dt)
 end

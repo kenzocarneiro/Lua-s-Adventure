@@ -10,6 +10,10 @@ rawget = nil -- Disable rawget
 local mainFont = love.graphics.newFont("img/hud/kenvector_future_thin.ttf", 15)
 love.graphics.setFont(mainFont)
 
+local function sleep(n)
+    local t0 = os.clock()
+    while os.clock() - t0 <= n do end
+end
 
 --- Load the game
 function love.load()
@@ -203,6 +207,7 @@ end
 --- Update the game (called every frames)
 --- @param dt number the time elapsed since the last frame
 function love.update(dt)
+    -- dt = math.min(1/5, dt) -- FPS independence physics guard
 
     if not G_musicOn and G_room.music then
         G_room.music:pause()
@@ -359,6 +364,7 @@ function love.update(dt)
             end
         end
     end
+    -- sleep(0.5) -- To test FPS independence.
 end
 
 function G_resetGVariable(roomIndex)

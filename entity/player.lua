@@ -85,7 +85,7 @@ function Player:update(dt)
         --moving and verifying collision
         if move ~= Vector:new(0, 0) then
             if self.state == "idle" then self:changeState("run") end
-            self:move(move)
+            self:move(move, dt)
         else
             if self.state == "run" then self:changeState("idle") end
         end

@@ -64,15 +64,15 @@ function Monster:update(dt, player)
 
     if self.goal then
         if self.typeOfMove == "simple" then
-            self:move(self.goal)
+            self:move(self.goal, dt)
         elseif self.typeOfMove == "advanced" then
-            self:betterMove(self.goal)
+            self:betterMove(self.goal, dt)
         elseif self.ia then
             local type, move = self.ia:update(dt, self, player)
             -- print(move)
             if move then self.pos = move end
         else
-            self:move(self.goal)
+            self:move(self.goal, dt)
         end
     end
 
@@ -98,13 +98,16 @@ end
 --     end
 -- end
 
-function Monster:move(vect)
+--- Move the monster (Basic movements)
+--- @param vect Vector
+--- @param dt number
+function Monster:move(vect, dt)
     --initialization of the move we want to do
     local move = Vector:new(vect.x-self.pos.x,vect.y-self.pos.y)
 
     --if we have a goal
     if self.goal then
-        Entity.move(self, move)
+        Entity.move(self, move, dt)
     end
 
     if self.state == "idle" then
@@ -118,7 +121,10 @@ function Monster:move(vect)
     end
 end
 
-function Monster:betterMove(vect)
+--- Move the monster (Better movements)
+--- @param vect Vector
+--- @param dt number
+function Monster:betterMove(vect, dt)
     --initialization of the move we want to do
     local move = Vector:new(vect.x-self.pos.x,vect.y-self.pos.y)
 
@@ -132,21 +138,21 @@ function Monster:betterMove(vect)
         local collision_H, collision_V = Entity.willCollide(self, move)
         if collision_V then
             if move.y > 0 then
-                Entity.move(self, Vector:new(-self.speed, 0))
+                Entity.move(self, Vector:new(-self.speed, 0), dt)
             elseif move.y < 0 then
-                Entity.move(self, Vector:new(self.speed, 0))
+                Entity.move(self, Vector:new(self.speed, 0), dt)
             end
         end
         if collision_H then
             if move.x > 0 then
-                Entity.move(self, Vector:new(0, self.speed))
+                Entity.move(self, Vector:new(0, self.speed), dt)
             elseif move.x < 0 then
-                Entity.move(self, Vector:new(0, -self.speed))
+                Entity.move(self, Vector:new(0, -self.speed), dt)
             end
         end
         if not collision_V and not collision_H then
             move = Vector:new(vect.x-self.pos.x,vect.y-self.pos.y)
-            Entity.move(self, move)
+            Entity.move(self, move, dt)
         end
     end
 

@@ -46,8 +46,9 @@ end
 
 --- Move the entity (not done yet).
 --- @param move Vector
-function Entity:move(move)
-    move = move:normalized() * self.speed
+--- @param dt number
+function Entity:move(move, dt)
+    move = move:normalized() * self.speed * 60 * dt
 
     local collider = nil
 

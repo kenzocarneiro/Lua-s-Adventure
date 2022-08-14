@@ -118,7 +118,7 @@ end
 --- @param boss Monster
 --- @param player Player
 function bossIA:updateMove(dt, boss, player)
-    Monster.move(boss, player.pos)
+    Monster.move(boss, player.pos, dt)
     local hasFinished = self.moveTimer:update(dt)
     if hasFinished then
         self.state = "attack"
