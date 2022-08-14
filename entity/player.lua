@@ -18,7 +18,6 @@ function Player:init(inventory, collectRadius, ...)
     self.maxEnergy = 1000
     self.currentEnergy = 0
    -- self.skillAngleCd = 0 or 0
-    self.energyTimer = Timer:new(0.1)
     self.maxHealth = 100
     self.targetHealth = 100
     self.currentHealth = self.maxHealth
@@ -350,15 +349,8 @@ function Player:buffsUpdate(dt)
 end
 
 function Player:energyUpdate(dt)
-    -- TODO: Mettre une augmentation d'énergie plus faible
-    if self.energyTimer and self.energyTimer:update(dt) then
-        self.energyTimer = nil
-        if self.currentEnergy < 1000 then
-            -- self.currentEnergy = self.currentEnergy + 0.01
-            self.currentEnergy = math.min(self.currentEnergy + 2, 1000)
-           -- self.skillAngleCd  = self.skillAngleCd + 360/100
-            self.energyTimer = Timer:new(0.01)
-        end
+    if self.currentEnergy < 1000 then
+        self.currentEnergy = math.min(self.currentEnergy + 2, 1000)
     end
 end
 
