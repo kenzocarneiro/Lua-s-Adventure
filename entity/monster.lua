@@ -41,9 +41,11 @@ function Monster:init(lootTable, name, aggroRadius, typeOfMove, speed, weapon, p
         self.damage = 15
     elseif name == "troll" then
         self.currentHealth = 30
+        self.maxHealth = 30
         self.damage = 20
     elseif name == "rhino" then
         self.currentHealth = 10
+        self.maxHealth = 10
         self.damage = 10
     end
 

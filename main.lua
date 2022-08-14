@@ -47,20 +47,27 @@ function love.load()
     G_itemList = {}
     --- @type Monster[]
     G_monsterList = {}
+    --- @type boolean
     G_hitboxActivated = true
 
+    --- @type boolean
     G_musicOn = true
+    --- @type boolean
     G_soundEffectsOn = true
 
+    --- @type Room
     G_room = Room:new(0, true)
+    --- @type number
     G_deltaT = 0
 
     --- @type Element[]
     G_deadElements = {}
 
+    --- @type number
     G_nbRooms = 4
 
     -- G_player because player is a global variable
+    --- @type Player
     G_player = Player:new()
     -- Arguments speed, weapon, pos, spriteCollection, , hbWidth, hbHeight, hbOffset
     -- speed and weapon are specific to entities while pos, spriteCollection, hbWidth, hbHeight and hbOffset are for all sprites
