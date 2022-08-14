@@ -350,7 +350,7 @@ end
 
 function Player:energyUpdate(dt)
     if self.currentEnergy < 1000 then
-        self.currentEnergy = math.min(self.currentEnergy + 2, 1000)
+        self.currentEnergy = math.min(math.floor(self.currentEnergy + 2 * 60 * dt), 1000)
     end
 end
 
