@@ -203,6 +203,10 @@ local function killEntities()
             G_player:changeState("idle")
             G_hud.player:setVisible(false)
             G_hud.defeat:setVisible(true)
+            G_hud.player.elements["healthHeartBoss"]:setVisible(false)
+            G_hud.player.elements["healthBarBoss"]:setVisible(false)
+            G_hud.player.elements["z_bossText"]:setVisible(false)
+            G_room.music:pause()
             if G_room.music then
                 G_room.music:pause()
             end
@@ -367,6 +371,9 @@ function love.update(dt)
                     -- print("Victory")
                     G_hud.player:setVisible(false)
                     G_hud.victory:setVisible(true)
+                    G_hud.player.elements["healthHeartBoss"]:setVisible(false)
+                    G_hud.player.elements["healthBarBoss"]:setVisible(false)
+                    G_hud.player.elements["z_bossText"]:setVisible(false)
                 else
                     --reset G_variables
                     G_resetGVariable(index)
