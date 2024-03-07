@@ -62,7 +62,8 @@ More information is available here: https://love2d.org/wiki/Getting_Started
 
 *Items:*
 - a : consume potion
-- i : inventory (not yet implemented)
+- 1, 2, 3: choose potion type
+- i : inventory
 
 *Miscellanenous:*
 - p : parameters
